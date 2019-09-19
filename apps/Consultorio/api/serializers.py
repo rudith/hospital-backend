@@ -53,7 +53,7 @@ class ConsultaSerializer(serializers.ModelSerializer):
 
 class ConsultaViewSerializer(serializers.ModelSerializer):
 
-    triaje = serializers.StringRelatedField(read_only=True)
+    #triaje = serializers.StringRelatedField(read_only=True)
     numeroHistoria = serializers.StringRelatedField(read_only=True)
     medico = serializers.StringRelatedField(read_only=True)
     class Meta:
