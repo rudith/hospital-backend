@@ -5,7 +5,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
 from apps.Admision.serializers import HistoriaSerializer
 from .serializers import (TriajeSerializer, TriajeViewSerializer,CitaSerializer, CitaViewSerializer, CitasDniSerializer, ConsultaSerializer, ConsultaViewSerializer,
-                          ConsultasDniSerializer, ConsultasHistoriaSerializer,TriajeHistoriaSerializer)
+                          ConsultasDniSerializer, ConsultasHistoriaSerializer,TriajeHistoriaSerializer,HistorialClinicoSerializer)
 
 
 from ..models import Triaje, Cita, Consulta
@@ -27,6 +27,13 @@ class vistaTriaje(ModelViewSet):
     queryset = Triaje.objects.all()
     serializer_class = TriajeViewSerializer
 
+class BuscarTriajeCita(generics.RetrieveUpdateDestroyAPIView):
+    lookup_field = 'cita'
+    serializer_class = TriajeViewSerializer
+
+    def get_queryset(self):
+        return Triaje.objects.all()
+
 class vistaCrearCita(ModelViewSet):
     queryset = Cita.objects.all()
     serializer_class = CitaSerializer
@@ -39,6 +46,7 @@ class vistaCita(ModelViewSet):
     filter_backends = [SearchFilter]
     search_fields = ["numeroRecibo"]
 
+
 class vistaCrearConsulta(ModelViewSet):
     queryset = Consulta.objects.all()
     serializer_class = ConsultaSerializer
@@ -47,12 +55,26 @@ class vistaConsulta(ModelViewSet):
     queryset = Consulta.objects.all()
     serializer_class = ConsultaViewSerializer
 
+class BuscarHistorialClinico(generics.RetrieveUpdateDestroyAPIView):
+    lookup_field = 'numeroHistoria'
+    serializer_class = HistorialClinicoSerializer
+
+    def get_queryset(self):
+        return Historia.objects.all()
+
 class BuscarCitaDni(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'dni'
     serializer_class = CitasDniSerializer
 
     def get_queryset(self):
         return Historia.objects.all()
+
+class BuscarCitaMedico(generics.RetrieveUpdateDestroyAPIView):
+    lookup_field = 'medico'
+    serializer_class = CitaViewSerializer
+
+    def get_queryset(self):
+        return Cita.objects.all()
 
 class BuscarTriajeHistoria(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'numeroHistoria'

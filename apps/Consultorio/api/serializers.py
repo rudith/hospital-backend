@@ -24,7 +24,7 @@ class TriajeViewSerializer(serializers.ModelSerializer):
     # paciente = serializers.StringRelatedField(read_only=True)
     personal = serializers.StringRelatedField(read_only=True)
     numeroHistoria = serializers.StringRelatedField(read_only=True)
-    cita = serializers.StringRelatedField(read_only=True)
+    #cita = serializers.StringRelatedField(read_only=True)
     class Meta: 
         model = Triaje
         fields = "__all__"  
@@ -65,6 +65,13 @@ class CitasDniSerializer(serializers.ModelSerializer):
     class Meta:
         model = Historia
         fields = ['nombres','dni','citas']
+
+class HistorialClinicoSerializer(serializers.ModelSerializer):
+    triajes = TriajeViewSerializer(many=True, read_only=True)
+    consultas = ConsultaViewSerializer(many=True, read_only=True)
+    class Meta:
+        model = Historia
+        fields = ['nombres','dni','numeroHistoria','triajes','consultas']
 
 class ConsultasDniSerializer(serializers.ModelSerializer):
     consultas = ConsultaSerializer(many=True, read_only=True)
