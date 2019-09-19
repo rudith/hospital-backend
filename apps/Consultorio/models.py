@@ -7,7 +7,7 @@ class Cita(models.Model):
 
     especialidad = models.ForeignKey(Especialidad, on_delete=models.CASCADE)
     numeroHistoria = models.ForeignKey(Historia,related_name='citas', on_delete=models.CASCADE,null=True)
-    medico = models.ForeignKey(User, on_delete=models.CASCADE)
+    medico = models.ForeignKey(User,related_name='citasM', on_delete=models.CASCADE)
     numeroRecibo = models.CharField(max_length=15)
     fechaSeparacion = models.DateField(blank=True,null=True)
     fechaAtencion = models.DateField()

@@ -3,9 +3,11 @@ from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
+from django.contrib.auth.models import User
 from apps.Admision.serializers import HistoriaSerializer
 from .serializers import (TriajeSerializer, TriajeViewSerializer,CitaSerializer, CitaViewSerializer, CitasDniSerializer, ConsultaSerializer, ConsultaViewSerializer,
-                          ConsultasDniSerializer, ConsultasHistoriaSerializer,TriajeHistoriaSerializer,HistorialClinicoSerializer)
+                          ConsultasDniSerializer, ConsultasHistoriaSerializer,TriajeHistoriaSerializer,HistorialClinicoSerializer,
+                          CitasMedicoViewSerializer)
 
 
 from ..models import Triaje, Cita, Consulta
@@ -70,11 +72,11 @@ class BuscarCitaDni(generics.RetrieveUpdateDestroyAPIView):
         return Historia.objects.all()
 
 class BuscarCitaMedico(generics.RetrieveUpdateDestroyAPIView):
-    lookup_field = 'medico'
-    serializer_class = CitaViewSerializer
+    lookup_field = 'id'
+    serializer_class = CitasMedicoViewSerializer
 
     def get_queryset(self):
-        return Cita.objects.all()
+        return User.objects.all()
 
 class BuscarTriajeHistoria(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'numeroHistoria'

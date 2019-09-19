@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from ..models import Triaje, Cita, Consulta
 from apps.Admision.models import Historia
+from django.contrib.auth.models import User
 
 # class EspecialidadSerializer(serializers.ModelSerializer):
 
@@ -79,6 +80,14 @@ class ConsultasDniSerializer(serializers.ModelSerializer):
     class Meta:
         model = Historia
         fields = ['nombres','dni','numeroHistoria','consultas']
+
+class CitasMedicoViewSerializer(serializers.ModelSerializer):
+    citasM = CitaViewSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = User
+        fields = ['id','username', 'citasM']
+
 
 class ConsultasHistoriaSerializer(serializers.ModelSerializer):
     consultas = ConsultaSerializer(many=True, read_only=True)
