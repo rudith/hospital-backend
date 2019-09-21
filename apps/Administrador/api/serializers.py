@@ -18,7 +18,9 @@ class EspecialidadSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Especialidad
-        fields = "__all__"
+        #fields = "__all__"
+        fields = ['nombre','descripcion']
+
 
 class TipoPersonalSerializer(serializers.ModelSerializer):
 
@@ -31,7 +33,10 @@ class PersonalSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Personal
-        fields = "__all__"  
+        #fields = "__all__"  
+        fields = ['dni','nombres','apellido_paterno','apellido_materno','celular','telefono','direccion','fechaReg',
+        'updated_at','estReg','area','tipo_personal','especialidad']
+
 
 class PersonalViewSerializer(serializers.ModelSerializer):
     #user = serializers.StringRelatedField(read_only=True)
@@ -40,4 +45,6 @@ class PersonalViewSerializer(serializers.ModelSerializer):
     especialidad = serializers.StringRelatedField(read_only=True)
     class Meta:
         model = Personal
-        fields = "__all__"  
+        #fields = "__all__"  
+        fields = ['dni','nombres','apellido_paterno','apellido_materno','celular','telefono','direccion','fechaReg',
+        'updated_at','estReg','area','tipo_personal','especialidad']
