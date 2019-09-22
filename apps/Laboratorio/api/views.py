@@ -34,7 +34,26 @@ class VistaExamenLabDet(ModelViewSet):
     queryset = ExamenLabDet.objects.all()
     serializer_class = ExamenLabDetSerializer
 
+class filtro(generics.ListAPIView):
+    serializer_class = BuscarExamenNombre
 
+    def get_queryset(self):
+        queryset = ExamenLabCab.objects.all()
+        nombre = self.request.query_params.get('nombre')
+        return ExamenLabCab.objects.filter(nombre=nombre)
+
+
+class filtrofecha(generics.ListAPIView):
+    serializer_class = BuscarExamenNombre
+
+    def get_queryset(self):
+        queryset = ExamenLabCab.objects.all()
+        fecha = self.request.query_params.get('fecha')
+        return ExamenLabCab.objects.filter(fecha=fecha)
+
+
+
+''' FILTRRO DE TODOS LOS EXAMENES DE LABORATORIO POR NOMBRE "NUMERO"
 class filtro(generics.ListAPIView):
     lookup_url_kwarg = 'nombre'
     serializer_class = BuscarExamenNombre
@@ -43,7 +62,7 @@ class filtro(generics.ListAPIView):
         nombre = self.kwargs.get(self.lookup_url_kwarg)
         return ExamenLabCab.objects.filter(nombre=nombre)
 
-
+'''
 '''
 class filtro(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'nombre'
