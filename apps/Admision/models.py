@@ -1,5 +1,7 @@
 from django.db import models
 from apps.Administrador.models import Area, Personal, TipoPersonal
+from .validators import dni
+from .validators import numeroHistoria
 
 class HorarioCab(models.Model):
     codigoHor = models.AutoField(primary_key=True)
@@ -48,12 +50,14 @@ class GrupSang(models.Model):
 
 class Historia(models.Model):
 
-    numeroHistoria = models.IntegerField()
+    #numeroHistoria = models.IntegerField()
+    numeroHistoria = models.IntegerField(validators=[numeroHistoria])
     grupoSanguineo = models.ForeignKey(GrupSang, on_delete=models.CASCADE,blank=True,null=True)
     distrito = models.ForeignKey(Distrito, on_delete=models.CASCADE,blank=True,null=True)
     provincia = models.ForeignKey(Provincia, on_delete=models.CASCADE,blank=True,null=True)
     departamento = models.ForeignKey(Departamento, on_delete=models.CASCADE, default=1)
-    dni = models.CharField(unique=True, max_length=8)
+    #dni = models.CharField(unique=True, max_length=8)
+    dni = models.CharField(unique=True, max_length=8 ,validators=[dni])
     nombres = models.CharField(max_length=30)
     apellido_paterno = models.CharField(max_length=30)
     apellido_materno = models.CharField(max_length=30)

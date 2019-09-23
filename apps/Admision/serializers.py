@@ -35,7 +35,10 @@ class DepartamentoSerializer(serializers.ModelSerializer):
 class HistoriaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Historia
-        fields = "__all__"
+        #fields = "__all__"
+        fields = ['numeroHistoria','dni','nombres','apellido_paterno','apellido_materno','sexo','edad','fechaNac','foto','celular',
+        'telefono','estadoCivil','gradoInstruccion','ocupacion','fechaReg','direccion','nacionalidad','descripcion',
+        'email','updated_at','estReg','grupoSanguineo','distrito','provincia','departamento']
 
 class HistoriaViewSerializer(serializers.ModelSerializer):
     grupoSanguineo = serializers.StringRelatedField(read_only=True)
@@ -45,4 +48,7 @@ class HistoriaViewSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Historia
-        fields = "__all__"
+        #fields = "__all__"
+        fields = ['numeroHistoria','dni','nombres','apellido_paterno','apellido_materno','sexo','edad','fechaNac','foto','celular',
+        'telefono','estadoCivil','gradoInstruccion','ocupacion','fechaReg','direccion','nacionalidad','descripcion',
+        'email','updated_at','estReg','grupoSanguineo','distrito','provincia','departamento']
