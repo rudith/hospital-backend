@@ -54,7 +54,7 @@ INSTALLED_APPS = [
     'apps.Administrador',
     'apps.Admision',
     'apps.Consultorio',
-    #'apps.Laboratorio',
+    'apps.Laboratorio',
 
     # CORS 
     'corsheaders'

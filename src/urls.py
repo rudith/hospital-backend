@@ -38,6 +38,7 @@ urlpatterns = [
     path('administrador/', include('apps.Administrador.api.urls')),
     path('admision/', include('apps.Admision.urls')),
     path('consultorio/', include('apps.Consultorio.api.urls')),
+    path('laboratorio/', include('apps.Laboratorio.api.urls')),
 ]
 
 

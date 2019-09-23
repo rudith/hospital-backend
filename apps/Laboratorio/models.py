@@ -1,5 +1,5 @@
 from django.db import models
-from apps.Admision.models import Historia
+
 
 class TipoExamen(models.Model):
     nombre = models.CharField(max_length=100)
@@ -7,16 +7,21 @@ class TipoExamen(models.Model):
     def __str__(self):
         return str(self.nombre)
 
+
 class ExamenLabCab(models.Model):
-    historia= models.ForeignKey(Historia, on_delete=models.CASCADE,blank=True,null=True)
-    nombre_paciente = models.CharField(max_length=100,null=True)
+    nombre = models.CharField(max_length=100, blank=True, null=True)
     tipoExam = models.ForeignKey(TipoExamen, on_delete=models.CASCADE)
+    orden = models.CharField(max_length=100, blank=True, null=True)
+    fecha = models.DateField()
+    observaciones = models.TextField(blank=True)
     def __str__(self):
-        return str(self.codigoExam)
+        return self.pk.__str__() +  self.nombre.__str__()
 
 class  ExamenLabDet(models.Model):
-
-    codigoExam = models.OneToOneField(ExamenLabCab, on_delete=models.CASCADE, primary_key=True)
+    codigoExam = models.ForeignKey(ExamenLabCab,related_name='detalles', on_delete=models.CASCADE)
     descripcion = models.CharField(max_length=100,blank=True,null=True)
-    resultadoObtenido = models.TextField()
-    situacion = models.CharField(max_length=100)
+    resultado_obtenido = models.TextField()
+    unidades =  models.CharField(max_length=100,blank=True,null=True)
+    rango_referencia = models.CharField(max_length=100)
+    def __str__(self):
+        return self.codigoExam.__str__()
