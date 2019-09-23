@@ -10,13 +10,13 @@ from rest_framework.views import APIView
 from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
 
-from .serializers import GrupSangSerializer, DistritoSerializer, ProvinciaSerializer, DepartamentoSerializer, HistoriaSerializer, HistoriaViewSerializer
-from .models import HorarioCab, HorarioDet, Provincia, Distrito, Departamento, GrupSang, Historia
+from .serializers import DistritoSerializer, ProvinciaSerializer, DepartamentoSerializer, HistoriaSerializer, HistoriaViewSerializer#, GrupSangSerializer
+from .models import HorarioCab, HorarioDet, Provincia, Distrito, Departamento, Historia#, GrupSang
 
 
-class vistaGrupoSang(ModelViewSet):
-    queryset = GrupSang.objects.all()
-    serializer_class = GrupSangSerializer
+# class vistaGrupoSang(ModelViewSet):
+#     queryset = GrupSang.objects.all()
+#     serializer_class = GrupSangSerializer
 
 class vistaDistrito(ModelViewSet):
     queryset = Distrito.objects.all()

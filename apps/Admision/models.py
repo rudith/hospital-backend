@@ -43,16 +43,16 @@ class Distrito(models.Model):
     def __str__(self):
         return self.nombre
 
-class GrupSang(models.Model):
-    descripcion = models.CharField(max_length=30,unique=True)   
-    def __str__(self):
-        return self.descripcion
+# class GrupSang(models.Model):
+#     descripcion = models.CharField(max_length=30,unique=True)   
+#     def __str__(self):
+#         return self.descripcion
 
 class Historia(models.Model):
 
     #numeroHistoria = models.IntegerField()
-    numeroHistoria = models.IntegerField(validators=[numeroHistoria])
-    grupoSanguineo = models.ForeignKey(GrupSang, on_delete=models.CASCADE,blank=True,null=True)
+    numeroHistoria = models.IntegerField()#(validators=[numeroHistoria])
+    #grupoSanguineo = models.ForeignKey(GrupSang, on_delete=models.CASCADE,blank=True,null=True)
     distrito = models.ForeignKey(Distrito, on_delete=models.CASCADE,blank=True,null=True)
     provincia = models.ForeignKey(Provincia, on_delete=models.CASCADE,blank=True,null=True)
     departamento = models.ForeignKey(Departamento, on_delete=models.CASCADE, default=1)
@@ -65,15 +65,14 @@ class Historia(models.Model):
     edad = models.IntegerField(null=True)
     fechaNac = models.DateField(blank=True,null=True)
     foto = models.BinaryField(blank=True,null=True)
-    celular = models.CharField(max_length=10,blank=True,null=True)
-    telefono = models.CharField(max_length=9,blank=True,null=True)
+    celular = models.CharField(max_length=9,blank=True,null=True)
+    telefono = models.CharField(max_length=6,blank=True,null=True)
     estadoCivil = models.CharField(max_length=15,blank=True,null=True)
     gradoInstruccion = models.CharField(max_length=15,blank=True,null=True)
     ocupacion = models.CharField(max_length=30,blank=True,null=True)
     fechaReg = models.DateField(auto_now_add=True)
     direccion = models.CharField(max_length=90,blank=True,null=True)
     nacionalidad = models.CharField(max_length=30,blank=True,null=True)
-    descripcion = models.CharField(max_length=200,blank=True,null=True)
     email = models.EmailField(blank=True,null=True)
     updated_at = models.DateTimeField(auto_now=True)
     estReg = models.BooleanField(default=True)

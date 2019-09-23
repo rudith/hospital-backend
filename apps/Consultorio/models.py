@@ -1,6 +1,6 @@
 from django.db import models
 from apps.Administrador.models import Area, Personal, TipoPersonal, Especialidad
-from apps.Admision.models import HorarioCab, HorarioDet, Historia, Provincia, Distrito, Departamento, GrupSang
+from apps.Admision.models import HorarioCab, HorarioDet, Historia, Provincia, Distrito, Departamento#, GrupSang
 from django.contrib.auth.models import User
 
 class Cita(models.Model):
@@ -15,8 +15,7 @@ class Cita(models.Model):
     estadoCita = models.CharField(max_length=10,blank=True,null=True)
     estReg = models.BooleanField(default=True)
     def __str__(self):
-        return self.numeroHistoria.__str__() + " (" +self.estadoCita+")"
-
+        return self.pk.__str__()
 
 class Triaje(models.Model):
 
@@ -24,7 +23,7 @@ class Triaje(models.Model):
     # falta campo personal
     numeroHistoria = models.ForeignKey(Historia,related_name='triajes', on_delete=models.CASCADE,null=True)
     personal = models.ForeignKey(User, on_delete=models.CASCADE)
-    cita = models.ForeignKey(Cita, on_delete=models.CASCADE)
+    cita = models.OneToOneField(Cita, on_delete=models.CASCADE)
     talla = models.FloatField()
     peso = models.FloatField()
     temperatura = models.FloatField()
@@ -35,12 +34,11 @@ class Triaje(models.Model):
     
 
     def __str__(self):
-        return self.pk.__str__() + ": "  + self.cita.__str__()
-
+        return self.pk.__str__() 
 
 class Consulta(models.Model):
     #FK Triaje
-    triaje = models.ForeignKey(Triaje, on_delete=models.CASCADE)
+    triaje = models.OneToOneField(Triaje, on_delete=models.CASCADE)
     numeroHistoria = models.ForeignKey(Historia,related_name='consultas', on_delete=models.CASCADE,null=True)
     medico = models.ForeignKey(User, on_delete=models.CASCADE)
     horaEntrada = models.DateTimeField(blank=True,null=True)       
@@ -59,4 +57,4 @@ class Consulta(models.Model):
     
 
     def __str__(self):  
-        return self.pk.__str__() + ": "  + self.triaje.__str__()
+        return self.pk.__str__() 

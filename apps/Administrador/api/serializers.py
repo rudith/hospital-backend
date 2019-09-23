@@ -34,7 +34,7 @@ class PersonalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Personal
         #fields = "__all__"  
-        fields = ['dni','nombres','apellido_paterno','apellido_materno','celular','telefono','direccion','fechaReg',
+        fields = ['id','dni','nombres','apellido_paterno','apellido_materno','celular','telefono','direccion','fechaReg',
         'updated_at','estReg','area','tipo_personal','especialidad']
 
 
@@ -46,5 +46,5 @@ class PersonalViewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Personal
         #fields = "__all__"  
-        fields = ['dni','nombres','apellido_paterno','apellido_materno','celular','telefono','direccion','fechaReg',
+        fields = ['id','dni','nombres','apellido_paterno','apellido_materno','celular','telefono','direccion','fechaReg',
         'updated_at','estReg','area','tipo_personal','especialidad']

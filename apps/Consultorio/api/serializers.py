@@ -2,6 +2,7 @@ from rest_framework import serializers
 from ..models import Triaje, Cita, Consulta
 from apps.Admision.models import Historia
 from django.contrib.auth.models import User
+from apps.Administrador.api.serializers import EspecialidadSerializer
 
 # class EspecialidadSerializer(serializers.ModelSerializer):
 
@@ -19,7 +20,7 @@ class TriajeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Triaje
         #fields = "__all__"  
-        fields = ['numeroHistoria','talla','peso','temperatura','frecuenciaR','frecuenciaC','presionArt','fechaReg','personal','cita']
+        fields = ['id','numeroHistoria','talla','peso','temperatura','frecuenciaR','frecuenciaC','presionArt','fechaReg','personal','cita']
 
 class TriajeViewSerializer(serializers.ModelSerializer):
     # personal = serializers.StringRelatedField(read_only=True)
@@ -30,15 +31,21 @@ class TriajeViewSerializer(serializers.ModelSerializer):
     class Meta: 
         model = Triaje
         #fields = "__all__"
-        fields = ['numeroHistoria','talla','peso','temperatura','frecuenciaR','frecuenciaC','presionArt','fechaReg','personal','cita']  
+        fields = ['id','numeroHistoria','talla','peso','temperatura','frecuenciaR','frecuenciaC','presionArt','fechaReg','personal','cita']  
 
 class CitaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cita
         #fields = "__all__"  
-        fields = ['numeroRecibo','fechaSeparacion','fechaAtencion','estadoCita','estReg','numeroHistoria','especialidad','medico'] 
+        fields = ['id','numeroRecibo','fechaSeparacion','fechaAtencion','estadoCita','estReg','numeroHistoria','especialidad','medico'] 
  
+# class CitaTemporal(serializers.ModelSerializer):
+#     especialidad = EspecialidadSerializer(many=True, read_only=True)
+#     class Meta:
+#         model = Cita
+#         #fields = "__all__"  
+#         fields = ['id','numeroRecibo','fechaSeparacion','fechaAtencion','estadoCita','estReg','numeroHistoria','especialidad','medico'] 
 
 class CitaViewSerializer(serializers.ModelSerializer):
     especialidad = serializers.StringRelatedField(read_only=True)
@@ -48,7 +55,7 @@ class CitaViewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cita
         #fields = "__all__"
-        fields = ['numeroHistoria','especialidad','medico','numeroRecibo','fechaSeparacion','fechaAtencion','estadoCita','estReg']
+        fields = ['id','numeroHistoria','especialidad','medico','numeroRecibo','fechaSeparacion','fechaAtencion','estadoCita','estReg']
   
 
 class ConsultaSerializer(serializers.ModelSerializer):
@@ -56,7 +63,7 @@ class ConsultaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Consulta
         #fields = "__all__" 
-        fields = ['horaEntrada','horaSalida','motivoConsulta','apetito','orina','deposiciones','examenFisico','diagnostico',
+        fields = ['id','horaEntrada','horaSalida','motivoConsulta','apetito','orina','deposiciones','examenFisico','diagnostico',
         'tratamiento','proximaCita','estadoAtencion','motivoAnulacion','estReg','triaje','numeroHistoria','medico']  
 
 class ConsultaViewSerializer(serializers.ModelSerializer):
@@ -67,7 +74,7 @@ class ConsultaViewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Consulta
         #fields = "__all__"
-        fields = ['horaEntrada','horaSalida','motivoConsulta','apetito','orina','deposiciones','examenFisico','diagnostico',
+        fields = ['id','horaEntrada','horaSalida','motivoConsulta','apetito','orina','deposiciones','examenFisico','diagnostico',
         'tratamiento','proximaCita','estadoAtencion','motivoAnulacion','estReg','triaje','numeroHistoria','medico']
  
 

@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from apps.Admision.serializers import HistoriaSerializer
 from .serializers import (TriajeSerializer, TriajeViewSerializer,CitaSerializer, CitaViewSerializer, CitasDniSerializer, ConsultaSerializer, ConsultaViewSerializer,
                           ConsultasDniSerializer, ConsultasHistoriaSerializer,TriajeHistoriaSerializer,HistorialClinicoSerializer,
-                          CitasMedicoViewSerializer)
+                          CitasMedicoViewSerializer)#,CitaTemporal)
 
 
 from ..models import Triaje, Cita, Consulta
@@ -48,6 +48,9 @@ class vistaCita(ModelViewSet):
     filter_backends = [SearchFilter]
     search_fields = ["numeroRecibo"]
 
+# class vistaCitaTemporal(ModelViewSet):
+#     queryset = Cita.objects.all()
+#     serializer_class = CitaTemporal
 
 class vistaCrearConsulta(ModelViewSet):
     queryset = Consulta.objects.all()

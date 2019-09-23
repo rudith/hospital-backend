@@ -1,12 +1,12 @@
-from .models import HorarioCab, HorarioDet, Provincia, Distrito, Departamento, GrupSang, Historia
+from .models import HorarioCab, HorarioDet, Provincia, Distrito, Departamento, Historia#, GrupSang
 from rest_framework import serializers
 from apps.Consultorio.models import Cita, Especialidad
 
 
-class GrupSangSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = GrupSang
-        fields = "__all__"
+# class GrupSangSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = GrupSang
+#         fields = "__all__"
 
 class DistritoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -36,12 +36,12 @@ class HistoriaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Historia
         #fields = "__all__"
-        fields = ['numeroHistoria','dni','nombres','apellido_paterno','apellido_materno','sexo','edad','fechaNac','foto','celular',
-        'telefono','estadoCivil','gradoInstruccion','ocupacion','fechaReg','direccion','nacionalidad','descripcion',
-        'email','updated_at','estReg','grupoSanguineo','distrito','provincia','departamento']
+        fields = ['id','numeroHistoria','dni','nombres','apellido_paterno','apellido_materno','sexo','edad','fechaNac','foto','celular',
+        'telefono','estadoCivil','gradoInstruccion','ocupacion','fechaReg','direccion','nacionalidad',
+        'email','updated_at','estReg','distrito','provincia','departamento']
 
 class HistoriaViewSerializer(serializers.ModelSerializer):
-    grupoSanguineo = serializers.StringRelatedField(read_only=True)
+    #grupoSanguineo = serializers.StringRelatedField(read_only=True)
     distrito = serializers.StringRelatedField(read_only=True)
     provincia = serializers.StringRelatedField(read_only=True)
     departamento = serializers.StringRelatedField(read_only=True)
@@ -49,6 +49,6 @@ class HistoriaViewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Historia
         #fields = "__all__"
-        fields = ['numeroHistoria','dni','nombres','apellido_paterno','apellido_materno','sexo','edad','fechaNac','foto','celular',
-        'telefono','estadoCivil','gradoInstruccion','ocupacion','fechaReg','direccion','nacionalidad','descripcion',
-        'email','updated_at','estReg','grupoSanguineo','distrito','provincia','departamento']
+        fields = ['id','numeroHistoria','dni','nombres','apellido_paterno','apellido_materno','sexo','edad','fechaNac','foto','celular',
+        'telefono','estadoCivil','gradoInstruccion','ocupacion','fechaReg','direccion','nacionalidad',
+        'email','updated_at','estReg','distrito','provincia','departamento']

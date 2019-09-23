@@ -3,7 +3,7 @@ from django.conf.urls import url
 from rest_framework.routers import DefaultRouter
 #from .views import (ProfileViewSet, ProfileStatusViewSet)
 from .views import (vistaTriaje, vistaCrearTriaje, vistaCita, vistaCrearCita, vistaConsulta, vistaCrearConsulta, cancelarCita, BuscarCitaDni, BuscarConsultaHistoria
-                    ,BuscarConsultaDni,BuscarTriajeHistoria, BuscarCitaMedico, BuscarTriajeCita, BuscarHistorialClinico)# vistaHistoriaConsulta)
+                    ,BuscarConsultaDni,BuscarTriajeHistoria, BuscarCitaMedico, BuscarTriajeCita, BuscarHistorialClinico)#, vistaCitaTemporal)# vistaHistoriaConsulta)
 
 # profile_list = ProfileViewSet.as_view({"get": "list"})
 # profile_detail = ProfileViewSet.as_view({"get": "retrieve"})
@@ -16,6 +16,8 @@ router.register(r"crear-consulta",vistaCrearConsulta)
 router.register(r"ver-triajes",vistaTriaje)
 router.register(r"ver-citas",vistaCita)
 router.register(r"ver-consultas",vistaConsulta)
+# router.register(r"citatemporal",vistaCitaTemporal)
+
 #router.register(r"historias",vistaHistoriaConsulta)
 
 #router.register(r"status", ProfileStatusViewSet, basename="status")

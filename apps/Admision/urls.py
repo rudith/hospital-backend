@@ -1,12 +1,12 @@
 from django.conf.urls import url
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
-from .views import (vistaGrupoSang, vistaDistrito, vistaProvincia, vistaDepartamento, vistaHistoria, vistaCrearHistoria, BuscarHistoria, BuscarDNIH)
+from .views import (vistaDistrito, vistaProvincia, vistaDepartamento, vistaHistoria, vistaCrearHistoria, BuscarHistoria, BuscarDNIH)#, vistaGrupoSang)
 from ..Administrador.api.views import (vistaArea, vistaTipoPersonal, vistaPersonal, vistaEspecialidad, BuscarDni)
 from rest_framework.urlpatterns import format_suffix_patterns
 
 router = DefaultRouter()
-router.register(r"grupo-sangre", vistaGrupoSang)
+# router.register(r"grupo-sangre", vistaGrupoSang)
 router.register(r"distritos",vistaDistrito)
 router.register(r"provincias",vistaProvincia)
 router.register(r"departamentos",vistaDepartamento)
