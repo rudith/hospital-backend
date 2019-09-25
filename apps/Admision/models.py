@@ -1,7 +1,7 @@
 from django.db import models
 from apps.Administrador.models import Area, Personal, TipoPersonal
 from .validators import dni
-from .validators import numeroHistoria
+# from .validators import numeroHistoria
 
 class HorarioCab(models.Model):
     codigoHor = models.AutoField(primary_key=True)

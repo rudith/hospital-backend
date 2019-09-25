@@ -41,8 +41,8 @@ class Consulta(models.Model):
     triaje = models.OneToOneField(Triaje, on_delete=models.CASCADE)
     numeroHistoria = models.ForeignKey(Historia,related_name='consultas', on_delete=models.CASCADE,null=True)
     medico = models.ForeignKey(User, on_delete=models.CASCADE)
-    horaEntrada = models.DateTimeField(blank=True,null=True)       
-    horaSalida = models.DateTimeField(blank=True,null=True)  
+    horaEntrada = models.DateTimeField(blank=True,null=True)  #esta demas    
+    horaSalida = models.DateTimeField(blank=True,null=True)  #esta demas   
     motivoConsulta = models.TextField(blank=True,null=True)
     apetito = models.CharField(max_length=100,blank=True,null=True)
     orina = models.CharField(max_length=100,blank=True,null=True)
@@ -50,10 +50,10 @@ class Consulta(models.Model):
     examenFisico = models.CharField(max_length=100,blank=True,null=True)
     diagnostico = models.TextField(max_length=300,blank=True,null=True)
     tratamiento = models.TextField(max_length=300,blank=True,null=True)
-    proximaCita = models.DateField(blank=True,null=True)
-    estadoAtencion = models.CharField(max_length=1,blank=True,null=True)
-    motivoAnulacion = models.TextField(blank=True,null=True)
-    estReg = models.BooleanField(default=True)
+    proximaCita = models.DateField(blank=True,null=True) 
+    estadoAtencion = models.CharField(max_length=1,blank=True,null=True) #esta demas   
+    motivoAnulacion = models.TextField(blank=True,null=True) #esta demas 
+    estReg = models.BooleanField(default=True) #esta demas   
     
 
     def __str__(self):  

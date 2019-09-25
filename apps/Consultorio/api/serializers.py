@@ -90,7 +90,7 @@ class HistorialClinicoSerializer(serializers.ModelSerializer):
     consultas = ConsultaViewSerializer(many=True, read_only=True)
     class Meta:
         model = Historia
-        fields = ['nombres','dni','numeroHistoria','triajes','consultas']
+        fields = ['nombres','apellido_paterno','apellido_materno','sexo','edad','dni','numeroHistoria','triajes','consultas']
 
 class ConsultasDniSerializer(serializers.ModelSerializer):
     consultas = ConsultaSerializer(many=True, read_only=True)
@@ -119,4 +119,4 @@ class TriajeHistoriaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Historia
-        fields = ['nombres','dni','numeroHistoria','triajes']
+        fields = ['nombres','apellido_paterno','apellido_materno','sexo','edad','dni','numeroHistoria','triajes']

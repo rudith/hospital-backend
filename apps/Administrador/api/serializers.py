@@ -19,7 +19,7 @@ class EspecialidadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Especialidad
         #fields = "__all__"
-        fields = ['nombre','descripcion']
+        fields = ['id','nombre','descripcion']
 
 
 class TipoPersonalSerializer(serializers.ModelSerializer):
