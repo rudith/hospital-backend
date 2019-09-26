@@ -4,7 +4,7 @@ from apps.Admision.models import HorarioCab, HorarioDet, Historia, Provincia, Di
 from django.contrib.auth.models import User
 
 class Cita(models.Model):
-
+    
     especialidad = models.ForeignKey(Especialidad, on_delete=models.CASCADE)
     numeroHistoria = models.ForeignKey(Historia,related_name='citas', on_delete=models.CASCADE,null=True)
     medico = models.ForeignKey(User,related_name='citasM', on_delete=models.CASCADE)
@@ -13,6 +13,8 @@ class Cita(models.Model):
     fechaAtencion = models.DateField()
     #######Especificar tipos estado turno condicion
     estadoCita = models.CharField(max_length=10,blank=True,null=True)
+    responsable = models.CharField(max_length=50)
+    exonerado = models.BooleanField(default=False)
     estReg = models.BooleanField(default=True)
     def __str__(self):
         return self.pk.__str__()
@@ -40,9 +42,7 @@ class Consulta(models.Model):
     #FK Triaje
     triaje = models.OneToOneField(Triaje, on_delete=models.CASCADE)
     numeroHistoria = models.ForeignKey(Historia,related_name='consultas', on_delete=models.CASCADE,null=True)
-    medico = models.ForeignKey(User, on_delete=models.CASCADE)
-    horaEntrada = models.DateTimeField(blank=True,null=True)  #esta demas    
-    horaSalida = models.DateTimeField(blank=True,null=True)  #esta demas   
+    medico = models.ForeignKey(User, on_delete=models.CASCADE)  
     motivoConsulta = models.TextField(blank=True,null=True)
     apetito = models.CharField(max_length=100,blank=True,null=True)
     orina = models.CharField(max_length=100,blank=True,null=True)
@@ -50,11 +50,7 @@ class Consulta(models.Model):
     examenFisico = models.CharField(max_length=100,blank=True,null=True)
     diagnostico = models.TextField(max_length=300,blank=True,null=True)
     tratamiento = models.TextField(max_length=300,blank=True,null=True)
-    proximaCita = models.DateField(blank=True,null=True) 
-    estadoAtencion = models.CharField(max_length=1,blank=True,null=True) #esta demas   
-    motivoAnulacion = models.TextField(blank=True,null=True) #esta demas 
-    estReg = models.BooleanField(default=True) #esta demas   
-    
+    proximaCita = models.DateField(blank=True,null=True)     
 
     def __str__(self):  
         return self.pk.__str__() 

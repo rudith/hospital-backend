@@ -38,7 +38,7 @@ class CitaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cita
         #fields = "__all__"  
-        fields = ['id','numeroRecibo','fechaSeparacion','fechaAtencion','estadoCita','estReg','numeroHistoria','especialidad','medico'] 
+        fields = ['id','numeroRecibo','fechaSeparacion','fechaAtencion','estadoCita','exonerado','responsable','estReg','numeroHistoria','especialidad','medico'] 
  
 # class CitaTemporal(serializers.ModelSerializer):
 #     especialidad = EspecialidadSerializer(many=True, read_only=True)
@@ -55,7 +55,7 @@ class CitaViewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cita
         #fields = "__all__"
-        fields = ['id','numeroHistoria','especialidad','medico','numeroRecibo','fechaSeparacion','fechaAtencion','estadoCita','estReg']
+        fields = ['id','numeroHistoria','especialidad','medico','numeroRecibo','fechaSeparacion','fechaAtencion','estadoCita','exonerado','responsable','estReg']
   
 
 class ConsultaSerializer(serializers.ModelSerializer):
@@ -63,8 +63,8 @@ class ConsultaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Consulta
         #fields = "__all__" 
-        fields = ['id','horaEntrada','horaSalida','motivoConsulta','apetito','orina','deposiciones','examenFisico','diagnostico',
-        'tratamiento','proximaCita','estadoAtencion','motivoAnulacion','estReg','triaje','numeroHistoria','medico']  
+        fields = ['id','motivoConsulta','apetito','orina','deposiciones','examenFisico','diagnostico',
+        'tratamiento','proximaCita','triaje','numeroHistoria','medico']  
 
 class ConsultaViewSerializer(serializers.ModelSerializer):
 
@@ -74,8 +74,8 @@ class ConsultaViewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Consulta
         #fields = "__all__"
-        fields = ['id','horaEntrada','horaSalida','motivoConsulta','apetito','orina','deposiciones','examenFisico','diagnostico',
-        'tratamiento','proximaCita','estadoAtencion','motivoAnulacion','estReg','triaje','numeroHistoria','medico']
+        fields = ['id','motivoConsulta','apetito','orina','deposiciones','examenFisico','diagnostico',
+        'tratamiento','proximaCita','triaje','numeroHistoria','medico']  
  
 
 class CitasDniSerializer(serializers.ModelSerializer):
@@ -119,4 +119,4 @@ class TriajeHistoriaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Historia
-        fields = ['nombres','apellido_paterno','apellido_materno','sexo','edad','dni','numeroHistoria','triajes']
+        fields = ['nombres','dni','numeroHistoria','triajes']
