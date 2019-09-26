@@ -18,6 +18,8 @@ urlpatterns = [
     #url(r'^filtro/(?P<nombre>\d+)/$', filtro.as_view(), name="filtro"),
     url(r'^filtro/$', filtro.as_view(), name="filtro"),
     url(r'^filtro/fecha/$', filtrofecha.as_view(), name="filtro"),
+
+
     #url(r'^buscarnombre/(?P<nombre_paciente>\d+)/$', BuscarExamen.as_view(), name="actualizarPersonal"),
     #url(r'^cancelar/(?P<dni>\d+)/$', cancelarCita.as_view(), name="cancelarCita"),
 ]

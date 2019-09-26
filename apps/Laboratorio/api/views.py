@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from rest_framework import generics, mixins, viewsets
 from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
@@ -8,7 +10,7 @@ from apps.Laboratorio.models import ExamenLabCab, TipoExamen, ExamenLabDet
 from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
 from rest_framework import status
-
+import django_filters
 
 class VistaExamenLabCab(ModelViewSet):
     queryset = ExamenLabCab.objects.all()
@@ -47,13 +49,14 @@ class filtrofecha(generics.ListAPIView):
     serializer_class = BuscarExamenNombre
 
     def get_queryset(self):
-        queryset = ExamenLabCab.objects.all()
-        fecha = self.request.query_params.get('fecha')
-        return ExamenLabCab.objects.filter(fecha=fecha)
+        #queryset = ExamenLabCab.objects.all()
+        #?fecha_inicio=2019-09-25&fecha_final=2019-09-03
+        fechaini = self.request.query_params.get('fecha_inicio')
+        fechafin = self.request.query_params.get('fecha_final')
+        return ExamenLabCab.objects.filter(fecha__range=[fechaini,fechafin])
 
 
-
-''' FILTRRO DE TODOS LOS EXAMENES DE LABORATORIO POR NOMBRE "NUMERO"
+''' FILTRRO DE TODOS LOS     EXAMENES DE LABORATORIO POR NOMBRE "NUMERO"
 class filtro(generics.ListAPIView):
     lookup_url_kwarg = 'nombre'
     serializer_class = BuscarExamenNombre
