@@ -14,6 +14,7 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from typing import Dict
+from datetime import timedelta
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -43,7 +44,10 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     
     'rest_framework',
-    'rest_framework.authtoken',
+    #'rest_framework.authtoken',
+
+    'django_expiring_token',
+
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -59,6 +63,9 @@ INSTALLED_APPS = [
     # CORS 
     'corsheaders'
 ]
+
+#token expiracion
+EXPIRING_TOKEN_DURATION=timedelta(minutes=2)
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -167,6 +174,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
+       # 'django_expiring_token.authentication.ExpiringTokenAuthentication',
     )
 }
 
@@ -174,3 +182,4 @@ SITE_ID = 1
 
 ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_EMAIL_REQUIRED = (True)
+
