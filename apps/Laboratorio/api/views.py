@@ -1,5 +1,15 @@
+from io import BytesIO
+
+from reportlab.lib import colors
+from reportlab.lib.units import cm
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from django.http import HttpResponse
+
 from datetime import datetime
 
+from django.http import HttpResponse
+from reportlab.platypus import Table, Spacer, TableStyle
 from rest_framework import generics, mixins, viewsets
 from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
@@ -11,8 +21,10 @@ from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
 from rest_framework import status
 import django_filters
+lista=[0]
 
 class VistaExamenLabCab(ModelViewSet):
+
     queryset = ExamenLabCab.objects.all()
     serializer_class = ExamenLabCabSerializer
     filter_backends = [SearchFilter]
@@ -28,9 +40,11 @@ class BuscarExamen(generics.RetrieveUpdateDestroyAPIView):
 
 
 class VistaTipoExamen(ModelViewSet):
-    queryset = TipoExamen.objects.all()
-    serializer_class = TipoExamenSerializer
-
+    if (lista[0] < 2):
+        print(lista[0])
+        queryset = TipoExamen.objects.all()
+        serializer_class = TipoExamenSerializer
+        lista[0] = lista[0] + 1
 
 class VistaExamenLabDet(ModelViewSet):
     queryset = ExamenLabDet.objects.all()
@@ -55,6 +69,55 @@ class filtrofecha(generics.ListAPIView):
         fechafin = self.request.query_params.get('fecha_final')
         return ExamenLabCab.objects.filter(fecha__range=[fechaini,fechafin])
 
+def reporte(request):
+
+    # Create the HttpResponse object with the appropriate PDF headers.
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename=Reporte.pdf'
+    buffer = BytesIO()
+    c = canvas.Canvas(buffer,pagesize=A4)
+
+    #Header
+    c.setLineWidth(.3)
+    c.setFont('Helvetica',22)
+    c.drawString(230,750,'LABORATORIO')
+    c.setFont('Helvetica', 22)
+    c.drawString(235, 730, 'RESULTADOS')
+    c.setFont('Helvetica', 12)
+    c.drawString(480,750,"29/09/2019")
+    c.setFont('Helvetica', 13)
+    c.drawString(20, 700, 'Nombre:')
+    c.drawString(70, 700, 'Julio Cesar Vicente Gallegos')
+    c.drawString(20, 680, 'DNI:')
+    c.drawString(45, 680, '72547204')
+    width,height =A4
+    high=600
+    #_______________________tabla___________________________________
+
+    datos = (
+        ('Descripcion ', 'Resultados', 'Unidad'),
+        ('Descripcion1 ', 'Resultados1', 'Unidad1'),
+        ('Descripcion2 ', 'Resultados2', 'Unidad2'),
+        ('Descripcion3 ', 'Resultados3', 'Unidad3'),
+    )
+    tabla = Table(data=datos,colWidths=[6*cm,6*cm,6*cm,1.9*cm,1.9*cm,1.9*cm])
+    tabla.setStyle(TableStyle([
+        ('INNERGRID',(0,0),(-1,-1),0.25,colors.black),
+        ('BOX',(0,0),(-1,-1),0.25,colors.black),]))
+    tabla.wrapOn(c,width,height)
+    tabla.drawOn(c,30,high)
+
+
+    # _______________________tabla___________________________________
+
+
+    # Close the PDF object cleanly.
+    c.showPage()
+    c.save()
+    pdf = buffer.getvalue()
+    buffer.close()
+    response.write(pdf)
+    return response
 
 ''' FILTRRO DE TODOS LOS     EXAMENES DE LABORATORIO POR NOMBRE "NUMERO"
 class filtro(generics.ListAPIView):
