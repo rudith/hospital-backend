@@ -14,6 +14,8 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from typing import Dict
+
+#libreria date time para los django_expiring_token
 from datetime import timedelta
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -46,6 +48,7 @@ INSTALLED_APPS = [
     'rest_framework',
     #'rest_framework.authtoken',
 
+# app para expiracion de un token
     'django_expiring_token',
 
     'allauth',
@@ -64,8 +67,8 @@ INSTALLED_APPS = [
     'corsheaders'
 ]
 
-#token expiracion
-EXPIRING_TOKEN_DURATION=timedelta(minutes=2)
+#token expiracion (se define un tiempo de duracion del token)
+EXPIRING_TOKEN_DURATION=timedelta(minutes=3)
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -174,7 +177,9 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
-       # 'django_expiring_token.authentication.ExpiringTokenAuthentication',
+        
+        #token ExpiringTokenAuthentication
+        'django_expiring_token.authentication.ExpiringTokenAuthentication',
     )
 }
 
