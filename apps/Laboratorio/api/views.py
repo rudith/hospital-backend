@@ -20,7 +20,7 @@ from apps.Laboratorio.models import ExamenLabCab, TipoExamen, ExamenLabDet
 from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
 from rest_framework import status
-import django_filters
+
 lista=[0]
 
 class VistaExamenLabCab(ModelViewSet):
