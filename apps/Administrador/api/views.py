@@ -29,9 +29,9 @@ class vistaCrearPersonal(ModelViewSet):
 class vistaPersonal(ModelViewSet):
     queryset = Personal.objects.all()
     serializer_class = PersonalViewSerializer
-    # permission_classes = [IsAuthenticated]
-    filter_backends = [SearchFilter]
-    search_fields = ["dni"]
+    #permission_classes = [IsAuthenticated]
+    # filter_backends = [SearchFilter]
+    # search_fields = ["dni"]
 
 class vistaUsuario(ModelViewSet):
     queryset = User.objects.all()

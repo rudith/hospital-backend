@@ -13,7 +13,7 @@ class Cita(models.Model):
     fechaAtencion = models.DateField()
     #######Especificar tipos estado turno condicion
     estadoCita = models.CharField(max_length=10,blank=True,null=True)
-    responsable = models.CharField(max_length=50)
+    responsable = models.CharField(max_length=50,blank=True,null=True)
     exonerado = models.BooleanField(default=False)
     estReg = models.BooleanField(default=True)
     def __str__(self):

@@ -51,7 +51,7 @@ class Distrito(models.Model):
 class Historia(models.Model):
 
     #numeroHistoria = models.IntegerField()
-    numeroHistoria = models.IntegerField()#(validators=[numeroHistoria])
+    numeroHistoria = models.IntegerField(unique=True)#(validators=[numeroHistoria])
     #grupoSanguineo = models.ForeignKey(GrupSang, on_delete=models.CASCADE,blank=True,null=True)
     distrito = models.ForeignKey(Distrito, on_delete=models.CASCADE,blank=True,null=True)
     provincia = models.ForeignKey(Provincia, on_delete=models.CASCADE,blank=True,null=True)
