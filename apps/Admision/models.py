@@ -1,6 +1,8 @@
 from django.db import models
 from apps.Administrador.models import Area, Personal, TipoPersonal
 from .validators import dni
+#libreria datetime
+from datetime import datetime
 # from .validators import numeroHistoria
 
 class HorarioCab(models.Model):
@@ -79,3 +81,7 @@ class Historia(models.Model):
 
     def __str__(self):
         return self.numeroHistoria.__str__() 
+
+    # captura la fecha y devuelve la edad 
+    def edad(self):
+       return int((datetime.now().date() - self.fechaNac).days / 365.25)

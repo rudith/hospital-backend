@@ -4,6 +4,7 @@ defusedxml==0.6.0
 Django==2.2.4
 django-allauth==0.39.1
 django-cors-headers==3.1.0
+django-expiring-token==1.0.2
 django-rest-auth==0.9.5
 djangorestframework==3.10.2
 get==2019.4.13
