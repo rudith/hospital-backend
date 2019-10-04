@@ -43,6 +43,18 @@ class TriajeViewSerializer(serializers.ModelSerializer):
         #fields = "__all__"
         fields = ['id','numeroHistoria','numeroHistoriaId','talla','peso','temperatura','frecuenciaR','frecuenciaC','presionArt','fechaReg','personal','cita']  
 
+class TriajeHistorialViewSerializer(serializers.ModelSerializer):
+    # personal = serializers.StringRelatedField(read_only=True)
+    # paciente = serializers.StringRelatedField(read_only=True)
+    personal = serializers.StringRelatedField(read_only=True)
+    #numeroHistoria = serializers.StringRelatedField(read_only=True)
+    numeroHistoria = serializers.StringRelatedField(read_only=True)
+    #cita = serializers.StringRelatedField(read_only=True)
+    class Meta: 
+        model = Triaje
+        #fields = "__all__"
+        fields = ['id','numeroHistoria','talla','peso','temperatura','frecuenciaR','frecuenciaC','presionArt','fechaReg','personal','cita'] 
+
 class CitaSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -71,6 +83,32 @@ class CitaViewSerializer(serializers.ModelSerializer):
         model = Cita
         #fields = "__all__"
         fields = ['id','numeroHistoria','numeroHistoriaId','especialidad','especialidadId','medico','medicoId','numeroRecibo','fechaSeparacion','fechaAtencion','estadoCita','exonerado','responsable','estReg']
+
+class CitaMViewSerializer(serializers.ModelSerializer):
+    # especialidad = serializers.StringRelatedField(read_only=True)
+    # numeroHistoria = serializers.StringRelatedField(read_only=True)
+    # medico = serializers.StringRelatedField(read_only=True)
+    numeroHistoria = HistoriaGetSerializer(read_only=True)
+    numeroHistoriaId = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Historia.objects.all(), source='numeroHistoria')
+    especialidad = EspecialidadSerializer(read_only=True)
+    especialidadId = serializers.PrimaryKeyRelatedField(write_only=True, queryset= Especialidad.objects.all(), source='especialidad')
+    class Meta:
+        model = Cita
+        #fields = "__all__"
+        fields = ['id','numeroHistoria','numeroHistoriaId','especialidad','especialidadId','numeroRecibo','fechaSeparacion','fechaAtencion','estadoCita','exonerado','responsable','estReg']
+class CitaEspeViewSerializer(serializers.ModelSerializer):
+    # especialidad = serializers.StringRelatedField(read_only=True)
+    # numeroHistoria = serializers.StringRelatedField(read_only=True)
+    # medico = serializers.StringRelatedField(read_only=True)
+    numeroHistoria = HistoriaGetSerializer(read_only=True)
+    numeroHistoriaId = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Historia.objects.all(), source='numeroHistoria')
+    medico = UserSerializer(read_only=True)
+    medicoId = serializers.PrimaryKeyRelatedField(write_only=True, queryset=User.objects.all(), source='medico')
+    
+    class Meta:
+        model = Cita
+        #fields = "__all__"
+        fields = ['id','numeroHistoria','numeroHistoriaId','medico','medicoId','numeroRecibo','fechaSeparacion','fechaAtencion','estadoCita','exonerado','responsable','estReg']
   
 
 class ConsultaSerializer(serializers.ModelSerializer):
@@ -100,11 +138,11 @@ class CitasDniSerializer(serializers.ModelSerializer):
         fields = ['nombres','dni','citas']
 
 class HistorialClinicoSerializer(serializers.ModelSerializer):
-    triajes = TriajeViewSerializer(many=True, read_only=True)
+    triajes = TriajeHistorialViewSerializer(many=True, read_only=True)
     consultas = ConsultaViewSerializer(many=True, read_only=True)
     class Meta:
         model = Historia
-        fields = ['nombres','apellido_paterno','apellido_materno','sexo','edad','dni','numeroHistoria','triajes','consultas']
+        fields = ['id','nombres','apellido_paterno','apellido_materno','sexo','edad','dni','numeroHistoria','triajes','consultas']
 
 class ConsultasDniSerializer(serializers.ModelSerializer):
     consultas = ConsultaSerializer(many=True, read_only=True)
@@ -114,12 +152,18 @@ class ConsultasDniSerializer(serializers.ModelSerializer):
         fields = ['nombres','dni','numeroHistoria','consultas']
 
 class CitasMedicoViewSerializer(serializers.ModelSerializer):
-    citasM = CitaViewSerializer(many=True, read_only=True)
+    citasM = CitaMViewSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
         fields = ['id','username', 'citasM']
 
+class CitasEspecialidadViewSerializer(serializers.ModelSerializer):
+    citasE = CitaEspeViewSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Especialidad
+        fields = ['id','nombre','descripcion','citasE']
 
 class ConsultasHistoriaSerializer(serializers.ModelSerializer):
     consultas = ConsultaSerializer(many=True, read_only=True)
