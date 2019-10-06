@@ -21,7 +21,6 @@ from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
 from rest_framework import status
 
-lista=[0]
 
 class VistaExamenLabCab(ModelViewSet):
 
@@ -40,11 +39,8 @@ class BuscarExamen(generics.RetrieveUpdateDestroyAPIView):
 
 
 class VistaTipoExamen(ModelViewSet):
-    if (lista[0] < 2):
-        print(lista[0])
-        queryset = TipoExamen.objects.all()
-        serializer_class = TipoExamenSerializer
-        lista[0] = lista[0] + 1
+    queryset = TipoExamen.objects.all()
+    serializer_class = TipoExamenSerializer
 
 class VistaExamenLabDet(ModelViewSet):
     queryset = ExamenLabDet.objects.all()
