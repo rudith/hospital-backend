@@ -1,6 +1,7 @@
 from django.db import models
 from apps.Administrador.models import Area, Personal, TipoPersonal
 from .validators import dni
+from .validators import fechaNac
 #libreria datetime
 from datetime import datetime
 # from .validators import numeroHistoria
@@ -66,7 +67,7 @@ class Historia(models.Model):
     sexo = models.CharField(max_length=10)
     edad = models.IntegerField(null=True)
     fechaNac = models.DateField(blank=True,null=True)
-    foto = models.BinaryField(blank=True,null=True)
+    foto = models.BinaryField(blank=True,null=True,validators=[fechaNac])
     celular = models.CharField(max_length=9,blank=True,null=True)
     telefono = models.CharField(max_length=6,blank=True,null=True)
     estadoCivil = models.CharField(max_length=15,blank=True,null=True)

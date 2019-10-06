@@ -2,6 +2,7 @@ from django import forms
 from .models import Historia
 from .validators import dni 
 from .validators import numeroHistoria
+from .validators import fechaNac
 
 
 class MyForm(models.ModelForm):
@@ -27,3 +28,11 @@ class MyForm1(models.ModelForm):
 #        if not nombre.isalpha():
 #            raise forms.ValidationError('El nombre no puede contener números')
 #        return nombre
+class MyForm2(models.ModelForm):
+
+    def __init__(self):
+        super().__init__(*args, **kwargs)
+        self.fields['fechaNac'].validators.append(fechaNac)
+
+    class Meta:
+        model = Historia
