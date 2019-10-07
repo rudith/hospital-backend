@@ -20,5 +20,5 @@ def fechaNac(value):
     a= int((datetime.now().date() - value).days / 365.25)
    #year = int((datetime.now().date() - fechaNac ).days / 365.25)
     
-    if not  0 < a <130  :
+    if not  0 <= a <130  :
      raise ValidationError('datos de fecha no validos')
