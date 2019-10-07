@@ -1,7 +1,7 @@
 from django import forms
 from .models import cita
 from .validators import dni 
-from .validators import dniint
+from .validators import fechaSeparacion, fechaAtencion
 
 
 class MyForm(models.ModelForm):
@@ -9,6 +9,15 @@ class MyForm(models.ModelForm):
     def __init__(self):
         super().__init__(*args, **kwargs)
         self.fields['fechaSeparacion'].validators.append(fechaSeparacion)
+
+    class Meta:
+        model = cita
+
+class MyForm1(models.ModelForm):
+
+    def __init__(self):
+        super().__init__(*args, **kwargs)
+        self.fields['fechaAtencion'].validators.append(fechaAtencion)
 
     class Meta:
         model = cita

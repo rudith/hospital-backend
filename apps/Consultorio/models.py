@@ -2,6 +2,8 @@ from django.db import models
 from apps.Administrador.models import Area, Personal, TipoPersonal, Especialidad
 from apps.Admision.models import HorarioCab, HorarioDet, Historia, Provincia, Distrito, Departamento#, GrupSang
 from django.contrib.auth.models import User
+from .validators import  fechaSeparacion,fechaAtencion
+
 
 class Cita(models.Model):
     
@@ -10,7 +12,7 @@ class Cita(models.Model):
     medico = models.ForeignKey(User,related_name='citasM', on_delete=models.CASCADE)
     numeroRecibo = models.CharField(unique=True,max_length=15,blank=True,null=True)
     fechaSeparacion = models.DateField(blank=True,null=True,validators=[fechaSeparacion])
-    fechaAtencion = models.DateField(validators=[fechaSeparacion])
+    fechaAtencion = models.DateField(validators=[fechaAtencion])
     #######Especificar tipos estado turno condicion
     estadoCita = models.CharField(max_length=10,blank=True,null=True)
     responsable = models.CharField(max_length=50,blank=True,null=True)

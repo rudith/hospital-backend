@@ -4,15 +4,12 @@ from datetime import date
 
 
 def dni(value):
-    if not  len(value) == 8:
+    if not  len(value) == 8 :
         raise ValidationError('numero de caracteres incorrectos')
 
-#vlaidar dni(solo numeros)
 #def dniint(value): 
 #    if  type(value) != int:
 #        raise ValidationError('tipo de dato incorrecto')
-
-
 # def numeroHistoria(value):
 #     if not  len(value) >= 0:
 #         raise ValidationError('numero de caracteres incorrectos')
