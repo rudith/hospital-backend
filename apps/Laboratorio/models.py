@@ -16,7 +16,7 @@ class ExamenLabCab(models.Model):
     fecha = models.DateField()
     observaciones = models.TextField(blank=True)
     def __str__(self):
-        return self.pk.__str__() +  self.nombre.__str__()
+        return self.nombre.__str__()+","+ self.dni.__str__()+","+self.fecha.__str__()+","+self.tipoExam.__str__()
 
 class  ExamenLabDet(models.Model):
     codigoExam = models.ForeignKey(ExamenLabCab,related_name='detalles', on_delete=models.CASCADE)
