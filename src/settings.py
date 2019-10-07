@@ -172,6 +172,7 @@ STATIC_URL = '/static/'
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = "uploads"
+#MEDIA_ROOT = os.path.join(BASE_DIR,"media")
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
