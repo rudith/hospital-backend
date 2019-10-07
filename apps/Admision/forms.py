@@ -3,6 +3,8 @@ from .models import Historia
 from .validators import dni 
 from .validators import numeroHistoria
 from .validators import fechaNac
+from .validators import dniint
+
 
 
 class MyForm(models.ModelForm):
@@ -33,6 +35,15 @@ class MyForm2(models.ModelForm):
     def __init__(self):
         super().__init__(*args, **kwargs)
         self.fields['fechaNac'].validators.append(fechaNac)
+
+    class Meta:
+        model = Historia
+
+class MyForm3(models.ModelForm):
+
+    def __init__(self):
+        super().__init__(*args, **kwargs)
+        self.fields['dni'].validators.append(dniint)
 
     class Meta:
         model = Historia
