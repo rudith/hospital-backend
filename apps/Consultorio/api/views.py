@@ -118,32 +118,22 @@ class cancelarCita(generics.RetrieveUpdateDestroyAPIView):
     #queryset                = Cita.objects.all()
     def get_queryset(self):
         qs = Cita.objects.all()
-        print(qs)
-        #query = "12348765" #
         query = self.kwargs['id']
-        print(query)
-        # busca por codigo
         if query is not None:
             qs = qs.filter(id__icontains=query)
         qs.update(estadoCita='Cancelado')
-        print(qs)
         return qs
 
 class atenderCita(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
     serializer_class = CitaSerializer
-    #queryset                = Cita.objects.all()
     def get_queryset(self):
         qs = Cita.objects.all()
-        print(qs)
-        #query = "12348765" #
         query = self.kwargs['id']
-        print(query)
         # busca por codigo
         if query is not None:
             qs = qs.filter(id__icontains=query)
         qs.update(estadoCita='Atendido')
-        print(qs)
         return qs
 
 
@@ -153,15 +143,10 @@ class triajeCita(generics.RetrieveUpdateDestroyAPIView):
     #queryset                = Cita.objects.all()
     def get_queryset(self):
         qs = Cita.objects.all()
-        print(qs)
-        #query = "12348765" #
         query = self.kwargs['id']
-        print(query)
-        # busca por codigo
         if query is not None:
             qs = qs.filter(id__icontains=query)
         qs.update(estadoCita='Triado')
-        print(qs)
         return qs
 
 # class buscarCitaDNI(generics.RetrieveUpdateDestroyAPIView):
