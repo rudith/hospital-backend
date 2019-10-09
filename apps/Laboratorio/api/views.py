@@ -16,7 +16,7 @@ from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
-from .serializers import ExamenLabCabSerializer, TipoExamenSerializer, ExamenLabDetSerializer, BuscarExamenNombre
+from .serializers import ExamenLabCabSerializer, TipoExamenSerializer, ExamenLabDetSerializer, BuscarExamenNombreSerializer
 from apps.Laboratorio.models import ExamenLabCab, TipoExamen, ExamenLabDet
 from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
@@ -31,8 +31,8 @@ class VistaExamenLabCab(ModelViewSet):
     serializer_class = ExamenLabCabSerializer
     
 class BuscarExamen(generics.RetrieveUpdateDestroyAPIView):
-    lookup_field = 'nombre_paciente'
-    serializer_class = ExamenLabCabSerializer
+    lookup_field = 'id'
+    serializer_class = BuscarExamenNombreSerializer
 
     def get_queryset(self):
         return ExamenLabCab.objects.all()
@@ -49,7 +49,7 @@ class VistaExamenLabDet(ModelViewSet):
     serializer_class = ExamenLabDetSerializer
 
 class filtro(generics.ListAPIView):
-    serializer_class = BuscarExamenNombre
+    serializer_class = BuscarExamenNombreSerializer
 
     def get_queryset(self):
         queryset = ExamenLabCab.objects.all()
@@ -57,7 +57,7 @@ class filtro(generics.ListAPIView):
         return ExamenLabCab.objects.filter(nombre=nombre)
 
 class filtroDNI(generics.ListAPIView):
-    serializer_class = BuscarExamenNombre
+    serializer_class = BuscarExamenNombreSerializer
 
     def get_queryset(self):
         queryset = ExamenLabCab.objects.all()
@@ -66,7 +66,7 @@ class filtroDNI(generics.ListAPIView):
 
 
 class filtrofecha(generics.ListAPIView):
-    serializer_class = BuscarExamenNombre
+    serializer_class = BuscarExamenNombreSerializer
 
     def get_queryset(self):
         #queryset = ExamenLabCab.objects.all()
@@ -74,6 +74,68 @@ class filtrofecha(generics.ListAPIView):
         fechaini = self.request.query_params.get('fecha_inicio')
         fechafin = self.request.query_params.get('fecha_final')
         return ExamenLabCab.objects.filter(fecha__range=[fechaini,fechafin])
+
+def reporteMensualExamenes(request):
+    fecha = datetime.today()
+    fechaInicio = fecha + timedelta(days=-30)
+    fechaInicio = fechaInicio.strftime("%Y-%m-%d")
+    fechaini = fechaInicio
+    fechafin = fecha.strftime("%Y-%m-%d")
+    
+    Examenes= ExamenLabCab.objects.filter(fecha__range=[fechaini,fechafin])
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename=ReporteMensual.pdf'
+    buffer = BytesIO()
+    c = canvas.Canvas(buffer,pagesize=A4)
+
+    #Cabecera__________________________________________
+    c.setLineWidth(.3)
+    c.setFont('Helvetica',24)
+    c.drawString(175,750,'REPORTE MENSUAL')
+    c.setFont('Helvetica', 24)
+    c.drawString(230, 730, 'EXAMENES')
+    c.line(40,695,550,695)
+    fecha = datetime.now()
+    fecha = fecha.strftime("%d-%m-%Y")
+    c.setFont('Helvetica', 13)
+    c.drawString(440, 697, 'Fecha:')
+    c.drawString(480,697,str(fecha))
+    c.drawImage("apps/Laboratorio/static/Unsa.jpg",45,700,width=85, height=110, mask='auto')
+    width,height =A4
+    #Cabecera_____________________________________________
+    #TABLA_______________________________________________
+    datos=[]
+    tablaCampos = ('NOMBRE', 'DNI', 'FECHA', 'EXAMEN')
+    contador=0
+    for var in Examenes:
+        # creo variable p para guardar la descripcion
+        nombre=Paragraph(var.nombre, styles['Normal'])
+        dni=Paragraph(var.dni, styles['Normal'])
+        fecha=Paragraph(var.fecha.__str__(), styles['Normal'])
+        tipoExam=Paragraph(var.tipoExam.__str__(), styles['Normal'])
+        # añado a la lista la llave primaria de acl y ademas la descripcion contenida en p
+        datos.append((nombre,dni,fecha,tipoExam))
+        contador+=1
+   
+    tabla = Table(data=[tablaCampos] + datos,colWidths=[9*cm,3*cm,3*cm,3*cm])
+    tabla.setStyle(TableStyle([
+        ('INNERGRID',(0,0),(-1,-1),0.25,colors.black),
+        ('ALIGN',(0,-1),(-1,-1),'CENTER'), 
+        ('BOX',(0,0),(-1,-1),0.25,colors.black),]))
+    tabla.wrapOn(c,width,height)
+    tabla.drawOn(c,40,695-contador*27)
+
+    
+    #TABLA_______________________________________________
+
+    # Close the PDF object cleanly.
+    c.showPage()
+    c.save()
+    pdf = buffer.getvalue()
+    buffer.close()
+    response.write(pdf)
+
+    return response
 
 def reporteSemanalExamenes(request):
     fecha = datetime.today()
@@ -123,7 +185,7 @@ def reporteSemanalExamenes(request):
         ('ALIGN',(0,-1),(-1,-1),'CENTER'), 
         ('BOX',(0,0),(-1,-1),0.25,colors.black),]))
     tabla.wrapOn(c,width,height)
-    tabla.drawOn(c,40,695-contador*25)
+    tabla.drawOn(c,40,695-contador*27)
 
     
     #TABLA_______________________________________________

@@ -20,7 +20,7 @@ class ExamenLabDetSerializer(serializers.ModelSerializer):
         model = ExamenLabDet
         fields = "__all__"
 
-class BuscarExamenNombre(serializers.ModelSerializer):
+class BuscarExamenNombreSerializer(serializers.ModelSerializer):
     detalles = ExamenLabDetSerializer(many=True,read_only=True)
     tipoExam = TipoExamenSerializer(read_only=True)
     class Meta:
