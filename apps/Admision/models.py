@@ -51,9 +51,23 @@ class Distrito(models.Model):
 #     def __str__(self):
 #         return self.descripcion
 
+# prueba de numero de historia autoincrementable
+
+   # def get_serial_number(self):
+   #    "Get formatted value of serial number"
+   #     return "%.2d-%.3d" % (self.numeroHistoria, self.Historia)
+
+    #def save(self):
+    #   "Get last value of Code and Number from database, and increment before save"
+    #    top = Historia.objects.order_by("-code","-codigohistoria")[0]
+    #    self.numeroHistoria = top.numeroHistoria + 1
+    #    self.codigohistoria = top.codigohistoria + 1
+    #    super(Historia, self).save()
+
 class Historia(models.Model):
 
     #numeroHistoria = models.IntegerField()
+    #codigohistoria=models.IntegerField(unique=True)
     numeroHistoria = models.IntegerField(unique=True)#(validators=[numeroHistoria])
     #grupoSanguineo = models.ForeignKey(GrupSang, on_delete=models.CASCADE,blank=True,null=True)
     distrito = models.ForeignKey(Distrito, on_delete=models.CASCADE,blank=True,null=True)
