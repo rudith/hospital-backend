@@ -1,6 +1,6 @@
 from django.db import models
 from apps.Administrador.models import Area, Personal, TipoPersonal
-from .validators import dni,dniint
+from .validators import dni
 from .validators import fechaNac
 #libreria datetime
 from datetime import datetime
