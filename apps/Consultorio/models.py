@@ -10,7 +10,7 @@ class Cita(models.Model):
     especialidad = models.ForeignKey(Especialidad, related_name='citasE',on_delete=models.CASCADE)
     numeroHistoria = models.ForeignKey(Historia,related_name='citas', on_delete=models.CASCADE,null=True)
     medico = models.ForeignKey(User,related_name='citasM', on_delete=models.CASCADE)
-    numeroRecibo = models.CharField(unique=True,max_length=15,blank=True,null=True)
+    numeroRecibo = models.CharField(max_length=15,blank=True,null=True)
     fechaSeparacion = models.DateField(blank=True,null=True,validators=[fechaSeparacion])
     fechaAtencion = models.DateField(validators=[fechaAtencion])
     #######Especificar tipos estado turno condicion
