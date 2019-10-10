@@ -90,8 +90,7 @@ class BuscarCitaMedicoEstado(generics.ListAPIView):
      
     def get_queryset(self):
         id = self.request.query_params.get('id')
-        estadoCita = self.request.query_params.get('estadoCita')
-
+        estadoCita = "Triado"
         return Cita.objects.filter(medico__id=id,estadoCita=estadoCita)
         
         
