@@ -8,7 +8,7 @@ from apps.Admision.serializers import HistoriaSerializer
 from apps.Administrador.models import Especialidad
 from .serializers import (TriajeSerializer, TriajeViewSerializer,CitaSerializer, CitaViewSerializer, CitasDniSerializer, ConsultaSerializer, ConsultaViewSerializer,
                           ConsultasDniSerializer, ConsultasHistoriaSerializer,TriajeHistoriaSerializer,HistorialClinicoSerializer,
-                          CitasMedicoViewSerializer, CitasEspecialidadViewSerializer
+                          CitasMedicoViewSerializer, CitasEspecialidadViewSerializer,CitaViewSerializerEstado
 )#,CitaTemporal)
 
 
@@ -83,6 +83,18 @@ class BuscarCitaMedico(generics.RetrieveUpdateDestroyAPIView):
     
     def get_queryset(self):
         return User.objects.all()
+        
+class BuscarCitaMedicoEstado(generics.ListAPIView):
+    
+    serializer_class = CitaViewSerializerEstado
+     
+    def get_queryset(self):
+        id = self.request.query_params.get('id')
+        estadoCita = self.request.query_params.get('estadoCita')
+
+        return Cita.objects.filter(medico__id=id,estadoCita=estadoCita)
+        
+        
 
 class BuscarCitaEspecialidad(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
