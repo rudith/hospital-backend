@@ -18,6 +18,7 @@ class Cita(models.Model):
     responsable = models.CharField(max_length=50,blank=True,null=True)
     exonerado = models.BooleanField(default=False)
     estReg = models.BooleanField(default=True)
+    updated_at = models.DateTimeField(auto_now=True)
     def __str__(self):
         return self.pk.__str__()
 

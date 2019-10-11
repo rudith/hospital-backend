@@ -89,11 +89,20 @@ class BuscarCitaMedicoEstado(generics.ListAPIView):
     serializer_class = CitaViewSerializerEstado
      
     def get_queryset(self):
+        #id = self.kwargs['id']
         id = self.request.query_params.get('id')
         estadoCita = "Triado"
         return Cita.objects.filter(medico__id=id,estadoCita=estadoCita)
         
-        
+class BuscarCitasEspera(generics.ListAPIView):
+    
+    serializer_class = CitaViewSerializerEstado
+     
+    def get_queryset(self):
+        #id = self.kwargs['id']
+        #id = self.request.query_params.get('id')
+        estadoCita = "Espera"
+        return Cita.objects.filter(estadoCita=estadoCita)    
 
 class BuscarCitaEspecialidad(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
@@ -122,6 +131,7 @@ class BuscarConsultaHistoria(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Historia.objects.all()
+
 
 class cancelarCita(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'

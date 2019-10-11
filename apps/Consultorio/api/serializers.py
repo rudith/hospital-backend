@@ -82,7 +82,7 @@ class CitaViewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cita
         #fields = "__all__"
-        fields = ['id','numeroHistoria','numeroHistoriaId','especialidad','especialidadId','medico','medicoId','numeroRecibo','fechaSeparacion','fechaAtencion','estadoCita','exonerado','responsable','estReg']
+        fields = ['id','numeroHistoria','numeroHistoriaId','especialidad','especialidadId','medico','medicoId','numeroRecibo','fechaSeparacion','updated_at','fechaAtencion','estadoCita','exonerado','responsable','estReg']
 
 class CitaMViewSerializer(serializers.ModelSerializer):
     # especialidad = serializers.StringRelatedField(read_only=True)
@@ -95,7 +95,7 @@ class CitaMViewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cita
         #fields = "__all__"
-        fields = ['id','numeroHistoria','numeroHistoriaId','especialidad','especialidadId','numeroRecibo','fechaSeparacion','fechaAtencion','estadoCita','exonerado','responsable','estReg']
+        fields = ['id','numeroHistoria','numeroHistoriaId','especialidad','especialidadId','numeroRecibo','fechaSeparacion','fechaAtencion','updated_at','estadoCita','exonerado','responsable','estReg']
 
 class CitaEspeViewSerializer(serializers.ModelSerializer):
     # especialidad = serializers.StringRelatedField(read_only=True)
@@ -109,7 +109,7 @@ class CitaEspeViewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cita
         #fields = "__all__"
-        fields = ['id','numeroHistoria','numeroHistoriaId','medico','medicoId','numeroRecibo','fechaSeparacion','fechaAtencion','estadoCita','exonerado','responsable','estReg']
+        fields = ['id','numeroHistoria','numeroHistoriaId','medico','medicoId','numeroRecibo','fechaSeparacion','fechaAtencion','updated_at','estadoCita','exonerado','responsable','estReg']
   
 
 class ConsultaSerializer(serializers.ModelSerializer):
@@ -193,5 +193,5 @@ class CitaViewSerializerEstado(serializers.ModelSerializer):
     
     class Meta:
         model = Cita
-        fields = ['medico','id','numeroHistoria','numeroHistoriaId','especialidad','especialidadId','numeroRecibo','fechaSeparacion','fechaAtencion','estadoCita','exonerado','responsable','estReg']
+        fields = ['medico','id','numeroHistoria','numeroHistoriaId','especialidad','especialidadId','numeroRecibo','fechaSeparacion','fechaAtencion','updated_at','estadoCita','exonerado','responsable','estReg']
     

@@ -45,6 +45,15 @@ class BuscarDni(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         return Personal.objects.all()
 
+class BuscarEspecialidad(generics.ListAPIView):
+  
+    serializer_class = PersonalViewSerializer
+     
+    def get_queryset(self):
+        #id = self.kwargs['id']
+        id = self.request.query_params.get('id')
+        return Personal.objects.filter(especialidad__id=id)
+
 # class cancelarCita(generics.RetrieveUpdateDestroyAPIView):
 #     lookup_field = 'dni'
 #     serializer_class = PersonalSerializer
