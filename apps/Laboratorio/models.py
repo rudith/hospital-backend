@@ -25,4 +25,4 @@ class  ExamenLabDet(models.Model):
     unidades =  models.CharField(max_length=100,blank=True,null=True)
     rango_referencia = models.CharField(max_length=100)
     def __str__(self):
-        return self.codigoExam.__str__()
+        return self.codigoExam.__str__()+self.descripcion.__str__()+self.resultado_obtenido.__str__()+self.unidades.__str__()+self.rango_referencia.__str__()
