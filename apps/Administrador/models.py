@@ -33,7 +33,7 @@ class Especialidad(models.Model):
 class Personal(models.Model):
     #codigoPer = models.AutoField(primary_key=True)
     #FK Area
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     area = models.ForeignKey(Area, on_delete=models.CASCADE)
     tipo_personal = models.ForeignKey(TipoPersonal, on_delete=models.CASCADE)
     especialidad = models.ForeignKey(Especialidad, on_delete=models.CASCADE)

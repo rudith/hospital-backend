@@ -39,9 +39,9 @@ class PersonalSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Personal
-        #fields = "__all__"  
-        fields = ['id','dni','nombres','apellido_paterno','apellido_materno','celular','telefono','direccion','fechaReg',
-        'updated_at','estReg','area','tipo_personal','especialidad','user',]
+        fields = "__all__"  
+        # fields = ['id','dni','nombres','apellido_paterno','apellido_materno','celular','telefono','direccion','fechaReg',
+        # 'updated_at','estReg','area','tipo_personal','especialidad','user',]
 
 class PersonalDetalleSerializer(serializers.ModelSerializer):
     #user = serializers.StringRelatedField(read_only=True)
@@ -66,6 +66,6 @@ class PersonalViewSerializer(serializers.ModelSerializer):
     especialidadId = serializers.PrimaryKeyRelatedField(write_only=True, queryset= Especialidad.objects.all(), source='especialidad')
     class Meta:
         model = Personal
-        #fields = "__all__"  
-        fields = ['id','dni','nombres','apellido_paterno','apellido_materno','celular','telefono','direccion','fechaReg',
-        'updated_at','estReg','areaId','area','tipo_personal','tipo_personalId','especialidad','especialidadId','user','usuarioId']
+        fields = "__all__"  
+        # fields = ['id','dni','nombres','apellido_paterno','apellido_materno','celular','telefono','direccion','fechaReg',
+        # 'updated_at','estReg','areaId','area','tipo_personal','tipo_personalId','especialidad','especialidadId','user','usuarioId']

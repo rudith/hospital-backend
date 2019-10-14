@@ -80,6 +80,18 @@ class BuscarDNIH(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         return Historia.objects.all()
 
+class BuscarNombreH(generics.ListAPIView):
+    
+    serializer_class = HistoriaViewSerializer
+     
+    def get_queryset(self):
+        #id = self.kwargs['id']
+        nombre = self.request.query_params.get('nom')
+        qs = Historia.objects.filter(nombres__icontains=nombre)
+        if qs.all().count()<1:
+            qs = Historia.objects.filter(apellido_paterno__icontains=nombre)
+        return qs
+
 def reniecDatos(request,dni):
     token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Imp2aWNlbnRlZy45NkBnbWFpbC5jb20ifQ.MyaKW0GJOlNqoLSYq5Vj0OIo-8oAew5OB3PT3vfZDjs'
     r = requests.get('http://dniruc.apisperu.com/api/v1/dni/' + dni + '?token=' + token)

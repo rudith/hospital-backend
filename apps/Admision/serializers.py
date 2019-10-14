@@ -7,21 +7,26 @@ from apps.Consultorio.models import Cita, Especialidad
 #     class Meta:
 #         model = GrupSang
 #         fields = "__all__"
-
-class DistritoSerializer(serializers.ModelSerializer):
+class DepartamentoSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Distrito
+        model = Departamento
         fields = "__all__"
 
 
 class ProvinciaSerializer(serializers.ModelSerializer):
+    
+    departamento = DepartamentoSerializer(read_only=True)
+    departamentoId = serializers.PrimaryKeyRelatedField(write_only=True, queryset= Departamento.objects.all(), source='departamento')
     class Meta:
         model = Provincia
         fields = "__all__"
 
-class DepartamentoSerializer(serializers.ModelSerializer):
+class DistritoSerializer(serializers.ModelSerializer):
+    provincia = ProvinciaSerializer(read_only=True)
+    provinciaId = serializers.PrimaryKeyRelatedField(write_only=True, queryset= Provincia.objects.all(), source='provincia')
+    
     class Meta:
-        model = Departamento
+        model = Distrito
         fields = "__all__"
 
 # class PacienteSerializer(serializers.ModelSerializer):

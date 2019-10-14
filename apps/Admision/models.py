@@ -36,13 +36,15 @@ class Departamento(models.Model):
 
 class Provincia(models.Model):
     nombre = models.CharField(max_length=30,unique=True)   
+    departamento = models.ForeignKey(Departamento, on_delete=models.CASCADE, default=1,related_name='provincias')
 
     def __str__(self):
         return self.nombre
 
 class Distrito(models.Model):
     nombre = models.CharField(max_length=30,unique=True)   
-  
+    provincia = models.ForeignKey(Provincia, on_delete=models.CASCADE,blank=True,null=True,related_name='distritos')
+
     def __str__(self):
         return self.nombre
 
@@ -76,13 +78,13 @@ class Distrito(models.Model):
 #  return new_booking_id
 #----------------------->
 
-  booking_id = models.CharField(max_length = 20, default = increment_booking_number, editable=False)
+  #booking_id = models.CharField(max_length = 20, default = increment_booking_number, editable=False)
 
 class Historia(models.Model):
 
     #numeroHistoria = models.IntegerField()
     #codigohistoria=models.IntegerField(unique=True)
-    numeroHistoria = models.IntegerField(unique=True)#,default=20001)(validators=[numeroHistoria])
+    numeroHistoria = models.IntegerField(unique=True, error_messages={'unique':"Este Nro de Historia ya ha sido registrado."})#,default=20001)(validators=[numeroHistoria])
     #grupoSanguineo = models.ForeignKey(GrupSang, on_delete=models.CASCADE,blank=True,null=True)
 #------------------>
     # prueba autoincrementable
@@ -92,7 +94,7 @@ class Historia(models.Model):
     provincia = models.ForeignKey(Provincia, on_delete=models.CASCADE,blank=True,null=True)
     departamento = models.ForeignKey(Departamento, on_delete=models.CASCADE, default=1)
     #dni = models.CharField(unique=True, max_length=8)
-    dni = models.CharField(unique=True, max_length=8 ,validators=[dni])
+    dni = models.CharField(unique=True, error_messages={'unique':"Este DNI ya ha sido registrado."}, max_length=8 ,validators=[dni])
     nombres = models.CharField(max_length=30)
     apellido_paterno = models.CharField(max_length=30)
     apellido_materno = models.CharField(max_length=30)
@@ -103,7 +105,7 @@ class Historia(models.Model):
     celular = models.CharField(max_length=9,blank=True,null=True)
     telefono = models.CharField(max_length=6,blank=True,null=True)
     estadoCivil = models.CharField(max_length=15,blank=True,null=True)
-    gradoInstruccion = models.CharField(max_length=15,blank=True,null=True)
+    gradoInstruccion = models.CharField(max_length=30,blank=True,null=True)
     ocupacion = models.CharField(max_length=30,blank=True,null=True)
     fechaReg = models.DateField(auto_now_add=True)
     direccion = models.CharField(max_length=90,blank=True,null=True)

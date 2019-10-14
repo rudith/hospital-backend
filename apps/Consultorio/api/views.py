@@ -17,6 +17,9 @@ from apps.Admision.models import Historia
 from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
 from rest_framework import status
+from datetime import datetime
+from datetime import date
+
     
 class vistaCrearTriaje(ModelViewSet):
     queryset = Triaje.objects.all()
@@ -145,8 +148,9 @@ class cancelarCita(generics.RetrieveUpdateDestroyAPIView):
         qs = Cita.objects.all()
         query = self.kwargs['id']
         if query is not None:
-            qs = qs.filter(id__icontains=query)
+            qs = qs.filter(pk=query)
         qs.update(estadoCita='Cancelado')
+        qs.update(updated_at = datetime.now().date())
         return qs
 
 class atenderCita(generics.RetrieveUpdateDestroyAPIView):
@@ -157,8 +161,9 @@ class atenderCita(generics.RetrieveUpdateDestroyAPIView):
         query = self.kwargs['id']
         # busca por codigo
         if query is not None:
-            qs = qs.filter(id__icontains=query)
+            qs = qs.filter(pk=query)
         qs.update(estadoCita='Atendido')
+        qs.update(updated_at = datetime.now().date())
         return qs
 
 
@@ -170,8 +175,9 @@ class triajeCita(generics.RetrieveUpdateDestroyAPIView):
         qs = Cita.objects.all()
         query = self.kwargs['id']
         if query is not None:
-            qs = qs.filter(id__icontains=query)
+            qs = qs.filter(pk=query)
         qs.update(estadoCita='Triado')
+        qs.update(updated_at = datetime.now().date())
         return qs
 
 # class buscarCitaDNI(generics.RetrieveUpdateDestroyAPIView):
