@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 from django.contrib.auth.models import User
 from apps.Admision.serializers import HistoriaSerializer
 from apps.Administrador.models import Especialidad
+from apps.Admision.models import Historia
 from .serializers import (TriajeSerializer, TriajeViewSerializer,CitaSerializer, CitaViewSerializer, CitasDniSerializer, ConsultaSerializer, ConsultaViewSerializer,
                           ConsultasDniSerializer, ConsultasHistoriaSerializer,TriajeHistoriaSerializer,HistorialClinicoSerializer,
                           CitasMedicoViewSerializer, CitasEspecialidadViewSerializer,CitaViewSerializerEstado
@@ -83,6 +84,16 @@ class BuscarCitaDni(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         return Historia.objects.all()
 
+class BuscarCitaDniE(generics.ListAPIView):
+    #lookup_field = 'dni'
+    #serializer_class = CitasDniSerializer
+    serializer_class = CitaViewSerializerEstado
+     
+    def get_queryset(self):
+        dni = self.request.query_params.get('dni')
+        estadoCita = "Espera"
+        return Cita.objects.filter(numeroHistoria__dni=dni,estadoCita=estadoCita)
+        
 class BuscarCitaMedico(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
     serializer_class = CitasMedicoViewSerializer
@@ -139,6 +150,16 @@ class BuscarConsultaHistoria(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         return Historia.objects.all()
 
+# class BuscarNombreCita(generics.ListAPIView):
+    
+#     serializer_class = CitaViewSerializer
+     
+#     def get_queryset(self):
+#         nombre = self.request.query_params.get('nom')
+#         qs = Historia.objects.filter(nombres__icontains=nombre)
+#         if qs.all().count()<1:
+#             qs = Historia.objects.filter(apellido_paterno__icontains=nombre)
+#         return qs
 
 class cancelarCita(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'

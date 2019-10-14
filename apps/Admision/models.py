@@ -5,7 +5,7 @@ from .validators import fechaNac
 #libreria datetime
 from datetime import datetime
 # from .validators import numeroHistoria
-
+from datetime import date
 class HorarioCab(models.Model):
     codigoHor = models.AutoField(primary_key=True)
     personal = models.ForeignKey(Personal, on_delete=models.CASCADE,null=True)
@@ -67,15 +67,17 @@ class Distrito(models.Model):
     #    super(Historia, self).save()
 
 #Prueba autoincrementable------------->
-#def increment_booking_number():
-#  last_booking = Historia.objects.all().order_by('id').last()
-#  if not last_booking:
-#    return 'RNH' + str(datetime.date.today().year) + str(datetime.date.today().month).zfill(2) + '0000'
-#  numeroHistoria = last_booking.numeroHistoria
-#  booking_int = int(numeroHistoria[9:13])
-#  new_booking_int = booking_int + 1
-#  new_booking_id = 'RNH' + str(str(datetime.date.today().year)) + str(datetime.date.today().month).zfill(2) + str(new_booking_int).zfill(4)
-#  return new_booking_id
+def increment_booking_number():
+    last_booking = Historia.objects.all().order_by('id').last()
+    if not last_booking:
+        return 'HDU' + str(datetime.now().date().year) + '-' + str(datetime.now().date().month).zfill(2)+ '-' +  '0001'
+    numeroHistoria = last_booking.numeroHistoria
+    booking_int = int(numeroHistoria[11:15])
+    new_historia_int = booking_int + 1
+    print()
+    #new_booking_id = 'HDU' + str(str(datetime.date.today().year)) + str(datetime.date.today().month).zfill(2) + str(new_booking_int).zfill(4)
+    new_historia_id = 'HDU' + str(datetime.now().date().year) + '-' + str(datetime.now().date().month).zfill(2) + '-' + str(new_historia_int).zfill(4)
+    return new_historia_id
 #----------------------->
 
   #booking_id = models.CharField(max_length = 20, default = increment_booking_number, editable=False)
@@ -84,11 +86,11 @@ class Historia(models.Model):
 
     #numeroHistoria = models.IntegerField()
     #codigohistoria=models.IntegerField(unique=True)
-    numeroHistoria = models.IntegerField(unique=True, error_messages={'unique':"Este Nro de Historia ya ha sido registrado."})#,default=20001)(validators=[numeroHistoria])
+    #numeroHistoria = models.IntegerField(unique=True, error_messages={'unique':"Este Nro de Historia ya ha sido registrado."})#,default=20001)(validators=[numeroHistoria])
     #grupoSanguineo = models.ForeignKey(GrupSang, on_delete=models.CASCADE,blank=True,null=True)
 #------------------>
     # prueba autoincrementable
-    #numeroHistoria = models.CharField(max_length = 20, default = increment_booking_number, editable=False)
+    numeroHistoria = models.CharField(max_length = 20, default = increment_booking_number, editable=False)
 #------------------>
     distrito = models.ForeignKey(Distrito, on_delete=models.CASCADE,blank=True,null=True)
     provincia = models.ForeignKey(Provincia, on_delete=models.CASCADE,blank=True,null=True)
