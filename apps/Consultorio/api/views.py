@@ -26,10 +26,12 @@ class vistaCrearTriaje(ModelViewSet):
     # def perform_create(self, serializer):
     #     personal = self.request.user
     #     serializer.save(personal=personal)
+     # permission_classes = [IsAuthenticated]
 
 class vistaTriaje(ModelViewSet):
     queryset = Triaje.objects.all()
     serializer_class = TriajeViewSerializer
+     # permission_classes = [IsAuthenticated]
 
 class BuscarTriajeCita(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'cita'
@@ -37,18 +39,20 @@ class BuscarTriajeCita(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Triaje.objects.all()
-
+     # permission_classes = [IsAuthenticated]
 class vistaCrearCita(ModelViewSet):
     queryset = Cita.objects.all()
     serializer_class = CitaSerializer
     filter_backends = [SearchFilter]
     search_fields = ["numeroRecibo"]
+     # permission_classes = [IsAuthenticated]
 
 class vistaCita(ModelViewSet):
     queryset = Cita.objects.all()
     serializer_class = CitaViewSerializer
     filter_backends = [SearchFilter]
     search_fields = ["numeroRecibo"]
+     # permission_classes = [IsAuthenticated]
 
 # class vistaCitaTemporal(ModelViewSet):
 #     queryset = Cita.objects.all()

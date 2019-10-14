@@ -176,12 +176,12 @@ MEDIA_ROOT = "uploads"
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
-        
-        #token ExpiringTokenAuthentication
         'django_expiring_token.authentication.ExpiringTokenAuthentication',
-    )
+        
+    ),
+#     'DEFAULT_PERMISSION_CLASSES': [
+#        'rest_framework.permissions.IsAuthenticated',
+#    ]
 }
 
 SITE_ID = 1

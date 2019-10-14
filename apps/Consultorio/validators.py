@@ -18,6 +18,10 @@ def fechaAtencion(value):
     if not  b <= 0 :
      raise ValidationError('fecha Atencion incorrectos')
 
+def valoresnegativos(value):
+
+    if not  value > 0 :
+     raise ValidationError('datos negativos no validos')
 #def fechaAtencion(value):
    #if not  len(value) == 8:
 #    a= int((datetime.now().date() - value).days)
