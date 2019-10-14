@@ -36,14 +36,17 @@ from .models import HorarioCab, HorarioDet, Provincia, Distrito, Departamento, H
 class vistaDistrito(ModelViewSet):
     queryset = Distrito.objects.all()
     serializer_class = DistritoSerializer
+     # permission_classes = [IsAuthenticated]
 
 class vistaProvincia(ModelViewSet):
     queryset = Provincia.objects.all()
     serializer_class = ProvinciaSerializer
+     # permission_classes = [IsAuthenticated]
 
 class vistaDepartamento(ModelViewSet):
     queryset = Departamento.objects.all()
     serializer_class = DepartamentoSerializer
+     # permission_classes = [IsAuthenticated]
 
 class vistaCrearHistoria(ModelViewSet):
     queryset = Historia.objects.all()
@@ -51,6 +54,7 @@ class vistaCrearHistoria(ModelViewSet):
     filter_backends = [SearchFilter]
     search_fields = ["dni"]
     #search_fields = ["numeroHistoria"]
+     # permission_classes = [IsAuthenticated]
 
 class vistaHistoria(ModelViewSet):
     queryset = Historia.objects.all()
@@ -58,6 +62,7 @@ class vistaHistoria(ModelViewSet):
     filter_backends = [SearchFilter]
     search_fields = ["dni"]
     #search_fields = ["numeroHistoria"]
+    # permission_classes = [IsAuthenticated]
 
 class BuscarHistoria(generics.RetrieveUpdateDestroyAPIView):
 

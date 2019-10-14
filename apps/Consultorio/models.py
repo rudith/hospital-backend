@@ -2,7 +2,7 @@ from django.db import models
 from apps.Administrador.models import Area, Personal, TipoPersonal, Especialidad
 from apps.Admision.models import HorarioCab, HorarioDet, Historia, Provincia, Distrito, Departamento#, GrupSang
 from django.contrib.auth.models import User
-from .validators import  fechaSeparacion,fechaAtencion
+from .validators import  fechaSeparacion,fechaAtencion,valoresnegativos
 
 
 class Cita(models.Model):
@@ -29,11 +29,11 @@ class Triaje(models.Model):
     numeroHistoria = models.ForeignKey(Historia,related_name='triajes', on_delete=models.CASCADE,null=True)
     personal = models.ForeignKey(User, on_delete=models.CASCADE)
     cita = models.OneToOneField(Cita, on_delete=models.CASCADE)
-    talla = models.FloatField()
-    peso = models.FloatField()
-    temperatura = models.FloatField()
-    frecuenciaR = models.IntegerField()
-    frecuenciaC = models.IntegerField()
+    talla = models.FloatField(validators=[valoresnegativos)
+    peso = models.FloatField(validators=[valoresnegativos)
+    temperatura = models.FloatField(validators=[valoresnegativos)
+    frecuenciaR = models.IntegerField(validators=[valoresnegativos)
+    frecuenciaC = models.IntegerField(validators=[valoresnegativos)
     presionArt = models.TextField()
     fechaReg = models.DateField(auto_now_add=True)
     

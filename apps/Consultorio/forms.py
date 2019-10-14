@@ -1,7 +1,7 @@
 from django import forms
 from .models import cita
 from .validators import dni 
-from .validators import fechaSeparacion, fechaAtencion
+from .validators import fechaSeparacion, fechaAtencion, valoresnegativos
 
 
 class MyForm(models.ModelForm):
@@ -21,6 +21,51 @@ class MyForm1(models.ModelForm):
 
     class Meta:
         model = cita
+
+class MyForm2(models.ModelForm):
+
+    def __init__(self):
+        super().__init__(*args, **kwargs)
+        self.fields['talla'].validators.append(valoresnegativos)
+
+    class Meta:
+        model = Triaje
+class MyForm3(models.ModelForm):
+
+    def __init__(self):
+        super().__init__(*args, **kwargs)
+        self.fields['peso'].validators.append(valoresnegativos)
+
+    class Meta:
+        model = Triaje
+
+class MyForm4(models.ModelForm):
+
+    def __init__(self):
+        super().__init__(*args, **kwargs)
+        self.fields['temperatura'].validators.append(valoresnegativos)
+
+    class Meta:
+        model = Triaje
+
+
+class MyForm5(models.ModelForm):
+
+    def __init__(self):
+        super().__init__(*args, **kwargs)
+        self.fields['frecuenciaR'].validators.append(valoresnegativos)
+
+    class Meta:
+        model = Triaje
+
+class MyForm6(models.ModelForm):
+
+    def __init__(self):
+        super().__init__(*args, **kwargs)
+        self.fields['frecuenciaC'].validators.append(valoresnegativos)
+
+    class Meta:
+        model = Triaje
 
 
 #    def clean_nombre(self):

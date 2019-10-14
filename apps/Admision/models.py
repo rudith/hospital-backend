@@ -68,7 +68,7 @@ class Historia(models.Model):
 
     #numeroHistoria = models.IntegerField()
     #codigohistoria=models.IntegerField(unique=True)
-    numeroHistoria = models.IntegerField(unique=True)#(validators=[numeroHistoria])
+    numeroHistoria = models.IntegerField(unique=True)#,default=20001)(validators=[numeroHistoria])
     #grupoSanguineo = models.ForeignKey(GrupSang, on_delete=models.CASCADE,blank=True,null=True)
     distrito = models.ForeignKey(Distrito, on_delete=models.CASCADE,blank=True,null=True)
     provincia = models.ForeignKey(Provincia, on_delete=models.CASCADE,blank=True,null=True)
@@ -100,3 +100,13 @@ class Historia(models.Model):
     # captura la fecha y devuelve la edad 
     def edad(self):
        return int((datetime.now().date() - self.fechaNac).days / 365.25)
+
+     #Prueba de autoincrementable
+
+    #def save(self, *args, **kwargs):
+    #    if self.numeroHistoria == 20001:
+    #        try:
+    #            self.numeroHistoria = self.store.customer_set.count() + 1
+    #        else:
+    #            self.numeroHistoria = 1
+    #    super(Historia, self).save(*args, **kwargs)
