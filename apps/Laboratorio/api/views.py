@@ -123,7 +123,9 @@ def reporteMensualExamenes(request):
         ('ALIGN',(0,-1),(-1,-1),'CENTER'), 
         ('BOX',(0,0),(-1,-1),0.25,colors.black),]))
     tabla.wrapOn(c,width,height)
-    tabla.drawOn(c,40,695-contador*27)
+    if (contador==0):
+        contador=1
+    tabla.drawOn(c,40,695-contador*30)
 
     
     #TABLA_______________________________________________
@@ -185,7 +187,9 @@ def reporteSemanalExamenes(request):
         ('ALIGN',(0,-1),(-1,-1),'CENTER'), 
         ('BOX',(0,0),(-1,-1),0.25,colors.black),]))
     tabla.wrapOn(c,width,height)
-    tabla.drawOn(c,40,695-contador*27)
+    if (contador==0):
+        contador=1
+    tabla.drawOn(c,40,695-contador*30)
 
     
     #TABLA_______________________________________________
@@ -199,6 +203,89 @@ def reporteSemanalExamenes(request):
 
     return response
     
+def resultadoExamen(request,id):
+        
+    examenLabCab=ExamenLabCab.objects.filter(id=id)
+    examenLabDet=ExamenLabDet.objects.filter(codigoExam=id)
+    
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename=ResultadoExamen.pdf'
+    buffer = BytesIO()
+    c = canvas.Canvas(buffer,pagesize=A4)
+
+    #Cabecera__________________________________________
+    c.setLineWidth(.3)
+    c.setFont('Helvetica',20)
+    c.drawString(185,750,'Resultado de Examen')
+    c.drawString(415, 770, 'Examen N°')
+    c.drawString(455,725,examenLabCab[0].id.__str__())
+    c.drawImage("apps/Laboratorio/static/Unsa.jpg",60,700,width=85, height=110, mask='auto')
+    c.line(40,695,550,695)
+    c.line(40,820,550,820)
+    c.line(40,695,40,820)
+    c.line(165,695,165,820)
+    c.line(395,695,395,820)
+    c.line(550,695,550,820)
+    c.line(395,750,550,750)
+    #Cabecera_____________________________________________
+    y=-10
+    c.setFont('Helvetica',13)
+    c.drawString(45,675+y,'Nombre: ')
+    c.drawString(100,675+y,examenLabCab[0].nombre.__str__())
+    c.drawString(400,675+y,'DNI: ')
+    c.drawString(440,675+y,examenLabCab[0].dni.__str__())
+    c.drawString(400,655+y,'Fecha: ')
+    c.drawString(440,655+y,examenLabCab[0].fecha.__str__())
+    c.drawString(45,655+y,'Orden: ')
+    c.drawString(100,655+y,examenLabCab[0].orden.__str__())
+    c.line(40,690+y,550,690+y)
+    c.line(40,650+y,550,650+y)
+    c.line(40,650+y,40,690+y)
+    c.line(395,650+y,395,690+y)
+    c.line(550,650+y,550,690+y)
+    
+    c.drawString(40,630+y,'Examen de: ')
+    c.drawString(115,630+y,examenLabCab[0].tipoExam.__str__())
+
+
+    #_______________Detalles______________________
+    width,height =A4
+    datos=[]
+    tablaCampos = ('DESCRIPCION ', 'RESULTADO', 'UNIDADES', 'RANGO DE REFERENCIA')
+    contador=0
+    for var in examenLabDet:
+        # creo variable p para guardar la descripcion
+        descripcion=Paragraph(var.descripcion.__str__(), styles['Normal'])
+        resultado=Paragraph(var.resultado_obtenido.__str__(), styles['Normal'])
+        unidades=Paragraph(var.unidades.__str__(), styles['Normal'])
+        rango=Paragraph(var.rango_referencia.__str__(), styles['Normal'])
+        # añado a la lista la llave primaria de acl y ademas la descripcion contenida en p
+        datos.append((descripcion,resultado,unidades,rango))
+        contador+=1
+   
+    tabla = Table(data=[tablaCampos] + datos,colWidths=[8*cm,2.5*cm,2.5*cm,5*cm])
+    tabla.setStyle(TableStyle([
+        ('INNERGRID',(0,0),(-1,-1),0.25,colors.black),
+        ('ALIGN',(0,-1),(-1,-1),'CENTER'), 
+        ('BOX',(0,0),(-1,-1),0.25,colors.black),]))
+    tabla.wrapOn(c,width,height)
+    if (contador==0):
+        contador=1
+    tabla.drawOn(c,40,630-contador*30)
+    fintabla=630-contador*30-20
+
+    c.drawString(40,fintabla, 'Observaciones :')
+    c.setFont('Helvetica',11)
+    c.drawString(40,fintabla-20 ,examenLabCab[0].observaciones.__str__())
+    
+
+
+    c.showPage()
+    c.save()
+    pdf = buffer.getvalue()
+    buffer.close()
+    response.write(pdf)
+    return response
 
 def reporte(request):
 
@@ -255,6 +342,40 @@ def reporte(request):
     buffer.close()
     response.write(pdf)
     return response
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ''' FILTRRO DE TODOS LOS     EXAMENES DE LABORATORIO POR NOMBRE "NUMERO"
 class filtro(generics.ListAPIView):
     lookup_url_kwarg = 'nombre'

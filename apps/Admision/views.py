@@ -7,7 +7,7 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.utils import ImageReader
 from reportlab.platypus import Image,Table, Spacer, TableStyle, Paragraph
 from reportlab.lib.styles import getSampleStyleSheet
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 
 from datetime import datetime , timedelta
 
@@ -27,7 +27,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from .serializers import DistritoSerializer, ProvinciaSerializer, DepartamentoSerializer, HistoriaSerializer, HistoriaViewSerializer#, GrupSangSerializer
 from .models import HorarioCab, HorarioDet, Provincia, Distrito, Departamento, Historia#, GrupSang
-
+import requests
 
 # class vistaGrupoSang(ModelViewSet):
 #     queryset = GrupSang.objects.all()
@@ -80,6 +80,13 @@ class BuscarDNIH(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         return Historia.objects.all()
 
+def reniecDatos(request,dni):
+    token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Imp2aWNlbnRlZy45NkBnbWFpbC5jb20ifQ.MyaKW0GJOlNqoLSYq5Vj0OIo-8oAew5OB3PT3vfZDjs'
+    r = requests.get('http://dniruc.apisperu.com/api/v1/dni/' + dni + '?token=' + token)
+    data = r.json()
+    #print(data)
+      
+    return JsonResponse(data)
 
 def HistoriaPDF(request,dni):
     

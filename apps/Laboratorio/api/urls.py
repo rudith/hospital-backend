@@ -2,7 +2,7 @@ from django.conf.urls import url
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 #from .views import (ProfileViewSet, ProfileStatusViewSet)
-from .views import (VistaExamenLabCab, VistaTipoExamen, BuscarExamen, VistaExamenLabDet,filtro,filtrofecha,filtroDNI,reporte,reporteSemanalExamenes,reporteMensualExamenes )
+from .views import (VistaExamenLabCab, VistaTipoExamen, BuscarExamen, VistaExamenLabDet,filtro,filtrofecha,filtroDNI,reporte,reporteSemanalExamenes,reporteMensualExamenes,resultadoExamen )
 
 # profile_list = ProfileViewSet.as_view({"get": "list"})
 # profile_detail = ProfileViewSet.as_view({"get": "retrieve"})
@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^reporte/$', reporte, name="Reporte"),
     url(r'^reporteSemanal/$',reporteSemanalExamenes,name="Reporte Semanal"),
     url(r'^reporteMensual/$',reporteMensualExamenes,name="Reporte Mensual"),
+    url(r'^resultadoExamen/(?P<id>\d+)/$',resultadoExamen,name="Resultados"),
     
     #url(r'^cancelar/(?P<dni>\d+)/$', cancelarCita.as_view(), name="cancelarCita"),
 ]
