@@ -156,8 +156,8 @@ class CitasMedicoViewSerializer(serializers.ModelSerializer):
     citasM = CitaMViewSerializer(many=True, read_only=True)
 
     class Meta:
-        model = User
-        fields = ['id','username', 'citasM']
+        model = Personal
+        fields = ['user','nombres','apellido_paterno','apellido_materno','citasM']
 
 class CitasEspecialidadViewSerializer(serializers.ModelSerializer):
     citasE = CitaEspeViewSerializer(many=True, read_only=True)
