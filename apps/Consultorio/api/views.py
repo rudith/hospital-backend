@@ -8,7 +8,7 @@ from apps.Admision.serializers import HistoriaSerializer
 from apps.Administrador.models import Especialidad
 from apps.Admision.models import Historia
 from .serializers import (TriajeSerializer, TriajeViewSerializer,CitaSerializer, CitaViewSerializer, CitasDniSerializer, ConsultaSerializer, ConsultaViewSerializer,
-                          ConsultaHistoriaViewSerializer, ConsultasDniSerializer, ConsultasHistoriaSerializer,TriajeHistoriaSerializer,HistorialClinicoSerializer,
+                          ConsultaHistoriaViewSerializer, ConsultasDniSerializer, ConsultasHistoriaSerializer,TriajeHistoriaSerializer,
                           CitasMedicoViewSerializer, CitasEspecialidadViewSerializer,CitaViewSerializerEstado
 )#,CitaTemporal)
 
@@ -100,7 +100,7 @@ class BuscarCitaDni(generics.RetrieveUpdateDestroyAPIView):
 class BuscarCitaDniE(generics.ListAPIView):
     #lookup_field = 'dni'
     #serializer_class = CitasDniSerializer
-    serializer_class = CitaViewSerializerEstado
+    serializer_class = CitaViewSerializer
      
     def get_queryset(self):
         dni = self.request.query_params.get('dni')
@@ -117,7 +117,7 @@ class BuscarCitaMedico(generics.RetrieveUpdateDestroyAPIView):
         
 class BuscarCitaMedicoEstado(generics.ListAPIView):
     
-    serializer_class = CitaViewSerializerEstado
+    serializer_class = CitaViewSerializer
      
     def get_queryset(self):
         #id = self.kwargs['id']
@@ -127,7 +127,7 @@ class BuscarCitaMedicoEstado(generics.ListAPIView):
         
 class BuscarCitasEspera(generics.ListAPIView):
     
-    serializer_class = CitaViewSerializerEstado
+    serializer_class = CitaViewSerializer
      
     def get_queryset(self):
         #id = self.kwargs['id']
@@ -142,13 +142,14 @@ class BuscarCitaEspecialidad(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         return Especialidad.objects.all()
 
-class BuscarTriajeHistoria(generics.RetrieveUpdateDestroyAPIView):
-    lookup_field = 'numeroHistoria'
-    serializer_class = TriajeHistoriaSerializer
+class BuscarTriajeHistoria(generics.ListAPIView):
+
+    serializer_class = TriajeViewSerializer
 
     def get_queryset(self):
-        return Historia.objects.all()
-
+        nro = self.request.query_params.get('nro')
+        return Triaje.objects.filter(cita__numeroHistoria__numeroHistoria=nro)
+        
 class BuscarConsultaDni(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'dni'
     serializer_class = ConsultasDniSerializer

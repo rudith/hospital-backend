@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
-from .views import (vistaDistrito, vistaProvincia, vistaDepartamento, vistaHistoria, vistaCrearHistoria, BuscarHistoria, BuscarDNIH, HistoriaPDF,reniecDatos,BuscarNombreH,BuscarDistrito,BuscarProvincia)#, vistaGrupoSang)
+from .views import (vistaDistrito, vistaProvincia, vistaDepartamento, vistaHistoria, vistaCrearHistoria, BuscarHistoria, BuscarDNIH, HistoriaPDF,reniecDatos,BuscarNombreH,BuscarDistrito,BuscarProvincia,BuscarDistritos,BuscarProvincias)#, vistaGrupoSang)
 from ..Administrador.api.views import (vistaArea, vistaTipoPersonal, vistaPersonal, vistaEspecialidad, BuscarDni)
 from rest_framework.urlpatterns import format_suffix_patterns
 
@@ -15,13 +15,15 @@ router.register(r"ver-historias",vistaHistoria)
 
 urlpatterns = [
     path("", include(router.urls)),
-    url(r'^historianumero/(?P<numeroHistoria>\d+)/$', BuscarHistoria.as_view(), name="HistoriaNumero"),
+    url(r'^historianumero/$', BuscarHistoria.as_view(), name="HistoriaNumero"),
     url(r'^historiadni/(?P<dni>\d+)/$', BuscarDNIH.as_view(), name="HistoriaDni"),
     url(r'^historiaPDF/(?P<dni>\d+)/$',HistoriaPDF,name="Historial PDF"),
     url(r'^historianombre/$', BuscarNombreH.as_view(), name="HistoriaDni"),
     url(r'^reniec/(?P<dni>\d+)/$',reniecDatos,name="Historial PDF"),
     url(r'^buscardistritos/(?P<id>\d+)/$', BuscarDistrito.as_view(), name="BuscarDistrito"),
     url(r'^buscarprovincias/(?P<id>\d+)/$', BuscarProvincia.as_view(), name="BuscarProvincia"),
+    url(r'^buscardistrito/$', BuscarDistritos.as_view(), name="BuscarDistritos"),
+    url(r'^buscarprovincia/$', BuscarProvincias.as_view(), name="BuscarProvincias")
     #url(r'^cancelar/(?P<dni>\d+)/$', cancelarCita.as_view(), name="cancelarCita"),
     # url(r'^personals/(?P<dni>\d+)/$', BuscarDni.as_view(), name="actualizarbusqueda"),
     # url(r'^cancelar/(?P<dni>\d+)/$', cancelarCita.as_view(), name="cancelarCita"),

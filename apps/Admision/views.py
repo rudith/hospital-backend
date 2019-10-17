@@ -8,11 +8,7 @@ from reportlab.lib.utils import ImageReader
 from reportlab.platypus import Image,Table, Spacer, TableStyle, Paragraph
 from reportlab.lib.styles import getSampleStyleSheet
 from django.http import HttpResponse, JsonResponse
-
 from datetime import datetime , timedelta
-
-
-
 from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework.decorators import api_view
@@ -65,13 +61,13 @@ class vistaHistoria(ModelViewSet):
     #search_fields = ["numeroHistoria"]
     # permission_classes = [IsAuthenticated]
 
-class BuscarHistoria(generics.RetrieveUpdateDestroyAPIView):
+class BuscarHistoria(generics.ListAPIView):
 
-    lookup_field = 'numeroHistoria'
     serializer_class = HistoriaViewSerializer
-    
+
     def get_queryset(self):
-        return Historia.objects.all()
+        nro = self.request.query_params.get('nro')
+        return Historia.objects.filter(numeroHistoria=nro)
 
 class BuscarDNIH(generics.RetrieveUpdateDestroyAPIView):
 
@@ -107,6 +103,22 @@ class BuscarProvincia(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Departamento.objects.all()
+
+class BuscarDistritos(generics.ListAPIView):
+    lookup_field = 'id'
+    serializer_class = DistritoSerializer
+
+    def get_queryset(self):
+        id = self.request.query_params.get('id')
+        return Distrito.objects.filter(provincia__id=id)
+
+class BuscarProvincias(generics.ListAPIView):
+    serializer_class = ProvinciaSerializer
+
+    def get_queryset(self):
+        id = self.request.query_params.get('id')
+        return Provincia.objects.filter(departamento__id=id)
+
 
 def reniecDatos(request,dni):
     token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Imp2aWNlbnRlZy45NkBnbWFpbC5jb20ifQ.MyaKW0GJOlNqoLSYq5Vj0OIo-8oAew5OB3PT3vfZDjs'
