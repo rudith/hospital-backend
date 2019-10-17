@@ -75,6 +75,13 @@ class filtrofecha(generics.ListAPIView):
         fechafin = self.request.query_params.get('fecha_final')
         return ExamenLabCab.objects.filter(fecha__range=[fechaini,fechafin])
 
+class filtroDetallesCodigoExamen(generics.ListAPIView):
+    serializer_class = ExamenLabDetSerializer
+
+    def get_queryset(self):
+        id = self.request.query_params.get('id')
+        return ExamenLabDet.objects.filter(codigoExam=id)
+
 def reporteMensualExamenes(request):
     fecha = datetime.today()
     fechaInicio = fecha + timedelta(days=-30)
@@ -123,10 +130,11 @@ def reporteMensualExamenes(request):
         ('ALIGN',(0,-1),(-1,-1),'CENTER'), 
         ('BOX',(0,0),(-1,-1),0.25,colors.black),]))
     tabla.wrapOn(c,width,height)
-    if (contador==0):
+     if (contador==0 or contador==1):
         contador=1
-    tabla.drawOn(c,40,695-contador*30)
-
+        distancia=38
+    tabla.drawOn(c,40,695-contador*distancia)
+    
     
     #TABLA_______________________________________________
 
@@ -187,9 +195,12 @@ def reporteSemanalExamenes(request):
         ('ALIGN',(0,-1),(-1,-1),'CENTER'), 
         ('BOX',(0,0),(-1,-1),0.25,colors.black),]))
     tabla.wrapOn(c,width,height)
-    if (contador==0):
+     distancia=25
+    if (contador==0 or contador==1):
         contador=1
-    tabla.drawOn(c,40,695-contador*30)
+        distancia=38
+    tabla.drawOn(c,40,695-contador*distancia)
+    
 
     
     #TABLA_______________________________________________
@@ -269,10 +280,12 @@ def resultadoExamen(request,id):
         ('ALIGN',(0,-1),(-1,-1),'CENTER'), 
         ('BOX',(0,0),(-1,-1),0.25,colors.black),]))
     tabla.wrapOn(c,width,height)
-    if (contador==0):
+    distancia=25
+    if (contador==0 or contador==1):
         contador=1
-    tabla.drawOn(c,40,630-contador*30)
-    fintabla=630-contador*30-20
+        distancia=38
+    tabla.drawOn(c,40,630-contador*distancia)
+    fintabla=630-contador*distancia-20
 
     c.drawString(40,fintabla, 'Observaciones :')
     c.setFont('Helvetica',11)
@@ -286,6 +299,71 @@ def resultadoExamen(request,id):
     buffer.close()
     response.write(pdf)
     return response
+
+
+def reporteTipoExamen(request,tipoExam):
+        
+    examenLabCab=ExamenLabCab.objects.filter(tipoExam__nombre=tipoExam)
+    
+    
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename=ReporteTipoExamen.pdf'
+    buffer = BytesIO()
+    c = canvas.Canvas(buffer,pagesize=A4)
+
+    #Cabecera__________________________________________
+    c.setLineWidth(.3)
+    c.setFont('Helvetica',24)
+    c.drawString(195,750,'REPORTE TIPO')
+    c.setFont('Helvetica', 24)
+    c.drawString(230, 730, 'EXAMEN')
+    c.line(40,695,550,695)
+    fecha = datetime.now()
+    fecha = fecha.strftime("%d-%m-%Y")
+    c.setFont('Helvetica', 13)
+    c.drawString(440, 697, 'Fecha:')
+    c.drawString(480,697,str(fecha))
+    c.drawImage("apps/Laboratorio/static/Unsa.jpg",45,700,width=85, height=110, mask='auto')
+    width,height =A4
+    #Cabecera_____________________________________________
+    #TABLA_______________________________________________
+    datos=[]
+    tablaCampos = ('NOMBRE', 'DNI', 'FECHA', 'EXAMEN')
+    contador=0
+    for var in examenLabCab:
+        # creo variable p para guardar la descripcion
+        nombre=Paragraph(var.nombre, styles['Normal'])
+        dni=Paragraph(var.dni, styles['Normal'])
+        fecha=Paragraph(var.fecha.__str__(), styles['Normal'])
+        tipoExam=Paragraph(var.tipoExam.__str__(), styles['Normal'])
+        # añado a la lista la llave primaria de acl y ademas la descripcion contenida en p
+        datos.append((nombre,dni,fecha,tipoExam))
+        contador+=1
+   
+    tabla = Table(data=[tablaCampos] + datos,colWidths=[9*cm,3*cm,3*cm,3*cm])
+    tabla.setStyle(TableStyle([
+        ('INNERGRID',(0,0),(-1,-1),0.25,colors.black),
+        ('ALIGN',(0,-1),(-1,-1),'CENTER'), 
+        ('BOX',(0,0),(-1,-1),0.25,colors.black),]))
+    tabla.wrapOn(c,width,height)
+    distancia=25
+    if (contador==0 or contador==1):
+        contador=1
+        distancia=38
+    tabla.drawOn(c,40,695-contador*distancia)
+
+    
+    #TABLA_______________________________________________
+
+    # Close the PDF object cleanly.
+    c.showPage()
+    c.save()
+    pdf = buffer.getvalue()
+    buffer.close()
+    response.write(pdf)
+
+    return response
+
 
 def reporte(request):
 
