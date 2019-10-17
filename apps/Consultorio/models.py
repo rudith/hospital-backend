@@ -41,6 +41,21 @@ class Triaje(models.Model):
     def __str__(self):
         return self.pk.__str__() 
 
+# def contadorConsultas():
+#     last_consulta = Consulta.objects.all().order_by('triaje')
+#     numeroHistoria = last_consulta.
+#     inicio = 0
+#     if not last_booking:
+#         return inicio
+#         #return 'HDU' + str(datetime.now().date().year) + '-' + str(datetime.now().date().month).zfill(2)+ '-' +  '0001'
+    
+#     booking_int = int(numeroHistoria[11:15])
+#     new_historia_int = booking_int + 1
+#     print()
+#     #new_booking_id = 'HDU' + str(str(datetime.date.today().year)) + str(datetime.date.today().month).zfill(2) + str(new_booking_int).zfill(4)
+#     new_historia_id = 'HDU' + str(datetime.now().date().year) + '-' + str(datetime.now().date().month).zfill(2) + '-' + str(new_historia_int).zfill(4)
+#     return new_historia_id
+
 class Consulta(models.Model):
     #FK Triaje
     triaje = models.OneToOneField(Triaje, on_delete=models.CASCADE, primary_key=True)
@@ -56,6 +71,6 @@ class Consulta(models.Model):
     proximaCita = models.DateField(blank=True,null=True)     
     especialidad = models.ForeignKey(Especialidad, related_name='consultasE',on_delete=models.CASCADE)
     fechaCreacion = models.DateField(auto_now_add=True)
-
+    #nroConsulta = models.IntegerField(default = contadorConsultas, editable=False)
     def __str__(self):  
         return self.pk.__str__() 

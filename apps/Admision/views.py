@@ -25,7 +25,8 @@ from rest_framework.views import APIView
 from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
 
-from .serializers import DistritoSerializer, ProvinciaSerializer, DepartamentoSerializer, HistoriaSerializer, HistoriaViewSerializer#, GrupSangSerializer
+from .serializers import DistritoSerializer, ProvinciaSerializer, DepartamentoSerializer, HistoriaSerializer, HistoriaViewSerializer, DistritosxProvincia, ProvinciasxDepartamento
+#, GrupSangSerializer
 from .models import HorarioCab, HorarioDet, Provincia, Distrito, Departamento, Historia#, GrupSang
 import requests
 
@@ -91,6 +92,21 @@ class BuscarNombreH(generics.ListAPIView):
         if qs.all().count()<1:
             qs = Historia.objects.filter(apellido_paterno__icontains=nombre)
         return qs
+
+
+class BuscarDistrito(generics.RetrieveUpdateDestroyAPIView):
+    lookup_field = 'id'
+    serializer_class = DistritosxProvincia
+
+    def get_queryset(self):
+        return Provincia.objects.all()
+
+class BuscarProvincia(generics.RetrieveUpdateDestroyAPIView):
+    lookup_field = 'id'
+    serializer_class = ProvinciasxDepartamento
+
+    def get_queryset(self):
+        return Departamento.objects.all()
 
 def reniecDatos(request,dni):
     token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Imp2aWNlbnRlZy45NkBnbWFpbC5jb20ifQ.MyaKW0GJOlNqoLSYq5Vj0OIo-8oAew5OB3PT3vfZDjs'

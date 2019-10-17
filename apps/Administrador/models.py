@@ -50,4 +50,6 @@ class Personal(models.Model):
     estReg = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.nombres +" "+self.apellido_paterno + " (" +self.area.__str__()+")"
+        return self.pk.__str__()
+        #return self.nombres +" "+self.apellido_paterno + " (" +self.area.__str__()+")"
+        

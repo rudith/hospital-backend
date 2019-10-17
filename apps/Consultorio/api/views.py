@@ -8,7 +8,7 @@ from apps.Admision.serializers import HistoriaSerializer
 from apps.Administrador.models import Especialidad
 from apps.Admision.models import Historia
 from .serializers import (TriajeSerializer, TriajeViewSerializer,CitaSerializer, CitaViewSerializer, CitasDniSerializer, ConsultaSerializer, ConsultaViewSerializer,
-                          ConsultasDniSerializer, ConsultasHistoriaSerializer,TriajeHistoriaSerializer,HistorialClinicoSerializer,
+                          ConsultaHistoriaViewSerializer, ConsultasDniSerializer, ConsultasHistoriaSerializer,TriajeHistoriaSerializer,HistorialClinicoSerializer,
                           CitasMedicoViewSerializer, CitasEspecialidadViewSerializer,CitaViewSerializerEstado
 )#,CitaTemporal)
 
@@ -54,8 +54,6 @@ class vistaCrearCita(ModelViewSet):
 class vistaCita(ModelViewSet):
     queryset = Cita.objects.all()
     serializer_class = CitaViewSerializer
-    filter_backends = [SearchFilter]
-    search_fields = ["numeroRecibo"]
      # permission_classes = [IsAuthenticated]
 
 # class vistaCitaTemporal(ModelViewSet):
@@ -68,14 +66,29 @@ class vistaCrearConsulta(ModelViewSet):
 
 class vistaConsulta(ModelViewSet):
     queryset = Consulta.objects.all()
-    serializer_class = ConsultaViewSerializer
+    serializer_class = ConsultaHistoriaViewSerializer
 
-class BuscarHistorialClinico(generics.RetrieveUpdateDestroyAPIView):
-    lookup_field = 'numeroHistoria'
-    serializer_class = HistorialClinicoSerializer
+class vistaConsultaHistoria(ModelViewSet):
+    queryset = Consulta.objects.all()
+    serializer_class = ConsultaHistoriaViewSerializer
+
+class BuscarHistorialClinico(generics.ListAPIView):
+    #queryset = Consulta.objects.all()
+    serializer_class = ConsultaHistoriaViewSerializer
+    #serializer_class = HistorialClinicoSerializer
 
     def get_queryset(self):
-        return Historia.objects.all()
+        nro = self.request.query_params.get('nro')
+        return Consulta.objects.filter(numeroHistoria__numeroHistoria=nro)
+
+class BuscarHistorialClinicoDNI(generics.ListAPIView):
+    #queryset = Consulta.objects.all()
+    serializer_class = ConsultaHistoriaViewSerializer
+    #serializer_class = HistorialClinicoSerializer
+
+    def get_queryset(self):
+        dni = self.request.query_params.get('dni')
+        return Consulta.objects.filter(numeroHistoria__dni=dni)
 
 class BuscarCitaDni(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'dni'

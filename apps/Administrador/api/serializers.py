@@ -69,3 +69,12 @@ class PersonalViewSerializer(serializers.ModelSerializer):
         fields = "__all__"  
         # fields = ['id','dni','nombres','apellido_paterno','apellido_materno','celular','telefono','direccion','fechaReg',
         # 'updated_at','estReg','areaId','area','tipo_personal','tipo_personalId','especialidad','especialidadId','user','usuarioId']
+
+class PersonalConsultorioSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+    usuarioId = serializers.PrimaryKeyRelatedField(write_only=True, queryset=User.objects.all(), source='user')
+
+    class Meta:
+        model = Personal
+        #fields = "__all__"  
+        fields = ['dni','nombres','apellido_paterno','apellido_materno','celular','user','usuarioId']

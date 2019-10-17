@@ -130,7 +130,8 @@ def reporteMensualExamenes(request):
         ('ALIGN',(0,-1),(-1,-1),'CENTER'), 
         ('BOX',(0,0),(-1,-1),0.25,colors.black),]))
     tabla.wrapOn(c,width,height)
-     if (contador==0 or contador==1):
+    distancia=25
+    if (contador==0 or contador==1):
         contador=1
         distancia=38
     tabla.drawOn(c,40,695-contador*distancia)
@@ -195,7 +196,7 @@ def reporteSemanalExamenes(request):
         ('ALIGN',(0,-1),(-1,-1),'CENTER'), 
         ('BOX',(0,0),(-1,-1),0.25,colors.black),]))
     tabla.wrapOn(c,width,height)
-     distancia=25
+    distancia=25
     if (contador==0 or contador==1):
         contador=1
         distancia=38

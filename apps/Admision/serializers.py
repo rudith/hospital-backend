@@ -13,22 +13,58 @@ class DepartamentoSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+# class ProvinciaSerializer(serializers.ModelSerializer):
+    
+#     departamento = DepartamentoSerializer(read_only=True)
+#     departamentoId = serializers.PrimaryKeyRelatedField(write_only=True, queryset= Departamento.objects.all(), source='departamento')
+#     class Meta:
+#         model = Provincia
+#         fields = "__all__"
 class ProvinciaSerializer(serializers.ModelSerializer):
     
-    departamento = DepartamentoSerializer(read_only=True)
-    departamentoId = serializers.PrimaryKeyRelatedField(write_only=True, queryset= Departamento.objects.all(), source='departamento')
     class Meta:
         model = Provincia
         fields = "__all__"
 
-class DistritoSerializer(serializers.ModelSerializer):
-    provincia = ProvinciaSerializer(read_only=True)
-    provinciaId = serializers.PrimaryKeyRelatedField(write_only=True, queryset= Provincia.objects.all(), source='provincia')
+class ProvinciasSerializer(serializers.ModelSerializer):
     
+    class Meta:
+        model = Provincia
+        fields = ['id','nombre']
+
+class DistritoSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Distrito
         fields = "__all__"
 
+class DistritosSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Distrito
+        fields = ['id','nombre']
+# class DistritoSerializer(serializers.ModelSerializer):
+#     provincia = ProvinciaSerializer(read_only=True)
+#     provinciaId = serializers.PrimaryKeyRelatedField(write_only=True, queryset= Provincia.objects.all(), source='provincia')
+    
+#     class Meta:
+#         model = Distrito
+#         fields = "__all__"
+
+
+class DistritosxProvincia(serializers.ModelSerializer):
+    distritos = DistritosSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Provincia
+        fields = ['id','nombre','departamento','distritos']
+
+class ProvinciasxDepartamento(serializers.ModelSerializer):
+    provincias = ProvinciasSerializer(many=True, read_only=True)
+ 
+    class Meta:
+        model = Departamento
+        fields = ['id','nombre','provincias']
 # class PacienteSerializer(serializers.ModelSerializer):
 
 #     class Meta:
