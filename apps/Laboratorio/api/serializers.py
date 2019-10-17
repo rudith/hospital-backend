@@ -25,4 +25,4 @@ class BuscarExamenNombreSerializer(serializers.ModelSerializer):
     tipoExam = TipoExamenSerializer(read_only=True)
     class Meta:
         model = ExamenLabCab
-        fields = ['nombre','dni','fecha','tipoExam','detalles','orden','observaciones']
+        fields = ['id','nombre','dni','fecha','tipoExam','detalles','orden','observaciones']
