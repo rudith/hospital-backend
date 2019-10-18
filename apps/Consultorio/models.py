@@ -8,7 +8,7 @@ from .validators import  fechaSeparacion,fechaAtencion,valoresnegativos
 class Cita(models.Model):
     
     especialidad = models.ForeignKey(Especialidad, related_name='citasE',on_delete=models.CASCADE)
-    numeroHistoria = models.ForeignKey(Historia,related_name='citas', on_delete=models.CASCADE,null=True)
+    numeroHistoria = models.ForeignKey(Historia,related_name='citas', on_delete=models.CASCADE)
     medico = models.ForeignKey(Personal,related_name='citasM', on_delete=models.CASCADE)
     numeroRecibo = models.CharField(max_length=15,blank=True,null=True)
     fechaSeparacion = models.DateField(blank=True,null=True,validators=[fechaSeparacion])
@@ -26,7 +26,7 @@ class Triaje(models.Model):
 
     #FK Historia
     # falta campo personal
-    numeroHistoria = models.ForeignKey(Historia,related_name='triajes', on_delete=models.CASCADE,null=True)
+    numeroHistoria = models.ForeignKey(Historia,related_name='triajes', on_delete=models.CASCADE)
     personal = models.ForeignKey(Personal, on_delete=models.CASCADE)
     cita = models.OneToOneField(Cita, on_delete=models.CASCADE)
     talla = models.FloatField(validators=[valoresnegativos])
@@ -59,7 +59,7 @@ class Triaje(models.Model):
 class Consulta(models.Model):
     #FK Triaje
     triaje = models.OneToOneField(Triaje, on_delete=models.CASCADE, primary_key=True)
-    numeroHistoria = models.ForeignKey(Historia,related_name='consultas', on_delete=models.CASCADE,null=True)
+    numeroHistoria = models.ForeignKey(Historia,related_name='consultas', on_delete=models.CASCADE)
     medico = models.ForeignKey(Personal, on_delete=models.CASCADE)  
     motivoConsulta = models.TextField(blank=True,null=True)
     apetito = models.CharField(max_length=100,blank=True,null=True)
