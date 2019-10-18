@@ -123,7 +123,7 @@ class BuscarCitaMedicoEstado(generics.ListAPIView):
         #id = self.kwargs['id']
         id = self.request.query_params.get('id')
         estadoCita = "Triado"
-        return Cita.objects.filter(medico__id=id,estadoCita=estadoCita)
+        return Cita.objects.filter(medico__pk=id,estadoCita=estadoCita)
         
 class BuscarCitasEspera(generics.ListAPIView):
     
