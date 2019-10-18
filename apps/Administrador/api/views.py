@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 from .serializers import AreaSerializer, PersonalSerializer, PersonalViewSerializer, TipoPersonalSerializer, EspecialidadSerializer, UsuarioSerializer
 from ..models import Area, Personal, TipoPersonal, Especialidad
 from django.contrib.auth.models import User
+from .pagination import SmallSetPagination
 
 class vistaArea(ModelViewSet):
     queryset = Area.objects.all()
@@ -29,9 +30,15 @@ class vistaCrearPersonal(ModelViewSet):
 class vistaPersonal(ModelViewSet):
     queryset = Personal.objects.all()
     serializer_class = PersonalViewSerializer
+    #pagination_class = SmallSetPagination
     #permission_classes = [IsAuthenticated]
     # filter_backends = [SearchFilter]
     # search_fields = ["dni"]
+
+class vistaPersonales(ModelViewSet):
+    queryset = Personal.objects.all()
+    serializer_class = PersonalViewSerializer
+    pagination_class = SmallSetPagination
 
 class vistaUsuario(ModelViewSet):
     queryset = User.objects.all()
