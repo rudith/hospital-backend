@@ -128,7 +128,7 @@ def reniecDatos(request,dni):
     #print(data)
       
     return JsonResponse(data)
-
+#Realizado por Julio Vicente: Historial Clinico,contiene datos & Consultas ,con su triaje, del paciente , utiliza libreria reportlab
 def HistoriaPDF(request,dni):
     
     historia=Historia.objects.filter(dni=dni)
