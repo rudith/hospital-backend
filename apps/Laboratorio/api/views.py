@@ -24,31 +24,35 @@ from rest_framework import status
 styles = getSampleStyleSheet()
 
 
+#Realizado por Julio Vicente: Vista general de Examen Cabecera, Get Post Put Delete
+class VistaExamenLabCab(ModelViewSet):                                  
 
-class VistaExamenLabCab(ModelViewSet):
+    queryset = ExamenLabCab.objects.all()                              
+    serializer_class = ExamenLabCabSerializer       
 
-    queryset = ExamenLabCab.objects.all()
-    serializer_class = ExamenLabCabSerializer
-    
+#Realizado por Julio Vicente: Busqueda por ID de un examen , Serializer muestra todo los campos de Examen Cab y los Detalles 
 class BuscarExamen(generics.RetrieveUpdateDestroyAPIView):
+
     lookup_field = 'id'
     serializer_class = BuscarExamenNombreSerializer
 
     def get_queryset(self):
         return ExamenLabCab.objects.all()
 
-
+#Realizado por Julio Vicente: Vista general de Tipo Examen, Get Post Put Delete
 class VistaTipoExamen(ModelViewSet):
-    
     queryset = TipoExamen.objects.all()
     serializer_class = TipoExamenSerializer
     
-
+#Realizado por Julio Vicente: Vista general de Examen Detalle, Get Post Put Delete
 class VistaExamenLabDet(ModelViewSet):
     queryset = ExamenLabDet.objects.all()
     serializer_class = ExamenLabDetSerializer
 
+
+#Realizado por Julio Vicente: Lista todos los examenes que tiene una persona el filtro es por nombre
 class filtro(generics.ListAPIView):
+
     serializer_class = BuscarExamenNombreSerializer
 
     def get_queryset(self):
@@ -56,6 +60,7 @@ class filtro(generics.ListAPIView):
         nombre = self.request.query_params.get('nombre')
         return ExamenLabCab.objects.filter(nombre=nombre)
 
+#Realizado por Julio Vicente: Lista todos los examenes que tiene una persona el filtro es por DNI
 class filtroDNI(generics.ListAPIView):
     serializer_class = BuscarExamenNombreSerializer
 
@@ -64,17 +69,17 @@ class filtroDNI(generics.ListAPIView):
         dni = self.request.query_params.get('dni')
         return ExamenLabCab.objects.filter(dni=dni)
 
-
+#Realizado por Julio Vicente: Lista todos los examenes en un rango de fecha
 class filtrofecha(generics.ListAPIView):
     serializer_class = BuscarExamenNombreSerializer
 
     def get_queryset(self):
-        #queryset = ExamenLabCab.objects.all()
-        #?fecha_inicio=2019-09-25&fecha_final=2019-09-03
+        #?fecha_inicio=2019-09-25&fecha_final=2019-09-30    -- > ejemplo de url
         fechaini = self.request.query_params.get('fecha_inicio')
         fechafin = self.request.query_params.get('fecha_final')
         return ExamenLabCab.objects.filter(fecha__range=[fechaini,fechafin])
 
+#Realizado por Julio Vicente: Lista todos los detalles que tiene una cabecera por su ID
 class filtroDetallesCodigoExamen(generics.ListAPIView):
     serializer_class = ExamenLabDetSerializer
 
@@ -82,6 +87,7 @@ class filtroDetallesCodigoExamen(generics.ListAPIView):
         id = self.request.query_params.get('id')
         return ExamenLabDet.objects.filter(codigoExam=id)
 
+#Realizado por Julio Vicente: Reporte de todos los examenes en un mes, utiliza libreria reportlab
 def reporteMensualExamenes(request):
     fecha = datetime.today()
     fechaInicio = fecha + timedelta(days=-30)
@@ -139,7 +145,7 @@ def reporteMensualExamenes(request):
     
     #TABLA_______________________________________________
 
-    # Close the PDF object cleanly.
+    # Cierre PDF .
     c.showPage()
     c.save()
     pdf = buffer.getvalue()
@@ -148,6 +154,7 @@ def reporteMensualExamenes(request):
 
     return response
 
+#Realizado por Julio Vicente: Reporte de todos los examenes en una semana, utiliza libreria reportlab
 def reporteSemanalExamenes(request):
     fecha = datetime.today()
     fechaInicio = fecha + timedelta(days=-7)
@@ -206,7 +213,7 @@ def reporteSemanalExamenes(request):
     
     #TABLA_______________________________________________
 
-    # Close the PDF object cleanly.
+    # Cierre PDF
     c.showPage()
     c.save()
     pdf = buffer.getvalue()
@@ -214,7 +221,8 @@ def reporteSemanalExamenes(request):
     response.write(pdf)
 
     return response
-    
+
+#Realizado por Julio Vicente: Muestra en PDF resultados de un examen (Cabecera,detalle,tip), utiliza libreria reportlab
 def resultadoExamen(request,id):
         
     examenLabCab=ExamenLabCab.objects.filter(id=id)
@@ -293,7 +301,7 @@ def resultadoExamen(request,id):
     c.drawString(40,fintabla-20 ,examenLabCab[0].observaciones.__str__())
     
 
-
+    # Cierre PDF
     c.showPage()
     c.save()
     pdf = buffer.getvalue()
@@ -301,7 +309,7 @@ def resultadoExamen(request,id):
     response.write(pdf)
     return response
 
-
+#Realizado por Julio Vicente: Reporte de todos los examenes por tipo de Examen, utiliza libreria reportlab
 def reporteTipoExamen(request,tipoExam):
         
     examenLabCab=ExamenLabCab.objects.filter(tipoExam__nombre=tipoExam)
@@ -365,7 +373,7 @@ def reporteTipoExamen(request,tipoExam):
 
     return response
 
-
+#Realizado por Julio Vicente: Reporte ejemplo, utiliza libreria reportlab
 def reporte(request):
 
     # Create the HttpResponse object with the appropriate PDF headers.
