@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'rest_framework',
     #'rest_framework.authtoken',
 
-# app para expiracion de un token
+    # app para expiracion de un token
     'django_expiring_token',
 
     'allauth',
@@ -71,6 +71,11 @@ INSTALLED_APPS = [
 EXPIRING_TOKEN_DURATION=timedelta(minutes=3)
 
 MIDDLEWARE = [
+    # CORS
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.BrokenLinkEmailsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -78,11 +83,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
-    # CORS
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.BrokenLinkEmailsMiddleware',
-    'django.middleware.common.CommonMiddleware',
 ]
 
 # CORS
