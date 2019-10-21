@@ -99,8 +99,6 @@ class ConsultaViewSerializer(serializers.ModelSerializer):
     numeroHistoriaId = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Historia.objects.all(), source='numeroHistoria')
     medico = PersonalConsultorioSerializer(read_only=True)
     medicoId = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Personal.objects.all(), source='medico')
-    especialidad = EspecialidadSerializer(read_only=True)
-    especialidadId = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Especialidad.objects.all(), source='especialidad')
     class Meta:
         model = Consulta
         fields = "__all__"
@@ -114,8 +112,6 @@ class ConsultaHistoriaViewSerializer(serializers.ModelSerializer):
     numeroHistoriaId = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Historia.objects.all(), source='numeroHistoria')
     medico = PersonalConsultorioSerializer(read_only=True)
     medicoId = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Personal.objects.all(), source='medico')
-    especialidad = EspecialidadSerializer(read_only=True)
-    especialidadId = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Especialidad.objects.all(), source='especialidad')
     triaje = TriajeSerializer(read_only=True)
     class Meta:
         model = Consulta

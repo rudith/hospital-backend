@@ -69,7 +69,6 @@ class Consulta(models.Model):
     diagnostico = models.TextField(max_length=300,blank=True,null=True)
     tratamiento = models.TextField(max_length=300,blank=True,null=True)
     proximaCita = models.DateField(blank=True,null=True)     
-    especialidad = models.ForeignKey(Especialidad, related_name='consultasE',on_delete=models.CASCADE)
     fechaCreacion = models.DateField(auto_now_add=True)
     #nroConsulta = models.IntegerField(default = contadorConsultas, editable=False)
     def __str__(self):  

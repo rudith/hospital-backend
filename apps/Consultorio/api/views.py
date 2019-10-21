@@ -135,6 +135,28 @@ class BuscarCitasEspera(generics.ListAPIView):
         estadoCita = "Espera"
         return Cita.objects.filter(estadoCita=estadoCita)    
 
+class BuscarCitaNombre (generics.ListAPIView):
+    
+    serializer_class = CitaViewSerializer
+     
+    def get_queryset(self):
+        #id = self.kwargs['id']
+        nombre = self.request.query_params.get('nom')
+        qs = Cita.objects.filter(numeroHistoria__nombres__icontains = nombre) 
+        if qs.all().count()<1:
+                qs = Cita.objects.filter(numeroHistoria__apellido_paterno__icontains=nombre)
+        return qs    
+
+        
+class BuscarCitaHistoria(generics.ListAPIView):
+    
+    serializer_class = CitaViewSerializer
+     
+    def get_queryset(self):
+        #id = self.kwargs['id']
+        nro = self.request.query_params.get('nro')
+        return Cita.objects.filter(numeroHistoria__numeroHistoria__icontains = nro)    
+
 class BuscarCitaEspecialidad(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
     serializer_class = CitasEspecialidadViewSerializer

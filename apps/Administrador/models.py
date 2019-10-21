@@ -36,7 +36,7 @@ class Personal(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     area = models.ForeignKey(Area, on_delete=models.CASCADE)
     tipo_personal = models.ForeignKey(TipoPersonal, on_delete=models.CASCADE)
-    especialidad = models.ForeignKey(Especialidad, on_delete=models.CASCADE)
+    especialidad = models.ForeignKey(Especialidad, on_delete=models.CASCADE,blank=True,null=True)
     dni = models.CharField(unique=True, max_length=8)
     nombres = models.CharField(max_length=40)
     apellido_paterno = models.CharField(max_length=30)

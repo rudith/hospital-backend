@@ -42,7 +42,7 @@ class Provincia(models.Model):
         return self.nombre
 
 class Distrito(models.Model):
-    nombre = models.CharField(max_length=30)   
+    nombre = models.CharField(max_length=50)   
     provincia = models.ForeignKey(Provincia, on_delete=models.CASCADE,blank=True,null=True,related_name='distritos')
 
     def __str__(self):
