@@ -90,12 +90,13 @@ class BuscarHistorialClinicoDNI(generics.ListAPIView):
         dni = self.request.query_params.get('dni')
         return Consulta.objects.filter(numeroHistoria__dni=dni)
 
-class BuscarCitaDni(generics.RetrieveUpdateDestroyAPIView):
-    lookup_field = 'dni'
-    serializer_class = CitasDniSerializer
-
+class BuscarCitaDni(generics.ListAPIView):
+    
+    serializer_class = CitaViewSerializer
+     
     def get_queryset(self):
-        return Historia.objects.all()
+        dni = self.request.query_params.get('dni')
+        return Cita.objects.filter(numeroHistoria__dni=dni)
 
 class BuscarCitaDniE(generics.ListAPIView):
     #lookup_field = 'dni'
@@ -146,7 +147,6 @@ class BuscarCitaNombre (generics.ListAPIView):
         if qs.all().count()<1:
                 qs = Cita.objects.filter(numeroHistoria__apellido_paterno__icontains=nombre)
         return qs    
-
         
 class BuscarCitaHistoria(generics.ListAPIView):
     
@@ -157,12 +157,13 @@ class BuscarCitaHistoria(generics.ListAPIView):
         nro = self.request.query_params.get('nro')
         return Cita.objects.filter(numeroHistoria__numeroHistoria__icontains = nro)    
 
-class BuscarCitaEspecialidad(generics.RetrieveUpdateDestroyAPIView):
-    lookup_field = 'id'
-    serializer_class = CitasEspecialidadViewSerializer
-
+class BuscarCitaEspecialidad(generics.ListAPIView):
+    serializer_class = CitaViewSerializer
+     
     def get_queryset(self):
-        return Especialidad.objects.all()
+        #id = self.kwargs['id']
+        id = self.request.query_params.get('id')
+        return Cita.objects.filter(especialidad = id)    
 
 class BuscarTriajeHistoria(generics.ListAPIView):
 

@@ -11,14 +11,17 @@ from .pagination import SmallSetPagination
 class vistaArea(ModelViewSet):
     queryset = Area.objects.all()
     serializer_class = AreaSerializer
+    pagination_class = SmallSetPagination
 
 class vistaTipoPersonal(ModelViewSet):
     queryset = TipoPersonal.objects.all()
     serializer_class = TipoPersonalSerializer
+    pagination_class = SmallSetPagination
 
 class vistaEspecialidad(ModelViewSet):
     queryset = Especialidad.objects.all()
     serializer_class = EspecialidadSerializer
+    pagination_class = SmallSetPagination
 
 class vistaCrearPersonal(ModelViewSet):
     queryset = Personal.objects.all()
@@ -26,10 +29,12 @@ class vistaCrearPersonal(ModelViewSet):
     # permission_classes = [IsAuthenticated]
     filter_backends = [SearchFilter]
     search_fields = ["dni"]
+    pagination_class = SmallSetPagination
 
 class vistaPersonal(ModelViewSet):
     queryset = Personal.objects.all()
     serializer_class = PersonalViewSerializer
+    pagination_class = SmallSetPagination
     #pagination_class = SmallSetPagination
     #permission_classes = [IsAuthenticated]
     # filter_backends = [SearchFilter]
@@ -43,19 +48,21 @@ class vistaPersonales(ModelViewSet):
 class vistaUsuario(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UsuarioSerializer
+    pagination_class = SmallSetPagination
 
 class BuscarDni(generics.RetrieveUpdateDestroyAPIView):
 
     lookup_field = 'dni'
     serializer_class = PersonalViewSerializer
-    
+
     def get_queryset(self):
         return Personal.objects.all()
 
 class BuscarEspecialidad(generics.ListAPIView):
   
     serializer_class = PersonalViewSerializer
-     
+    pagination_class = SmallSetPagination
+
     def get_queryset(self):
         #id = self.kwargs['id']
         id = self.request.query_params.get('id')
