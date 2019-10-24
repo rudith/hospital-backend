@@ -101,7 +101,7 @@ class Historia(models.Model):
     apellido_materno = models.CharField(max_length=30)
     sexo = models.CharField(max_length=10)
     edad = models.IntegerField(null=True)
-    fechaNac = models.DateField(blank=True,null=True,validators=[fechaNac])
+    fechaNac = models.DateField(validators=[fechaNac])
     foto = models.BinaryField(blank=True,null=True)
     celular = models.CharField(max_length=9,blank=True,null=True)
     telefono = models.CharField(max_length=6,blank=True,null=True)
@@ -120,6 +120,7 @@ class Historia(models.Model):
 
     # Metodo que captura la fecha de nacimiento  y devuelve la edad automaticamente 
     def edad(self):
+    
        return int((datetime.now().date() - self.fechaNac).days / 365.25)
 
-  
+    
