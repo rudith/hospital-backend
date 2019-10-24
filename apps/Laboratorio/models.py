@@ -1,4 +1,5 @@
 from django.db import models
+from .validators import dni,fecha
 
 
 class TipoExamen(models.Model):
@@ -9,11 +10,11 @@ class TipoExamen(models.Model):
 
 
 class ExamenLabCab(models.Model):
-    nombre = models.CharField(max_length=100)
-    dni = models.CharField(max_length=8)
+    nombre = models.CharField(max_length=100,blank=True)
+    dni = models.CharField(max_length=8,validators=[dni])
     tipoExam = models.ForeignKey(TipoExamen, on_delete=models.CASCADE)
     orden = models.CharField(max_length=100, blank=True, null=True)
-    fecha = models.DateField()
+    fecha = models.DateField(validators=[fecha])
     observaciones = models.TextField(blank=True)
     def __str__(self):
         return self.nombre.__str__()+","+ self.dni.__str__()+","+self.fecha.__str__()+","+self.tipoExam.__str__()
