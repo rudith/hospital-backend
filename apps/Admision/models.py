@@ -4,7 +4,6 @@ from .validators import dni
 from .validators import fechaNac
 #libreria datetime
 from datetime import datetime
-# from .validators import numeroHistoria
 from datetime import date
 class HorarioCab(models.Model):
     codigoHor = models.AutoField(primary_key=True)
@@ -119,16 +118,8 @@ class Historia(models.Model):
     def __str__(self):
         return self.numeroHistoria.__str__() 
 
-    # captura la fecha y devuelve la edad 
+    # Metodo que captura la fecha de nacimiento  y devuelve la edad automaticamente 
     def edad(self):
        return int((datetime.now().date() - self.fechaNac).days / 365.25)
 
-     #Prueba de autoincrementable
-
-    #def save(self, *args, **kwargs):
-    #    if self.numeroHistoria == 20001:
-    #        try:
-    #            self.numeroHistoria = self.store.customer_set.count() + 1
-    #        else:
-    #            self.numeroHistoria = 1
-    #    super(Historia, self).save(*args, **kwargs)
+  

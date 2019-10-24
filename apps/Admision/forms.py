@@ -3,10 +3,10 @@ from .models import Historia
 from .validators import dni 
 from .validators import numeroHistoria
 from .validators import fechaNac
-from .validators import dniint
 
 
 
+# metodo que llama al metodo de validacion de dni para asignarle al atributo que desea evaluar con su respectivo modelo
 class MyForm(models.ModelForm):
 
     def __init__(self):
@@ -15,7 +15,7 @@ class MyForm(models.ModelForm):
 
     class Meta:
         model = Historia
-
+# metodo que llama al metodo de validacion de numeroHistoria para asignarle al atributo que desea evaluar con su respectivo modelo
 class MyForm1(models.ModelForm):
 
     def __init__(self):
@@ -24,12 +24,7 @@ class MyForm1(models.ModelForm):
 
     class Meta:
         model = Historia
-
-#    def clean_nombre(self):
-#        nombre = self.cleaned_data['nombre']
-#        if not nombre.isalpha():
-#            raise forms.ValidationError('El nombre no puede contener números')
-#        return nombre
+# metodo que llama al metodo de validacion de fechaNac para asignarle al atributo que desea evaluar con su respectivo modelo
 class MyForm2(models.ModelForm):
 
     def __init__(self):
@@ -39,11 +34,3 @@ class MyForm2(models.ModelForm):
     class Meta:
         model = Historia
 
-class MyForm3(models.ModelForm):
-
-    def __init__(self):
-        super().__init__(*args, **kwargs)
-        self.fields['dni'].validators.append(dniint)
-
-    class Meta:
-        model = Historia
