@@ -26,6 +26,7 @@ from .serializers import DistritoSerializer, ProvinciaSerializer, DepartamentoSe
 from .models import HorarioCab, HorarioDet, Provincia, Distrito, Departamento, Historia#, GrupSang
 from apps.Consultorio.models import Triaje,Consulta
 import requests
+from .pagination import SmallSetPagination
 
 # class vistaGrupoSang(ModelViewSet):
 #     queryset = GrupSang.objects.all()
@@ -34,21 +35,25 @@ import requests
 class vistaDistrito(ModelViewSet):
     queryset = Distrito.objects.all()
     serializer_class = DistritoSerializer
+    pagination_class = SmallSetPagination
      # permission_classes = [IsAuthenticated]
 
 class vistaProvincia(ModelViewSet):
     queryset = Provincia.objects.all()
     serializer_class = ProvinciaSerializer
+    pagination_class = SmallSetPagination
      # permission_classes = [IsAuthenticated]
 
 class vistaDepartamento(ModelViewSet):
     queryset = Departamento.objects.all()
     serializer_class = DepartamentoSerializer
+    pagination_class = SmallSetPagination
      # permission_classes = [IsAuthenticated]
 
 class vistaCrearHistoria(ModelViewSet):
     queryset = Historia.objects.all()
     serializer_class = HistoriaSerializer
+    pagination_class = SmallSetPagination
     filter_backends = [SearchFilter]
     search_fields = ["dni"]
     #search_fields = ["numeroHistoria"]
@@ -57,6 +62,7 @@ class vistaCrearHistoria(ModelViewSet):
 class vistaHistoria(ModelViewSet):
     queryset = Historia.objects.all()
     serializer_class = HistoriaViewSerializer
+    pagination_class = SmallSetPagination
     filter_backends = [SearchFilter]
     search_fields = ["dni"]
     #search_fields = ["numeroHistoria"]
@@ -65,6 +71,7 @@ class vistaHistoria(ModelViewSet):
 class BuscarHistoria(generics.ListAPIView):
 
     serializer_class = HistoriaViewSerializer
+    pagination_class = SmallSetPagination
 
     def get_queryset(self):
         nro = self.request.query_params.get('nro')
@@ -81,6 +88,7 @@ class BuscarDNIH(generics.RetrieveUpdateDestroyAPIView):
 class BuscarNombreH(generics.ListAPIView):
     
     serializer_class = HistoriaViewSerializer
+    pagination_class = SmallSetPagination
      
     def get_queryset(self):
         #id = self.kwargs['id']
@@ -94,6 +102,7 @@ class BuscarNombreH(generics.ListAPIView):
 class BuscarDistrito(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
     serializer_class = DistritosxProvincia
+    pagination_class = SmallSetPagination
 
     def get_queryset(self):
         return Provincia.objects.all()
@@ -101,6 +110,7 @@ class BuscarDistrito(generics.RetrieveUpdateDestroyAPIView):
 class BuscarProvincia(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
     serializer_class = ProvinciasxDepartamento
+    pagination_class = SmallSetPagination
 
     def get_queryset(self):
         return Departamento.objects.all()
@@ -108,6 +118,7 @@ class BuscarProvincia(generics.RetrieveUpdateDestroyAPIView):
 class BuscarDistritos(generics.ListAPIView):
     lookup_field = 'id'
     serializer_class = DistritoSerializer
+    pagination_class = SmallSetPagination
 
     def get_queryset(self):
         id = self.request.query_params.get('id')
@@ -115,7 +126,8 @@ class BuscarDistritos(generics.ListAPIView):
 
 class BuscarProvincias(generics.ListAPIView):
     serializer_class = ProvinciaSerializer
-
+    pagination_class = SmallSetPagination
+    
     def get_queryset(self):
         id = self.request.query_params.get('id')
         return Provincia.objects.filter(departamento__id=id)

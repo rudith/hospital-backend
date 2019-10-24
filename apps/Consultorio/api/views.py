@@ -20,11 +20,12 @@ from rest_framework.generics import get_object_or_404
 from rest_framework import status
 from datetime import datetime
 from datetime import date
-
+from .pagination import SmallSetPagination
     
 class vistaCrearTriaje(ModelViewSet):
     queryset = Triaje.objects.all()
     serializer_class = TriajeSerializer
+    pagination_class = SmallSetPagination
     #filter_backends = [SearchFilter]
     #search_fields = ["dni"]
     # def perform_create(self, serializer):
@@ -35,6 +36,7 @@ class vistaCrearTriaje(ModelViewSet):
 class vistaTriaje(ModelViewSet):
     queryset = Triaje.objects.all()
     serializer_class = TriajeViewSerializer
+    pagination_class = SmallSetPagination
      # permission_classes = [IsAuthenticated]
 
 class BuscarTriajeCita(generics.RetrieveUpdateDestroyAPIView):
@@ -47,6 +49,7 @@ class BuscarTriajeCita(generics.RetrieveUpdateDestroyAPIView):
 class vistaCrearCita(ModelViewSet):
     queryset = Cita.objects.all()
     serializer_class = CitaSerializer
+    pagination_class = SmallSetPagination
     filter_backends = [SearchFilter]
     search_fields = ["numeroRecibo"]
      # permission_classes = [IsAuthenticated]
@@ -54,6 +57,7 @@ class vistaCrearCita(ModelViewSet):
 class vistaCita(ModelViewSet):
     queryset = Cita.objects.all()
     serializer_class = CitaViewSerializer
+    pagination_class = SmallSetPagination
      # permission_classes = [IsAuthenticated]
 
 # class vistaCitaTemporal(ModelViewSet):
@@ -63,18 +67,22 @@ class vistaCita(ModelViewSet):
 class vistaCrearConsulta(ModelViewSet):
     queryset = Consulta.objects.all()
     serializer_class = ConsultaSerializer
+    pagination_class = SmallSetPagination
 
 class vistaConsulta(ModelViewSet):
     queryset = Consulta.objects.all()
     serializer_class = ConsultaHistoriaViewSerializer
+    pagination_class = SmallSetPagination
 
 class vistaConsultaHistoria(ModelViewSet):
     queryset = Consulta.objects.all()
     serializer_class = ConsultaHistoriaViewSerializer
+    pagination_class = SmallSetPagination
 
 class BuscarHistorialClinico(generics.ListAPIView):
     #queryset = Consulta.objects.all()
     serializer_class = ConsultaHistoriaViewSerializer
+    pagination_class = SmallSetPagination
     #serializer_class = HistorialClinicoSerializer
 
     def get_queryset(self):
@@ -84,6 +92,7 @@ class BuscarHistorialClinico(generics.ListAPIView):
 class BuscarHistorialClinicoDNI(generics.ListAPIView):
     #queryset = Consulta.objects.all()
     serializer_class = ConsultaHistoriaViewSerializer
+    pagination_class = SmallSetPagination
     #serializer_class = HistorialClinicoSerializer
 
     def get_queryset(self):
@@ -93,6 +102,7 @@ class BuscarHistorialClinicoDNI(generics.ListAPIView):
 class BuscarCitaDni(generics.ListAPIView):
     
     serializer_class = CitaViewSerializer
+    pagination_class = SmallSetPagination
      
     def get_queryset(self):
         dni = self.request.query_params.get('dni')
@@ -102,6 +112,7 @@ class BuscarCitaDniE(generics.ListAPIView):
     #lookup_field = 'dni'
     #serializer_class = CitasDniSerializer
     serializer_class = CitaViewSerializer
+    pagination_class = SmallSetPagination
      
     def get_queryset(self):
         dni = self.request.query_params.get('dni')
@@ -111,6 +122,7 @@ class BuscarCitaDniE(generics.ListAPIView):
 class BuscarCitaMedico(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
     serializer_class = CitasMedicoViewSerializer
+    pagination_class = SmallSetPagination
  #   estado = Cita.objects.filter(estadoCita='Espera')
     
     def get_queryset(self):
@@ -119,6 +131,7 @@ class BuscarCitaMedico(generics.RetrieveUpdateDestroyAPIView):
 class BuscarCitaMedicoEstado(generics.ListAPIView):
     
     serializer_class = CitaViewSerializer
+    pagination_class = SmallSetPagination
      
     def get_queryset(self):
         #id = self.kwargs['id']
@@ -129,6 +142,7 @@ class BuscarCitaMedicoEstado(generics.ListAPIView):
 class BuscarCitasEspera(generics.ListAPIView):
     
     serializer_class = CitaViewSerializer
+    pagination_class = SmallSetPagination
      
     def get_queryset(self):
         #id = self.kwargs['id']
@@ -139,6 +153,7 @@ class BuscarCitasEspera(generics.ListAPIView):
 class BuscarCitaNombre (generics.ListAPIView):
     
     serializer_class = CitaViewSerializer
+    pagination_class = SmallSetPagination
      
     def get_queryset(self):
         #id = self.kwargs['id']
@@ -151,6 +166,7 @@ class BuscarCitaNombre (generics.ListAPIView):
 class BuscarCitaHistoria(generics.ListAPIView):
     
     serializer_class = CitaViewSerializer
+    pagination_class = SmallSetPagination
      
     def get_queryset(self):
         #id = self.kwargs['id']
@@ -159,16 +175,26 @@ class BuscarCitaHistoria(generics.ListAPIView):
 
 class BuscarCitaEspecialidad(generics.ListAPIView):
     serializer_class = CitaViewSerializer
+    pagination_class = SmallSetPagination
      
     def get_queryset(self):
         #id = self.kwargs['id']
         id = self.request.query_params.get('id')
         return Cita.objects.filter(especialidad = id)    
 
+class BuscarCitaEspecialidad2(generics.ListAPIView):
+    serializer_class = CitaViewSerializer
+    pagination_class = SmallSetPagination
+     
+    def get_queryset(self):
+        #id = self.kwargs['id']
+        esp = self.request.query_params.get('esp')
+        return Cita.objects.filter(especialidad__nombre__icontains = esp)  
+
 class BuscarTriajeHistoria(generics.ListAPIView):
 
     serializer_class = TriajeViewSerializer
-
+    pagination_class = SmallSetPagination
     def get_queryset(self):
         nro = self.request.query_params.get('nro')
         return Triaje.objects.filter(cita__numeroHistoria__numeroHistoria=nro)
@@ -176,6 +202,7 @@ class BuscarTriajeHistoria(generics.ListAPIView):
 class BuscarConsultaDni(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'dni'
     serializer_class = ConsultasDniSerializer
+    pagination_class = SmallSetPagination
 
     def get_queryset(self):
         return Historia.objects.all()
@@ -183,6 +210,7 @@ class BuscarConsultaDni(generics.RetrieveUpdateDestroyAPIView):
 class BuscarConsultaHistoria(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'numeroHistoria'
     serializer_class = ConsultasDniSerializer
+    pagination_class = SmallSetPagination
 
     def get_queryset(self):
         return Historia.objects.all()
@@ -261,6 +289,7 @@ class triajeCita(generics.RetrieveUpdateDestroyAPIView):
 
 
 class vistaHistoriaDetalle(APIView):
+    pagination_class = SmallSetPagination
 
     def get_object(self, pk):
         consulta = get_object_or_404(Consulta, pk=pk)

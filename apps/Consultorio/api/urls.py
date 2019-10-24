@@ -4,7 +4,7 @@ from rest_framework.routers import DefaultRouter
 #from .views import (ProfileViewSet, ProfileStatusViewSet)
 from .views import (vistaTriaje, vistaCrearTriaje, vistaCita, vistaCrearCita, vistaConsulta, vistaCrearConsulta, cancelarCita, BuscarCitaDni, BuscarConsultaHistoria
                     ,BuscarConsultaDni,BuscarTriajeHistoria, BuscarCitaMedico, BuscarTriajeCita, BuscarHistorialClinico, atenderCita, triajeCita,BuscarCitaEspecialidad
-                    ,BuscarCitaMedicoEstado, BuscarCitasEspera,BuscarCitaDniE,BuscarHistorialClinicoDNI,BuscarCitaHistoria,BuscarCitaNombre)#, vistaCitaTemporal)# vistaHistoriaConsulta)
+                    ,BuscarCitaMedicoEstado, BuscarCitasEspera,BuscarCitaDniE,BuscarHistorialClinicoDNI,BuscarCitaHistoria,BuscarCitaNombre,BuscarCitaEspecialidad2)#, vistaCitaTemporal)# vistaHistoriaConsulta)
 
 # profile_list = ProfileViewSet.as_view({"get": "list"})
 # profile_detail = ProfileViewSet.as_view({"get": "retrieve"})
@@ -36,6 +36,7 @@ urlpatterns = [
     url(r'^consultadni/(?P<dni>\d+)/$', BuscarConsultaDni.as_view(), name="BuscarConsultaDni"),
     url(r'^citadni/$', BuscarCitaDni.as_view(), name="BuscarCitaDni"),
     url(r'^citasporespecialidad/$', BuscarCitaEspecialidad.as_view(), name="BuscarCitasMedico"),
+    url(r'^citasporespecialidad2/$', BuscarCitaEspecialidad2.as_view(), name="BuscarCitasMedico"),
     url(r'^citadniespera/$', BuscarCitaDniE.as_view(), name="BuscarCitaDniE"),
     url(r'^citaspormedico/$', BuscarCitaMedicoEstado.as_view(), name="BuscarCitasMedico"),
     url(r'^citasenespera/$', BuscarCitasEspera.as_view(), name="BuscarCitasEspera"),

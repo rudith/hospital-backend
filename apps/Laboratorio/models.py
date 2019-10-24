@@ -10,7 +10,7 @@ class TipoExamen(models.Model):
 
 
 class ExamenLabCab(models.Model):
-    nombre = models.CharField(max_length=100,blank=True)
+    nombre = models.CharField(max_length=100)
     dni = models.CharField(max_length=8,validators=[dni])
     tipoExam = models.ForeignKey(TipoExamen, on_delete=models.CASCADE)
     orden = models.CharField(max_length=100, blank=True, null=True)

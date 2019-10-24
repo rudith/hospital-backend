@@ -22,7 +22,7 @@ from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
 from rest_framework import status
 styles = getSampleStyleSheet()
-
+from .pagination import SmallSetPagination
 
 #Realizado por Julio Vicente: Vista general de Examen Cabecera, Get Post Put Delete
 class VistaExamenLabCab(ModelViewSet):                                  

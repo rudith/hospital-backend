@@ -68,7 +68,7 @@ INSTALLED_APPS = [
 ]
 
 #token expiracion (se define un tiempo de duracion del token)
-EXPIRING_TOKEN_DURATION=timedelta(minutes=3)
+EXPIRING_TOKEN_DURATION=timedelta(minutes=2)
 
 MIDDLEWARE = [
     # CORS
@@ -179,9 +179,9 @@ REST_FRAMEWORK = {
         'django_expiring_token.authentication.ExpiringTokenAuthentication',
         
     ),
-#     'DEFAULT_PERMISSION_CLASSES': [
-#        'rest_framework.permissions.IsAuthenticated',
-#    ]
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.IsAuthenticated',
+    # ]
 }
 
 SITE_ID = 1
