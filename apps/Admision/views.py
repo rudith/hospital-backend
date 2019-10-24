@@ -136,7 +136,7 @@ def HistoriaPDF(request,dni):
     width,height =A4
     
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename=Historial.pdf'
+    response['Content-Disposition'] = 'attachment; filename=Historial_'+""+historia[0].numeroHistoria.__str__()+""+'.pdf'
     buffer = BytesIO()
     c = canvas.Canvas(buffer,pagesize=A4)
 
@@ -145,6 +145,7 @@ def HistoriaPDF(request,dni):
     c.setFont('Helvetica',20)
     c.drawString(185,750,'HISTORIA CLINICA')
     c.drawString(405, 765, 'N° HISTORIA')
+    c.setFont('Helvetica',16)
     c.drawString(402,725,historia[0].numeroHistoria.__str__())
     c.drawImage("apps/Laboratorio/static/Unsa.jpg",60,700,width=85, height=110, mask='auto')
     c.line(40,695,550,695)
