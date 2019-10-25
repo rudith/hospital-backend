@@ -35,7 +35,7 @@ from .pagination import SmallSetPagination
 class vistaDistrito(ModelViewSet):
     queryset = Distrito.objects.all()
     serializer_class = DistritoSerializer
-    pagination_class = SmallSetPagination
+    pagination_class = SmallSetPagination 
      # permission_classes = [IsAuthenticated]
 
 class vistaProvincia(ModelViewSet):
@@ -47,7 +47,6 @@ class vistaProvincia(ModelViewSet):
 class vistaDepartamento(ModelViewSet):
     queryset = Departamento.objects.all()
     serializer_class = DepartamentoSerializer
-    pagination_class = SmallSetPagination
      # permission_classes = [IsAuthenticated]
 
 class vistaCrearHistoria(ModelViewSet):
@@ -71,7 +70,6 @@ class vistaHistoria(ModelViewSet):
 class BuscarHistoria(generics.ListAPIView):
 
     serializer_class = HistoriaViewSerializer
-    pagination_class = SmallSetPagination
 
     def get_queryset(self):
         nro = self.request.query_params.get('nro')
@@ -102,7 +100,6 @@ class BuscarNombreH(generics.ListAPIView):
 class BuscarDistrito(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
     serializer_class = DistritosxProvincia
-    pagination_class = SmallSetPagination
 
     def get_queryset(self):
         return Provincia.objects.all()
@@ -110,7 +107,6 @@ class BuscarDistrito(generics.RetrieveUpdateDestroyAPIView):
 class BuscarProvincia(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
     serializer_class = ProvinciasxDepartamento
-    pagination_class = SmallSetPagination
 
     def get_queryset(self):
         return Departamento.objects.all()
@@ -118,7 +114,6 @@ class BuscarProvincia(generics.RetrieveUpdateDestroyAPIView):
 class BuscarDistritos(generics.ListAPIView):
     lookup_field = 'id'
     serializer_class = DistritoSerializer
-    pagination_class = SmallSetPagination
 
     def get_queryset(self):
         id = self.request.query_params.get('id')
@@ -127,7 +122,7 @@ class BuscarDistritos(generics.ListAPIView):
 class BuscarProvincias(generics.ListAPIView):
     serializer_class = ProvinciaSerializer
     pagination_class = SmallSetPagination
-    
+
     def get_queryset(self):
         id = self.request.query_params.get('id')
         return Provincia.objects.filter(departamento__id=id)
