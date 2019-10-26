@@ -15,14 +15,18 @@ def client():
     token_h = "Token 8f901d8666059a0c196f8239ab4efc4a57a93377"
     headers = {"Authorization": token_h}
 
-    response = requests.get("http://127.0.0.1:8000/administrador/personal/",
+    response = requests.get("http://127.0.0.1:8000/administrador/ver-personales/",
                             headers=headers)
 
-    print("Status Code: ", response.status_code)
+    print("HOLA")
+    print(response.to_string())
+ 
+client()
+#     print("Status Code: ", response.status_code)
     
-    response_data = response.json()
-    print(response_data)
+#     response_data = response.json()
+#     print(response_data)
 
 
-if __name__ == "__main__":
-    client()
+# if __name__ == "__main__":
+#     client()

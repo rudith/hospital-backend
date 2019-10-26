@@ -73,8 +73,9 @@ class PersonalViewSerializer(serializers.ModelSerializer):
 class PersonalConsultorioSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     usuarioId = serializers.PrimaryKeyRelatedField(write_only=True, queryset=User.objects.all(), source='user')
-
+    especialidad = EspecialidadSerializer(read_only=True)
+    #usuarioId = serializers.PrimaryKeyRelatedField(write_only=True, queryset=User.objects.all(), source='user')
     class Meta:
         model = Personal
         #fields = "__all__"  
-        fields = ['dni','nombres','apellido_paterno','apellido_materno','celular','user','usuarioId']
+        fields = ['dni','nombres','apellido_paterno','apellido_materno','celular','user','usuarioId','especialidad']

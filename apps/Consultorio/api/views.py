@@ -26,6 +26,8 @@ class vistaCrearTriaje(ModelViewSet):
     queryset = Triaje.objects.all()
     serializer_class = TriajeSerializer
     pagination_class = SmallSetPagination
+
+        #return qs
     #filter_backends = [SearchFilter]
     #search_fields = ["dni"]
     # def perform_create(self, serializer):
