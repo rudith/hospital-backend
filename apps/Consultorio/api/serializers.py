@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import Triaje, Cita, Consulta
+from ..models import Triaje, Cita, Consulta, Orden
 from apps.Admision.models import Historia
 from apps.Administrador.models import Especialidad, Personal
 from django.contrib.auth.models import User
@@ -17,6 +17,10 @@ from apps.Admision.serializers import HistoriaSerializer, HistoriaGetSerializer
 #     class Meta:
 #         model = Especialista
 #         fields = "__all__"
+class OrdenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Triaje
+        fields = "__all__" 
 
 class TriajeSerializer(serializers.ModelSerializer):
     class Meta:

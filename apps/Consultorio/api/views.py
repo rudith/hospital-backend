@@ -9,11 +9,11 @@ from apps.Administrador.models import Especialidad
 from apps.Admision.models import Historia
 from .serializers import (TriajeSerializer, TriajeViewSerializer,CitaSerializer, CitaViewSerializer, CitasDniSerializer, ConsultaSerializer, ConsultaViewSerializer,
                           ConsultaHistoriaViewSerializer, ConsultasDniSerializer, ConsultasHistoriaSerializer,TriajeHistoriaSerializer,
-                          CitasMedicoViewSerializer, CitasEspecialidadViewSerializer,CitaViewSerializerEstado
+                          CitasMedicoViewSerializer, CitasEspecialidadViewSerializer,CitaViewSerializerEstado, OrdenSerializer
 )#,CitaTemporal)
 
 
-from ..models import Triaje, Cita, Consulta
+from ..models import Triaje, Cita, Consulta, Orden
 from apps.Admision.models import Historia
 from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
@@ -22,6 +22,12 @@ from datetime import datetime
 from datetime import date
 from .pagination import SmallSetPagination
     
+
+class vistaCrearOrden(ModelViewSet):
+    queryset = Orden.objects.all()
+    serializer_class = OrdenSerializer
+
+
 class vistaCrearTriaje(ModelViewSet):
     queryset = Triaje.objects.all()
     serializer_class = TriajeSerializer

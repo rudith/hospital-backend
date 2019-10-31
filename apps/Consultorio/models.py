@@ -1,8 +1,9 @@
 from django.db import models
 from apps.Administrador.models import Area, Personal, TipoPersonal, Especialidad
 from apps.Admision.models import HorarioCab, HorarioDet, Historia, Provincia, Distrito, Departamento#, GrupSang
+from apps.Laboratorio.models import TipoExamen
 from django.contrib.auth.models import User
-from .validators import  fechaSeparacion,fechaAtencion,valoresnegativos
+from .validators import  fechaSeparacion,fechaAtencion,valoresnegativos,fecha
 
 
 class Cita(models.Model):
@@ -41,21 +42,6 @@ class Triaje(models.Model):
     def __str__(self):
         return self.pk.__str__() 
 
-# def contadorConsultas():
-#     last_consulta = Consulta.objects.all().order_by('triaje')
-#     numeroHistoria = last_consulta.
-#     inicio = 0
-#     if not last_booking:
-#         return inicio
-#         #return 'HDU' + str(datetime.now().date().year) + '-' + str(datetime.now().date().month).zfill(2)+ '-' +  '0001'
-    
-#     booking_int = int(numeroHistoria[11:15])
-#     new_historia_int = booking_int + 1
-#     print()
-#     #new_booking_id = 'HDU' + str(str(datetime.date.today().year)) + str(datetime.date.today().month).zfill(2) + str(new_booking_int).zfill(4)
-#     new_historia_id = 'HDU' + str(datetime.now().date().year) + '-' + str(datetime.now().date().month).zfill(2) + '-' + str(new_historia_int).zfill(4)
-#     return new_historia_id
-
 class Consulta(models.Model):
     #FK Triaje
     triaje = models.OneToOneField(Triaje, on_delete=models.CASCADE, primary_key=True)
@@ -68,8 +54,20 @@ class Consulta(models.Model):
     examenFisico = models.CharField(max_length=100,blank=True,null=True)
     diagnostico = models.TextField(max_length=300,blank=True,null=True)
     tratamiento = models.TextField(max_length=300,blank=True,null=True)
+    ordenExam = models.TextField(max_length=200,blank=True,null=True)
     proximaCita = models.DateField(blank=True,null=True)     
     fechaCreacion = models.DateField(auto_now_add=True)
-    #nroConsulta = models.IntegerField(default = contadorConsultas, editable=False)
+    def __str__(self):  
+        return self.pk.__str__() 
+    
+class Orden(models.Model):
+    numeroHistoria = models.ForeignKey(Historia,related_name='ordenes', on_delete=models.CASCADE,blank=True,null=True)
+    dni = models.CharField(max_length=8)
+    nombre = models.CharField(max_length=100)
+    medico = models.CharField(max_length=100,blank=True,null=True)
+    orden = models.CharField(max_length=100,blank=True,null=True)
+    tipoExam = models.ForeignKey(TipoExamen, on_delete=models.CASCADE)
+    fecha = models.DateField(validators=[fecha])
+    fechaCreacion = models.DateField(auto_now_add=True)
     def __str__(self):  
         return self.pk.__str__() 
