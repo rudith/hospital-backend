@@ -49,7 +49,14 @@ class PersonalDetalleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Personal
         #fields = "__all__"  
-        fields = ['id','nombres','apellido_paterno','apellido_materno','area','tipo_personal','especialidad']
+        fields = ['user','nombres','apellido_paterno','apellido_materno','area','tipo_personal','especialidad']
+class PersonalOrdenSerializer(serializers.ModelSerializer):
+    especialidad = serializers.StringRelatedField(read_only=True)
+    
+    class Meta:
+        model = Personal
+        #fields = "__all__"  
+        fields = ['user','nombres','apellido_paterno','apellido_materno','area','tipo_personal','especialidad']
 
 class PersonalViewSerializer(serializers.ModelSerializer):
     #user = serializers.StringRelatedField(read_only=True)

@@ -2,9 +2,9 @@ from django.urls import include, path
 from django.conf.urls import url
 from rest_framework.routers import DefaultRouter
 #from .views import (ProfileViewSet, ProfileStatusViewSet)
-from .views import (vistaTriaje, vistaCrearTriaje, vistaCita, vistaCrearCita, vistaConsulta, vistaCrearConsulta, cancelarCita, BuscarCitaDni, BuscarConsultaHistoria
+from .views import (vistaCrearOrden, vistaOrden, vistaTriaje, vistaCrearTriaje, vistaCita, vistaCrearCita, vistaConsulta, vistaCrearConsulta, cancelarCita, BuscarCitaDni, BuscarConsultaHistoria
                     ,BuscarConsultaDni,BuscarTriajeHistoria, BuscarCitaMedico, BuscarTriajeCita, BuscarHistorialClinico, atenderCita, triajeCita,BuscarCitaEspecialidad
-                    ,BuscarCitaMedicoEstado, BuscarCitasEspera,BuscarCitaDniE,BuscarHistorialClinicoDNI,BuscarCitaHistoria,BuscarCitaNombre,BuscarCitaEspecialidad2)#, vistaCitaTemporal)# vistaHistoriaConsulta)
+                    ,BuscarCitaMedicoEstado, BuscarCitasEspera,BuscarCitaDniE,BuscarHistorialClinicoDNI,BuscarCitaHistoria,BuscarCitaNombre,BuscarCitaEspecialidad2,VerSolicitudes)#, vistaCitaTemporal)# vistaHistoriaConsulta)
 
 # profile_list = ProfileViewSet.as_view({"get": "list"})
 # profile_detail = ProfileViewSet.as_view({"get": "retrieve"})
@@ -17,6 +17,9 @@ router.register(r"crear-consulta",vistaCrearConsulta)
 router.register(r"ver-triajes",vistaTriaje)
 router.register(r"ver-citas",vistaCita)
 router.register(r"ver-consultas",vistaConsulta)
+router.register(r"crear-orden",vistaCrearOrden)
+router.register(r"ver-orden",vistaOrden)
+router.register(r"ver-solicitudes",VerSolicitudes)
 # router.register(r"citatemporal",vistaCitaTemporal)
 
 #router.register(r"historias",vistaHistoriaConsulta)

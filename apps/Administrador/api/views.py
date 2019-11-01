@@ -13,15 +13,28 @@ class vistaArea(ModelViewSet):
     serializer_class = AreaSerializer
     pagination_class = SmallSetPagination
 
+class vistaArea2(ModelViewSet):
+    queryset = Area.objects.all()
+    serializer_class = AreaSerializer
+    pagination_class = SmallSetPagination
+
 class vistaTipoPersonal(ModelViewSet):
     queryset = TipoPersonal.objects.all()
     serializer_class = TipoPersonalSerializer
     pagination_class = SmallSetPagination
 
+class vistaTipoPersonal2(ModelViewSet):
+    queryset = TipoPersonal.objects.all()
+    serializer_class = TipoPersonalSerializer
+
 class vistaEspecialidad(ModelViewSet):
     queryset = Especialidad.objects.all()
     serializer_class = EspecialidadSerializer
     pagination_class = SmallSetPagination
+
+class vistaEspecialidad2(ModelViewSet):
+    queryset = Especialidad.objects.all()
+    serializer_class = EspecialidadSerializer
 
 class vistaCrearPersonal(ModelViewSet):
     queryset = Personal.objects.all()
@@ -35,10 +48,10 @@ class vistaPersonal(ModelViewSet):
     queryset = Personal.objects.all()
     serializer_class = PersonalViewSerializer
     pagination_class = SmallSetPagination
-    #pagination_class = SmallSetPagination
-    #permission_classes = [IsAuthenticated]
-    # filter_backends = [SearchFilter]
-    # search_fields = ["dni"]
+
+class vistaPersonal2(ModelViewSet):
+    queryset = Personal.objects.all()
+    serializer_class = PersonalViewSerializer
 
 class vistaPersonales(ModelViewSet):
     queryset = Personal.objects.all()
@@ -51,6 +64,10 @@ class vistaUsuario(ModelViewSet):
     serializer_class = UsuarioSerializer
     pagination_class = SmallSetPagination
 
+class vistaUsuario2(ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UsuarioSerializer
+
 class BuscarDni(generics.RetrieveUpdateDestroyAPIView):
 
     lookup_field = 'dni'
@@ -62,7 +79,6 @@ class BuscarDni(generics.RetrieveUpdateDestroyAPIView):
 class BuscarEspecialidad(generics.ListAPIView):
   
     serializer_class = PersonalViewSerializer
-    pagination_class = SmallSetPagination
 
     def get_queryset(self):
         #id = self.kwargs['id']

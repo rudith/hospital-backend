@@ -59,7 +59,7 @@ class vistaCrearHistoria(ModelViewSet):
      # permission_classes = [IsAuthenticated]
 
 class vistaHistoria(ModelViewSet):
-    queryset = Historia.objects.all()
+    queryset = Historia.objects.all().order_by("-id")
     serializer_class = HistoriaViewSerializer
     pagination_class = SmallSetPagination
     filter_backends = [SearchFilter]
@@ -121,7 +121,6 @@ class BuscarDistritos(generics.ListAPIView):
 
 class BuscarProvincias(generics.ListAPIView):
     serializer_class = ProvinciaSerializer
-    pagination_class = SmallSetPagination
 
     def get_queryset(self):
         id = self.request.query_params.get('id')

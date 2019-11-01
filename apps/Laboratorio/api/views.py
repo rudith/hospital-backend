@@ -27,8 +27,9 @@ from .pagination import SmallSetPagination
 #Realizado por Julio Vicente: Vista general de Examen Cabecera, Get Post Put Delete
 class VistaExamenLabCab(ModelViewSet):                                  
 
-    queryset = ExamenLabCab.objects.all()                              
+    queryset = ExamenLabCab.objects.all().order_by("-id")                             
     serializer_class = ExamenLabCabSerializer       
+    pagination_class = SmallSetPagination
 
 #Realizado por Julio Vicente: Busqueda por ID de un examen , Serializer muestra todo los campos de Examen Cab y los Detalles 
 class BuscarExamen(generics.RetrieveUpdateDestroyAPIView):
@@ -46,9 +47,9 @@ class VistaTipoExamen(ModelViewSet):
     
 #Realizado por Julio Vicente: Vista general de Examen Detalle, Get Post Put Delete
 class VistaExamenLabDet(ModelViewSet):
-    queryset = ExamenLabDet.objects.all()
+    queryset = ExamenLabDet.objects.all().order_by("-id")
     serializer_class = ExamenLabDetSerializer
-
+    pagination_class = SmallSetPagination
 
 #Realizado por Julio Vicente: Lista todos los examenes que tiene una persona el filtro es por nombre
 class filtro(generics.ListAPIView):
