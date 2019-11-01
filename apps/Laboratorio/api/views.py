@@ -113,7 +113,7 @@ def reporteMensualExamenes(request):
     c.setFont('Helvetica', 13)
     c.drawString(440, 697, 'Fecha:')
     c.drawString(480,697,str(fecha))
-    c.drawImage("apps/Laboratorio/static/Unsa.jpg",45,700,width=85, height=110, mask='auto')
+    c.drawImage("apps/Laboratorio/static/Unsa.png",45,700,width=85, height=110, mask='auto')
     width,height =A4
     #Cabecera_____________________________________________
     #TABLA_______________________________________________
@@ -137,8 +137,9 @@ def reporteMensualExamenes(request):
         ('BOX',(0,0),(-1,-1),0.25,colors.black),]))
     tabla.wrapOn(c,width,height)
     distancia=25
-    if (contador==0 or contador==1):
-        contador=1
+    if (contador==0 or contador==1 or contador==2):
+        if(contador==0):
+            contador=1
         distancia=38
     tabla.drawOn(c,40,695-contador*distancia)
     
@@ -180,7 +181,7 @@ def reporteSemanalExamenes(request):
     c.setFont('Helvetica', 13)
     c.drawString(440, 697, 'Fecha:')
     c.drawString(480,697,str(fecha))
-    c.drawImage("apps/Laboratorio/static/Unsa.jpg",45,700,width=85, height=110, mask='auto')
+    c.drawImage("apps/Laboratorio/static/Unsa.png",45,700,width=85, height=110, mask='auto')
     width,height =A4
     #Cabecera_____________________________________________
     #TABLA_______________________________________________
@@ -204,8 +205,9 @@ def reporteSemanalExamenes(request):
         ('BOX',(0,0),(-1,-1),0.25,colors.black),]))
     tabla.wrapOn(c,width,height)
     distancia=25
-    if (contador==0 or contador==1):
-        contador=1
+    if (contador==0 or contador==1 or contador==2):
+        if(contador==0):
+            contador=1
         distancia=38
     tabla.drawOn(c,40,695-contador*distancia)
     
@@ -239,7 +241,7 @@ def resultadoExamen(request,id):
     c.drawString(185,750,'Resultado de Examen')
     c.drawString(415, 770, 'Examen N°')
     c.drawString(455,725,examenLabCab[0].id.__str__())
-    c.drawImage("apps/Laboratorio/static/Unsa.jpg",60,700,width=85, height=110, mask='auto')
+    c.drawImage("apps/Laboratorio/static/Unsa.png",60,700,width=85, height=110, mask='auto')
     c.line(40,695,550,695)
     c.line(40,820,550,820)
     c.line(40,695,40,820)
@@ -290,8 +292,9 @@ def resultadoExamen(request,id):
         ('BOX',(0,0),(-1,-1),0.25,colors.black),]))
     tabla.wrapOn(c,width,height)
     distancia=25
-    if (contador==0 or contador==1):
-        contador=1
+    if (contador==0 or contador==1 or contador==2):
+        if(contador==0):
+            contador=1
         distancia=38
     tabla.drawOn(c,40,630-contador*distancia)
     fintabla=630-contador*distancia-20
@@ -332,7 +335,7 @@ def reporteTipoExamen(request,tipoExam):
     c.setFont('Helvetica', 13)
     c.drawString(440, 697, 'Fecha:')
     c.drawString(480,697,str(fecha))
-    c.drawImage("apps/Laboratorio/static/Unsa.jpg",45,700,width=85, height=110, mask='auto')
+    c.drawImage("apps/Laboratorio/static/Unsa.png",45,700,width=85, height=110, mask='auto')
     width,height =A4
     #Cabecera_____________________________________________
     #TABLA_______________________________________________
@@ -356,8 +359,9 @@ def reporteTipoExamen(request,tipoExam):
         ('BOX',(0,0),(-1,-1),0.25,colors.black),]))
     tabla.wrapOn(c,width,height)
     distancia=25
-    if (contador==0 or contador==1):
-        contador=1
+    if (contador==0 or contador==1 or contador==2):
+        if(contador==0):
+            contador=1
         distancia=38
     tabla.drawOn(c,40,695-contador*distancia)
 
@@ -400,7 +404,7 @@ def reporte(request):
     c.drawString(40, 650, 'DNI:')
     c.drawString(65, 650, '72547204')
     #c.drawImage("https://upload.wikimedia.org/wikipedia/commons/e/ef/Unsa.png", 10, 10,width=400, height=400, mask='auto')
-    c.drawImage("apps/Laboratorio/static/Unsa.jpg",45,700,width=85, height=110, mask='auto')
+    c.drawImage("apps/Laboratorio/static/Unsa.png",45,700,width=85, height=110, mask='auto')
     width,height =A4
     
     #_______________________tabla___________________________________
