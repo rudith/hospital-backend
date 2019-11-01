@@ -44,7 +44,7 @@ class vistaPersonales(ModelViewSet):
     queryset = Personal.objects.all()
     serializer_class = PersonalViewSerializer
     pagination_class = SmallSetPagination
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
 class vistaUsuario(ModelViewSet):
     queryset = User.objects.all()

@@ -10,8 +10,9 @@ def dni(value):
 
 # validacion de fecha de nacimiento 
 # Ingreso de fecha acepta fechas desde 0 hasta 130 años 
-# observacion ---> acepta solo fechas validad 
+# no acepta  fechas futuras solo la fecha  actual
 def fechaNac(value): 
-    a= int((datetime.now().date() - value).days / 365.25)  
-    if not  0 <= a <130  :
+    a= int((datetime.now().date() - value).days / 365.25)
+    b= int((datetime.now().date() - value).days)  
+    if not  (0 <= a <130) & (b >= 0) :
      raise ValidationError('datos de fecha no validos')

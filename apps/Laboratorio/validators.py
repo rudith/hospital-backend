@@ -9,11 +9,13 @@ def dni(value):
     if not  len(value) == 8 :
         raise ValidationError('numero de caracteres incorrectos')
 
+# Validacion de fecha laboratorio solo acepta fecha actual 
+# No acepta fechas futuras ni antiguas
 def fecha(value):
-   #if not  len(value) == 8:
+  
     b= int((datetime.now().date() - value).days)
-   #year = int((datetime.now().date() - fechaNac ).days / 365.25)
-    if not  b <= 0 :
-     raise ValidationError('datos de fecha incorrectos')
+   
+    if not  (b <= 0) & (b >= 0):
+      raise ValidationError('datos de fecha incorrectos')
 
 
