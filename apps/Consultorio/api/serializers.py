@@ -19,7 +19,7 @@ from apps.Laboratorio.models import TipoExamen
 #         fields = "__all__"
 class OrdenSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Triaje
+        model = Orden
         fields = "__all__" 
 
 class HistoriaTriajeSerializer(serializers.ModelSerializer):
@@ -42,9 +42,9 @@ class OrdenViewSerializer(serializers.ModelSerializer):
         model = Orden
         numeroHistoria = HistoriaOrdenSerializer(read_only=True)
         numeroHistoriaId = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Historia.objects.all(), source='numeroHistoria')
-        tipoExam = HistoriaOrdenSerializer(read_only=True)
+        tipoExam = TipoExamSerializer(read_only=True)
         tipoExamId = serializers.PrimaryKeyRelatedField(write_only=True, queryset=TipoExamen.objects.all(), source='tipoExam')
-        fields = ['id','numeroHistoria','numeroHistoriaId','dni','nombre','medico','orden','tipoExam','tipoExamId','fecha','fechaCreacion'] 
+        fields = ['id','numeroHistoria','dni','nombre','medico','orden','tipoExam','fecha','fechaCreacion'] 
 
 class TriajeSerializer(serializers.ModelSerializer):
     class Meta:
