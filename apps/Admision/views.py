@@ -154,7 +154,7 @@ def HistoriaPDF(request,dni):
     c.drawString(405, 765, 'N° HISTORIA')
     c.setFont('Helvetica',16)
     c.drawString(402,725,historia[0].numeroHistoria.__str__())
-    c.drawImage("apps/Laboratorio/static/Unsa.jpg",60,700,width=85, height=110, mask='auto')
+    c.drawImage("apps/Laboratorio/static/Unsa.png",60,700,width=85, height=110, mask='auto')
     c.line(40,695,550,695)
     c.line(40,820,550,820)
     c.line(40,695,40,820)
