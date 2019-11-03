@@ -20,6 +20,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
 from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
+from apps.Consultorio.models import Cita
 
 from .serializers import DistritoSerializer, ProvinciaSerializer, DepartamentoSerializer, HistoriaSerializer, HistoriaViewSerializer, DistritosxProvincia, ProvinciasxDepartamento
 #, GrupSangSerializer
@@ -135,6 +136,16 @@ def reniecDatos(request,dni):
     #print(data)
       
     return JsonResponse(data)
+
+def cancelarCitasFecha(request):
+    fecha = datetime.today()
+    fechaInicio = fecha + timedelta(days=-1)
+    fechaInicio = fechaInicio.strftime("%Y-%m-%d")
+    Cita.objects.filter(fechaAtencion__range=[fechaInicio,fechaInicio]).update(estadoCita="Cancelado")
+
+    return JsonResponse({'status':'done'})
+
+
 #Realizado por Julio Vicente: Historial Clinico,contiene datos & Consultas ,con su triaje, del paciente , utiliza libreria reportlab
 def HistoriaPDF(request,dni):
     
@@ -194,8 +205,9 @@ def HistoriaPDF(request,dni):
     c.drawString(125,550,'DNI')
     c.drawString(105,530,historia[0].dni.__str__())
 
-    c.drawString(340,550,'Provincia')
-    c.drawString(350,530,historia[0].provincia.__str__())
+    c.drawString(340,550,'Edad')
+    c.drawString(350,530,str(historia[0].edad()))
+    print(historia[0].edad.__str__())
 
     c.line(40,565,550,565)
     c.line(40,545,550,545)
@@ -260,6 +272,21 @@ def HistoriaPDF(request,dni):
     c.line(40,345,40,385)
     c.line(265,345,265,385)
     c.line(550,345,550,385)
+
+    #Edad y Fecha de Apertura
+    c.drawString(45,310,'Fecha de Apertura')
+    c.drawString(45,290,historia[0].fechaReg.__str__())
+
+    c.line(40,325,550,325)
+    c.line(40,305,550,305)
+    c.line(40,285,550,285)
+
+    c.line(40,285,40,325)
+    c.line(550,285,550,325)
+
+
+
+
      # Close the PDF object cleanly.
     c.showPage()
     contador=1
