@@ -20,6 +20,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
 from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
+from apps.Consultorio.models import Cita
 
 from .serializers import DistritoSerializer, ProvinciaSerializer, DepartamentoSerializer, HistoriaSerializer, HistoriaViewSerializer, DistritosxProvincia, ProvinciasxDepartamento
 #, GrupSangSerializer
@@ -134,6 +135,16 @@ def reniecDatos(request,dni):
     #print(data)
       
     return JsonResponse(data)
+
+def cancelarCitasFecha(request):
+    fecha = datetime.today()
+    fechaInicio = fecha + timedelta(days=-1)
+    fechaInicio = fechaInicio.strftime("%Y-%m-%d")
+    Cita.objects.filter(fechaAtencion__range=[fechaInicio,fechaInicio]).update(estadoCita="Cancelado")
+
+    return JsonResponse({'status':'done'})
+
+
 #Realizado por Julio Vicente: Historial Clinico,contiene datos & Consultas ,con su triaje, del paciente , utiliza libreria reportlab
 def HistoriaPDF(request,dni):
     
@@ -193,8 +204,8 @@ def HistoriaPDF(request,dni):
     c.drawString(125,550,'DNI')
     c.drawString(105,530,historia[0].dni.__str__())
 
-    c.drawString(340,550,'Provincia')
-    c.drawString(350,530,historia[0].provincia.__str__())
+    c.drawString(340,550,'Edad')
+    c.drawString(350,530,str(historia[0].edad()))
 
     c.line(40,565,550,565)
     c.line(40,545,550,545)
@@ -259,150 +270,162 @@ def HistoriaPDF(request,dni):
     c.line(40,345,40,385)
     c.line(265,345,265,385)
     c.line(550,345,550,385)
+
+     #Edad y Fecha de Apertura
+    c.drawString(45,310,'Fecha de Apertura')
+    c.drawString(45,290,historia[0].fechaReg.__str__())
+
+    c.line(40,325,550,325)
+    c.line(40,305,550,305)
+    c.line(40,285,550,285)
+
+    c.line(40,285,40,325)
+    c.line(550,285,550,325)
      # Close the PDF object cleanly.
     c.showPage()
     contador=1
-    for triajes in triaje:
-        consulta=Consulta.objects.filter(triaje=triajes.id.__str__())#Filtro de consultas por el id de triaje
-        
-        if(contador==1):
-            c.setFont('Helvetica',20)
-            c.line(40,820,560,820)#Linea arriba
-            c.line(40,420,560,420)#Linea media
-            c.line(40,20,560,20)#Linea abajo
-            c.line(40,760,560,760)#Linea entre triaje y consulta 1 
-            c.line(40,20,40,820) # Linea izquierda
-            c.line(560,20,560,820) # Linea derecha
-            #_____________________Triaje_________________________
-            c.drawString(50,790,'Fecha:')
-            c.drawString(50,770, triajes.fechaReg.__str__()) 
-            c.setFont('Helvetica',13)
-            c.drawString(240,800,'Talla:')
-            c.drawString(280,800, triajes.talla.__str__())
-            c.drawString(330,800,'Peso:')
-            c.drawString(370,800, triajes.peso.__str__())
-            c.drawString(420,800,'T°:')
-            c.drawString(460,800, triajes.temperatura.__str__())
-            c.drawString(240,780,'F.R:')
-            c.drawString(280,780, triajes.frecuenciaR.__str__())
-            c.drawString(330,780,'F.C:')
-            c.drawString(370,780, triajes.frecuenciaC.__str__())
-            c.drawString(420,780,'P.A:')
-            c.drawString(460,780, triajes.presionArt.__str__())
-            #__________________Consulta______________________
-            c.setFont('Helvetica',13)
-            c.drawString(50,740,'Motivo Consulta:')
-            c.drawString(50,640,'Apetito:')
-            c.drawString(230,640,'Orina:')
-            c.drawString(400,640,'Deposiciones:')
-            c.drawString(50,600,'Examen Fisico:')
-            c.drawString(310,600,'Diagnostico:')
-            c.drawString(50,500,'Tratamiento:')
-            c.drawString(310,500,'Proxima Cita')
+    if (triaje==None):
+        for triajes in triaje:
+            consulta=Consulta.objects.filter(triaje=triajes.id.__str__())#Filtro de consultas por el id de triaje
             
-                       
-            p = ParagraphStyle('test')
-            p.textColor = 'black'
-            p.borderColor = 'white'
-            p.borderWidth = 1
-            p.fontSize = 10
-            motivo = Paragraph(consulta[0].motivoConsulta.__str__(),p)
-            motivo.wrapOn(c,500,90)
-            motivo.drawOn(c, 50, 680)
-            apetito = Paragraph(consulta[0].apetito.__str__(),p)
-            apetito.wrapOn(c,170,90)
-            apetito.drawOn(c,50, 620)
-            orina = Paragraph(consulta[0].orina.__str__(),p)
-            orina.wrapOn(c,160,90)
-            orina.drawOn(c,230, 620)
-            deposiciones = Paragraph(consulta[0].deposiciones.__str__(),p)
-            deposiciones.wrapOn(c,160,90)
-            deposiciones.drawOn(c,400, 620)
-            examenFisico = Paragraph(consulta[0].examenFisico.__str__(),p)
-            examenFisico.wrapOn(c,245,90)
-            examenFisico.drawOn(c, 50, 560)
-            diagnostico = Paragraph(consulta[0].diagnostico.__str__(),p)
-            diagnostico.wrapOn(c,245,90)
-            diagnostico.drawOn(c, 310, 560)
-            tratamiento = Paragraph(consulta[0].tratamiento.__str__(),p)
-            tratamiento.wrapOn(c,245,90)
-            tratamiento.drawOn(c, 50, 460)
-            p.fontSize = 15
-            proximaCita = Paragraph(consulta[0].proximaCita.__str__(),p)
-            proximaCita.wrapOn(c,245,100)
-            proximaCita.drawOn(c, 310, 480)
-           
-        
+            if(contador==1):
+                c.setFont('Helvetica',20)
+                c.line(40,820,560,820)#Linea arriba
+                c.line(40,420,560,420)#Linea media
+                c.line(40,20,560,20)#Linea abajo
+                c.line(40,760,560,760)#Linea entre triaje y consulta 1 
+                c.line(40,20,40,820) # Linea izquierda
+                c.line(560,20,560,820) # Linea derecha
+                #_____________________Triaje_________________________
+                c.drawString(50,790,'Fecha:')
+                c.drawString(50,770, triajes.fechaReg.__str__()) 
+                c.setFont('Helvetica',13)
+                c.drawString(240,800,'Talla:')
+                c.drawString(280,800, triajes.talla.__str__())
+                c.drawString(330,800,'Peso:')
+                c.drawString(370,800, triajes.peso.__str__())
+                c.drawString(420,800,'T°:')
+                c.drawString(460,800, triajes.temperatura.__str__())
+                c.drawString(240,780,'F.R:')
+                c.drawString(280,780, triajes.frecuenciaR.__str__())
+                c.drawString(330,780,'F.C:')
+                c.drawString(370,780, triajes.frecuenciaC.__str__())
+                c.drawString(420,780,'P.A:')
+                c.drawString(460,780, triajes.presionArt.__str__())
+                #__________________Consulta______________________
+                c.setFont('Helvetica',13)
+                c.drawString(50,740,'Motivo Consulta:')
+                c.drawString(50,640,'Apetito:')
+                c.drawString(230,640,'Orina:')
+                c.drawString(400,640,'Deposiciones:')
+                c.drawString(50,600,'Examen Fisico:')
+                c.drawString(310,600,'Diagnostico:')
+                c.drawString(50,500,'Tratamiento:')
+                c.drawString(310,500,'Proxima Cita')
+                
+                        
+                p = ParagraphStyle('test')
+                p.textColor = 'black'
+                p.borderColor = 'white'
+                p.borderWidth = 1
+                p.fontSize = 10
+                motivo = Paragraph(consulta[0].motivoConsulta.__str__(),p)
+                motivo.wrapOn(c,500,90)
+                motivo.drawOn(c, 50, 680)
+                apetito = Paragraph(consulta[0].apetito.__str__(),p)
+                apetito.wrapOn(c,170,90)
+                apetito.drawOn(c,50, 620)
+                orina = Paragraph(consulta[0].orina.__str__(),p)
+                orina.wrapOn(c,160,90)
+                orina.drawOn(c,230, 620)
+                deposiciones = Paragraph(consulta[0].deposiciones.__str__(),p)
+                deposiciones.wrapOn(c,160,90)
+                deposiciones.drawOn(c,400, 620)
+                examenFisico = Paragraph(consulta[0].examenFisico.__str__(),p)
+                examenFisico.wrapOn(c,245,90)
+                examenFisico.drawOn(c, 50, 560)
+                diagnostico = Paragraph(consulta[0].diagnostico.__str__(),p)
+                diagnostico.wrapOn(c,245,90)
+                diagnostico.drawOn(c, 310, 560)
+                tratamiento = Paragraph(consulta[0].tratamiento.__str__(),p)
+                tratamiento.wrapOn(c,245,90)
+                tratamiento.drawOn(c, 50, 460)
+                p.fontSize = 15
+                proximaCita = Paragraph(consulta[0].proximaCita.__str__(),p)
+                proximaCita.wrapOn(c,245,100)
+                proximaCita.drawOn(c, 310, 480)
             
-
-
-
-
-        if(contador==2):
-            c.setFont('Helvetica',20)
-            c.line(40,360,560,360)#Linea entre triaje y consulta 2 
-            #_____________________Triaje_________________________
-            c.drawString(50,390,'Fecha:')
-            c.drawString(50,370, triajes.fechaReg.__str__()) 
-            c.setFont('Helvetica',13)
-            c.drawString(240,400,'Talla:')
-            c.drawString(280,400, triajes.talla.__str__())
-            c.drawString(330,400,'Peso:')
-            c.drawString(370,400, triajes.peso.__str__())
-            c.drawString(420,400,'T°:')
-            c.drawString(460,400, triajes.temperatura.__str__())
-            c.drawString(240,380,'F.R:')
-            c.drawString(280,380, triajes.frecuenciaR.__str__())
-            c.drawString(330,380,'F.C:')
-            c.drawString(370,380, triajes.frecuenciaC.__str__())
-            c.drawString(420,380,'P.A:')
-            c.drawString(460,380, triajes.presionArt.__str__())
-            #__________________Consulta______________________
-            c.setFont('Helvetica',13)
-            c.drawString(50,340,'Motivo Consulta:')
-            c.drawString(50,240,'Apetito:')
-            c.drawString(230,240,'Orina:')
-            c.drawString(400,240,'Deposiciones:')
-            c.drawString(50,200,'Examen Fisico:')
-            c.drawString(310,200,'Diagnostico:')
-            c.drawString(50,100,'Tratamiento:')
-            c.drawString(310,100,'Proxima Cita')
             
-            p = ParagraphStyle('test')
-            p.textColor = 'black'
-            p.borderColor = 'white'
-            p.borderWidth = 1
-            p.fontSize = 10
-            motivo = Paragraph(consulta[0].motivoConsulta.__str__(),p)
-            motivo.wrapOn(c,500,90)
-            motivo.drawOn(c, 50, 280)
-            apetito = Paragraph(consulta[0].apetito.__str__(),p)
-            apetito.wrapOn(c,170,90)
-            apetito.drawOn(c,50, 220)
-            orina = Paragraph(consulta[0].orina.__str__(),p)
-            orina.wrapOn(c,160,90)
-            orina.drawOn(c,230, 220)
-            deposiciones = Paragraph(consulta[0].deposiciones.__str__(),p)
-            deposiciones.wrapOn(c,160,90)
-            deposiciones.drawOn(c,400, 220)
-            examenFisico = Paragraph(consulta[0].examenFisico.__str__(),p)
-            examenFisico.wrapOn(c,245,90)
-            examenFisico.drawOn(c, 50, 160)
-            diagnostico = Paragraph(consulta[0].diagnostico.__str__(),p)
-            diagnostico.wrapOn(c,245,90)
-            diagnostico.drawOn(c, 310, 160)
-            tratamiento = Paragraph(consulta[0].tratamiento.__str__(),p)
-            tratamiento.wrapOn(c,245,90)
-            tratamiento.drawOn(c, 50, 60)
-            p.fontSize = 15
-            proximaCita = Paragraph(consulta[0].proximaCita.__str__(),p)
-            proximaCita.wrapOn(c,245,100)
-            proximaCita.drawOn(c, 310, 80)
+                
 
-            contador=0
-            c.showPage()
-        
-        contador=contador+1
+
+
+
+            if(contador==2):
+                c.setFont('Helvetica',20)
+                c.line(40,360,560,360)#Linea entre triaje y consulta 2 
+                #_____________________Triaje_________________________
+                c.drawString(50,390,'Fecha:')
+                c.drawString(50,370, triajes.fechaReg.__str__()) 
+                c.setFont('Helvetica',13)
+                c.drawString(240,400,'Talla:')
+                c.drawString(280,400, triajes.talla.__str__())
+                c.drawString(330,400,'Peso:')
+                c.drawString(370,400, triajes.peso.__str__())
+                c.drawString(420,400,'T°:')
+                c.drawString(460,400, triajes.temperatura.__str__())
+                c.drawString(240,380,'F.R:')
+                c.drawString(280,380, triajes.frecuenciaR.__str__())
+                c.drawString(330,380,'F.C:')
+                c.drawString(370,380, triajes.frecuenciaC.__str__())
+                c.drawString(420,380,'P.A:')
+                c.drawString(460,380, triajes.presionArt.__str__())
+                #__________________Consulta______________________
+                c.setFont('Helvetica',13)
+                c.drawString(50,340,'Motivo Consulta:')
+                c.drawString(50,240,'Apetito:')
+                c.drawString(230,240,'Orina:')
+                c.drawString(400,240,'Deposiciones:')
+                c.drawString(50,200,'Examen Fisico:')
+                c.drawString(310,200,'Diagnostico:')
+                c.drawString(50,100,'Tratamiento:')
+                c.drawString(310,100,'Proxima Cita')
+                
+                p = ParagraphStyle('test')
+                p.textColor = 'black'
+                p.borderColor = 'white'
+                p.borderWidth = 1
+                p.fontSize = 10
+                motivo = Paragraph(consulta[0].motivoConsulta.__str__(),p)
+                motivo.wrapOn(c,500,90)
+                motivo.drawOn(c, 50, 280)
+                apetito = Paragraph(consulta[0].apetito.__str__(),p)
+                apetito.wrapOn(c,170,90)
+                apetito.drawOn(c,50, 220)
+                orina = Paragraph(consulta[0].orina.__str__(),p)
+                orina.wrapOn(c,160,90)
+                orina.drawOn(c,230, 220)
+                deposiciones = Paragraph(consulta[0].deposiciones.__str__(),p)
+                deposiciones.wrapOn(c,160,90)
+                deposiciones.drawOn(c,400, 220)
+                examenFisico = Paragraph(consulta[0].examenFisico.__str__(),p)
+                examenFisico.wrapOn(c,245,90)
+                examenFisico.drawOn(c, 50, 160)
+                diagnostico = Paragraph(consulta[0].diagnostico.__str__(),p)
+                diagnostico.wrapOn(c,245,90)
+                diagnostico.drawOn(c, 310, 160)
+                tratamiento = Paragraph(consulta[0].tratamiento.__str__(),p)
+                tratamiento.wrapOn(c,245,90)
+                tratamiento.drawOn(c, 50, 60)
+                p.fontSize = 15
+                proximaCita = Paragraph(consulta[0].proximaCita.__str__(),p)
+                proximaCita.wrapOn(c,245,100)
+                proximaCita.drawOn(c, 310, 80)
+
+                contador=0
+                c.showPage()
+            
+            contador=contador+1
 
     
    
