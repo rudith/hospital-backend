@@ -143,7 +143,8 @@ class BuscarCitaMedicoEstado(generics.ListAPIView):
         #id = self.kwargs['id']
         id = self.request.query_params.get('id')
         estadoCita = "Triado"
-        return Cita.objects.filter(medico__pk=id,estadoCita=estadoCita).order_by("fechaAtencion")
+        fecha=datetime.now().date()
+        return Cita.objects.filter(medico__pk=id,estadoCita=estadoCita,fechaAtencion=fecha).order_by("fechaAtencion")
         
 class BuscarCitasEspera(generics.ListAPIView):
     
