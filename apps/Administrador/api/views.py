@@ -112,7 +112,6 @@ class BuscarArea(generics.ListAPIView):
 class vistaArea2(ModelViewSet):
     queryset = Area.objects.all()
     serializer_class = AreaSerializer
-    pagination_class = SmallSetPagination
 
 class vistaTipoPersonal(ModelViewSet):
     queryset = TipoPersonal.objects.all()
