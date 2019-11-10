@@ -64,7 +64,7 @@ INSTALLED_APPS = [
     'apps.Laboratorio',
 
     # CORS 
-    'corsheaders'
+    'corsheaders',
 ]
 
 #token expiracion (se define un tiempo de duracion del token)
@@ -83,6 +83,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    #'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
 ]
 
 # CORS
@@ -133,6 +135,11 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
+# AUTHENTICATION_BACKENDS = [
+#     {
+#         'django.contrib.auth.backends.ModelBackend'
+#     }
+# ]
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -176,12 +183,14 @@ MEDIA_ROOT = "uploads"
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
         'django_expiring_token.authentication.ExpiringTokenAuthentication',
         
     ),
-    # 'DEFAULT_PERMISSION_CLASSES': [
-    #     'rest_framework.permissions.IsAuthenticated',
-    # ]
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
 }
 
 SITE_ID = 1
