@@ -26,10 +26,16 @@ from .pagination import SmallSetPagination
 class vistaCrearOrden(ModelViewSet):
     queryset = Orden.objects.all()
     serializer_class = OrdenSerializer
+    pagination_class = SmallSetPagination
 
 class vistaOrden(ModelViewSet):
     queryset = Orden.objects.all()
     serializer_class = OrdenViewSerializer
+    pagination_class = SmallSetPagination
+    
+    def get_queryset(self):
+        estadoO = "Creada"
+        return Orden.objects.filter(estadoOrden=estadoO)
 
 class vistaCrearTriaje(ModelViewSet):
     queryset = Triaje.objects.all()
@@ -144,7 +150,7 @@ class BuscarCitaMedicoEstado(generics.ListAPIView):
         id = self.request.query_params.get('id')
         estadoCita = "Triado"
         fecha=datetime.now().date()
-        return Cita.objects.filter(medico__pk=id,estadoCita=estadoCita,fechaAtencion=fecha).order_by("fechaAtencion")
+        return Cita.objects.filter(medico__pk=id,estadoCita=estadoCita).order_by("fechaAtencion")
         
 class BuscarCitasEspera(generics.ListAPIView):
     
@@ -155,7 +161,8 @@ class BuscarCitasEspera(generics.ListAPIView):
         #id = self.kwargs['id']
         #id = self.request.query_params.get('id')
         estadoCita = "Espera"
-        return Cita.objects.filter(estadoCita=estadoCita).order_by("fechaAtencion")   
+        fecha=datetime.now().date()
+        return Cita.objects.filter(estadoCita=estadoCita,fechaAtencion=fecha).order_by("fechaAtencion")
 
 class BuscarCitaNombre (generics.ListAPIView):
     
@@ -259,6 +266,17 @@ class atenderCita(generics.RetrieveUpdateDestroyAPIView):
         qs.update(updated_at = datetime.now().date())
         return qs
 
+class atenderOrden(generics.RetrieveUpdateDestroyAPIView):
+    lookup_field = 'id'
+    serializer_class = OrdenViewSerializer
+    def get_queryset(self):
+        qs = Orden.objects.all()
+        query = self.kwargs['id']
+        # busca por codigo
+        if query is not None:
+            qs = qs.filter(pk=query)
+        qs.update(estadoOrden='Atendido')
+        return qs
 
 class triajeCita(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
@@ -279,6 +297,37 @@ class VerSolicitudes(ModelViewSet):
     serializer_class = ConsultaOrdenSerializer
     pagination_class = SmallSetPagination
 
+
+class buscarSol(generics.ListAPIView):
+    
+    serializer_class = ConsultaOrdenSerializer
+    pagination_class = SmallSetPagination
+    def get_queryset(self):
+        nro = self.request.query_params.get('nro')
+        qs = Consulta.objects.filter(numeroHistoria__numeroHistoria=nro)
+        return qs.order_by("fechaCreacion")
+
+class buscarSol2(generics.ListAPIView):
+    
+    serializer_class = ConsultaOrdenSerializer
+    pagination_class = SmallSetPagination
+    def get_queryset(self):
+        #id = self.kwargs['id']
+        nombre = self.request.query_params.get('nom')
+        qs = Consulta.objects.filter(numeroHistoria__nombres__icontains = nombre) 
+        if qs.all().count()<1:
+                qs = Consulta.objects.filter(numeroHistoria__apellido_paterno__icontains=nombre)
+        return qs.order_by("fechaCreacion")
+
+class  buscarOrden(generics.ListAPIView):
+    
+    serializer_class = OrdenSerializer
+    pagination_class = SmallSetPagination
+    def get_queryset(self):
+        #id = self.kwargs['id']
+        dni= self.request.query_params.get('dni')
+        qs = Orden.objects.filter(dni__icontains = dni) 
+        return qs.order_by("fechaA")
 
 
 class vistaHistoriaDetalle(APIView):

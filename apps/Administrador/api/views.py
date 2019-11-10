@@ -3,7 +3,7 @@ from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
-from .serializers import AreaSerializer, PersonalSerializer, PersonalViewSerializer, TipoPersonalSerializer, EspecialidadSerializer, UsuarioSerializer,PersonalDetalleSerializer
+from .serializers import AreaSerializer, PersonalSerializer, PersonalViewSerializer, TipoPersonalSerializer, EspecialidadSerializer, UsuarioSerializer,PersonalDetalleSerializer, UserSerializer
 from ..models import Area, Personal, TipoPersonal, Especialidad
 from django.contrib.auth.models import User
 from .pagination import SmallSetPagination
@@ -73,6 +73,41 @@ class vistaArea(ModelViewSet):
     queryset = Area.objects.all()
     serializer_class = AreaSerializer
     pagination_class = SmallSetPagination
+
+class BuscarEsp(generics.ListAPIView):
+      
+    serializer_class = EspecialidadSerializer
+
+    def get_queryset(self):
+        #id = self.kwargs['id']
+        esp = self.request.query_params.get('esp')
+        return Especialidad.objects.filter(nombre__icontains=esp)
+
+class BuscarTip(generics.ListAPIView):
+      
+    serializer_class = TipoPersonalSerializer
+
+    def get_queryset(self):
+        #id = self.kwargs['id']
+        id = self.request.query_params.get('tip')
+        return TipoPersonal.objects.filter(nombre__icontains=id)
+
+class BuscarUser(generics.ListAPIView):
+      
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        #id = self.kwargs['id']
+        us = self.request.query_params.get('us')
+        return User.objects.filter(username__icontains=us)
+class BuscarArea(generics.ListAPIView):
+      
+    serializer_class = AreaSerializer
+
+    def get_queryset(self):
+        #id = self.kwargs['id']
+        ar = self.request.query_params.get('ar')
+        return Area.objects.filter(nombre__icontains=ar) 
 
 class vistaArea2(ModelViewSet):
     queryset = Area.objects.all()

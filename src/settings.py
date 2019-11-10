@@ -68,8 +68,8 @@ INSTALLED_APPS = [
 ]
 
 #token expiracion (se define un tiempo de duracion del token)
+#EXPIRING_TOKEN_DURATION=timedelta(hours=12)
 EXPIRING_TOKEN_DURATION=timedelta(minutes=2)
-
 MIDDLEWARE = [
     # CORS
     'corsheaders.middleware.CorsMiddleware',
@@ -181,17 +181,17 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = "uploads"
 #MEDIA_ROOT = os.path.join(BASE_DIR,"media")
 
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'django_expiring_token.authentication.ExpiringTokenAuthentication',
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'rest_framework.authentication.BasicAuthentication',
+#         'rest_framework.authentication.SessionAuthentication',
+#         'django_expiring_token.authentication.ExpiringTokenAuthentication',
         
-    ),
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-    ]
-}
+#     ),
+#     'DEFAULT_PERMISSION_CLASSES': [
+#         'rest_framework.permissions.IsAuthenticated',
+#     ]
+# }
 
 SITE_ID = 1
 

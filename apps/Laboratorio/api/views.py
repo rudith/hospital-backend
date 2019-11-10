@@ -49,7 +49,7 @@ class VistaTipoExamen(ModelViewSet):
 class VistaExamenLabDet(ModelViewSet):
     queryset = ExamenLabDet.objects.all().order_by("-id")
     serializer_class = ExamenLabDetSerializer
-    pagination_class = SmallSetPagination
+    #pagination_class = SmallSetPagination
 
 #Realizado por Julio Vicente: Lista todos los examenes que tiene una persona el filtro es por nombre
 class filtro(generics.ListAPIView):

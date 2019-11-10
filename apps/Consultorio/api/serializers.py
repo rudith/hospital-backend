@@ -44,7 +44,7 @@ class OrdenViewSerializer(serializers.ModelSerializer):
         numeroHistoriaId = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Historia.objects.all(), source='numeroHistoria')
         tipoExam = TipoExamSerializer(read_only=True)
         tipoExamId = serializers.PrimaryKeyRelatedField(write_only=True, queryset=TipoExamen.objects.all(), source='tipoExam')
-        fields = ['id','numeroHistoria','dni','nombre','medico','orden','tipoExam','fecha','fechaCreacion'] 
+        fields = ['id','numeroHistoria','dni','nombre','medico','orden','tipoExam','fechaA','fechaCreacion','estadoOrden'] 
 
 class TriajeSerializer(serializers.ModelSerializer):
     class Meta:
