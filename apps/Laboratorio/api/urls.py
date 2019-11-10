@@ -2,7 +2,7 @@ from django.conf.urls import url
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 #from .views import (ProfileViewSet, ProfileStatusViewSet)
-from .views import (VistaExamenLabCab, VistaTipoExamen, BuscarExamen, VistaExamenLabDet,filtro,filtrofecha,filtroDNI,reporte,reporteSemanalExamenes,reporteMensualExamenes,resultadoExamen,reporteTipoExamen,filtroDetallesCodigoExamen )
+from .views import (VistaCrearExamenLabCab, VistaExamenLabCab, VistaTipoExamen, BuscarExamen, VistaExamenLabDet,filtro,filtrofecha,filtroDNI,reporte,reporteSemanalExamenes,reporteMensualExamenes,resultadoExamen,reporteTipoExamen,filtroDetallesCodigoExamen )
 
 # profile_list = ProfileViewSet.as_view({"get": "list"})
 # profile_detail = ProfileViewSet.as_view({"get": "retrieve"})
@@ -10,6 +10,7 @@ from .views import (VistaExamenLabCab, VistaTipoExamen, BuscarExamen, VistaExame
 
 router = DefaultRouter()
 router.register(r"ExamenLabCab", VistaExamenLabCab)
+router.register(r"CrearExamenLabCab", VistaCrearExamenLabCab)
 router.register(r"TipoExamen", VistaTipoExamen)
 router.register(r"ExamenLabDet", VistaExamenLabDet)
 

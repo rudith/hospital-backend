@@ -15,6 +15,10 @@ class ExamenLabCabSerializer(serializers.ModelSerializer):
         model = ExamenLabCab
         fields = "__all__"
 
+class CrearExamenLabCabSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ExamenLabCab
+        fields = "__all__"
 
 class ExamenLabDetSerializer(serializers.ModelSerializer):
 

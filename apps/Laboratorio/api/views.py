@@ -16,7 +16,7 @@ from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
-from .serializers import ExamenLabCabSerializer, TipoExamenSerializer, ExamenLabDetSerializer, BuscarExamenNombreSerializer
+from .serializers import CrearExamenLabCabSerializer,ExamenLabCabSerializer, TipoExamenSerializer, ExamenLabDetSerializer, BuscarExamenNombreSerializer
 from apps.Laboratorio.models import ExamenLabCab, TipoExamen, ExamenLabDet
 from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
@@ -31,6 +31,11 @@ class VistaExamenLabCab(ModelViewSet):
     serializer_class = ExamenLabCabSerializer       
     pagination_class = SmallSetPagination
 
+class VistaCrearExamenLabCab(ModelViewSet):                                  
+
+    queryset = ExamenLabCab.objects.all().order_by("-id")                             
+    serializer_class = CrearExamenLabCabSerializer       
+    pagination_class = SmallSetPagination
 #Realizado por Julio Vicente: Busqueda por ID de un examen , Serializer muestra todo los campos de Examen Cab y los Detalles 
 class BuscarExamen(generics.RetrieveUpdateDestroyAPIView):
 

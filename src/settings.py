@@ -68,8 +68,8 @@ INSTALLED_APPS = [
 ]
 
 #token expiracion (se define un tiempo de duracion del token)
-#EXPIRING_TOKEN_DURATION=timedelta(hours=12)
-EXPIRING_TOKEN_DURATION=timedelta(minutes=2)
+EXPIRING_TOKEN_DURATION=timedelta(hours=12)
+# EXPIRING_TOKEN_DURATION=timedelta(minutes=2)
 MIDDLEWARE = [
     # CORS
     'corsheaders.middleware.CorsMiddleware',
