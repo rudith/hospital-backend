@@ -2,7 +2,7 @@ from django.conf.urls import url
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 #from .views import (ProfileViewSet, ProfileStatusViewSet)
-from .views import (signin, vistaArea, vistaArea2, vistaTipoPersonal, vistaTipoPersonal2, vistaPersonal, vistaPersonal2, vistaPersonales, vistaCrearPersonal, vistaEspecialidad, vistaEspecialidad2, BuscarDni, vistaUsuario, vistaUsuario2,BuscarEspecialidad,BuscarEsp,BuscarTip,BuscarArea, BuscarUser)
+from .views import ( LoginView, vistaArea, vistaArea2, vistaTipoPersonal, vistaTipoPersonal2, vistaPersonal, vistaPersonal2, vistaPersonales, vistaCrearPersonal, vistaEspecialidad, vistaEspecialidad2, BuscarDni, vistaUsuario, vistaUsuario2,BuscarEspecialidad,BuscarEsp,BuscarTip,BuscarArea, BuscarUser)
 
 # profile_list = ProfileViewSet.as_view({"get": "list"})
 # profile_detail = ProfileViewSet.as_view({"get": "retrieve"})
@@ -24,8 +24,9 @@ router.register(r"usuariosSP",vistaUsuario2)
 
 urlpatterns = [
     path("", include(router.urls)),
+    path('login/', LoginView.as_view(), name='login'),
     url(r'^personaldni/(?P<dni>\d+)/$', BuscarDni.as_view(), name="PersonalDNI"),
-    path('login/', signin),
+    #path('login/', signin),
     url(r'^buscarespecialidad/$', BuscarEsp.as_view(), name="BuscarEsp"),
     url(r'^buscartipousuario/$', BuscarTip.as_view(), name="BuscarTip"),
     url(r'^buscararea/$', BuscarArea.as_view(), name="BuscarArea"), 

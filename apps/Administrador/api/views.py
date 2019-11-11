@@ -30,45 +30,48 @@ from rest_framework.status import (
 
 from .serializers import UserSerializer, UserSigninSerializer
 
-@api_view(["POST"])
-@permission_classes((AllowAny,))  # here we specify permission by default we set IsAuthenticated
-def signin(request):
-    signin_serializer = UserSigninSerializer(data = request.data)
-    if not signin_serializer.is_valid():
-        return Response(signin_serializer.errors, status = HTTP_400_BAD_REQUEST)
+class LoginView(APIView):
+    serializer_class = UserSigninSerializer
+#     permission_classes = []
 
+    #@api_view(["POST"])
+    @permission_classes((AllowAny,))  # here we specify permission by default we set IsAuthenticated
+    def post (self, request):
+        signin_serializer = UserSigninSerializer(data = request.data)
+        if not signin_serializer.is_valid():
+            return Response(signin_serializer.errors, status = HTTP_400_BAD_REQUEST)
 
-    user = authenticate(
+        user = authenticate(
             username = signin_serializer.data['username'],
             password = signin_serializer.data['password'] 
         )
-    if not user:
-        return Response({'detail': 'Invalid Credentials or activate account'}, status=HTTP_404_NOT_FOUND)
+        if not user:
+            return Response({'detail': 'Invalid Credentials or activate account'}, status=HTTP_404_NOT_FOUND)
         
-    #TOKEN STUFF
-    token, _ = Token.objects.get_or_create(user = user)
+        #TOKEN STUFF
+        token, _ = Token.objects.get_or_create(user = user)
     
-    #token_expire_handler will check, if the token is expired it will generate new one
-    is_expired, token = token_expire_handler(token)     # The implementation will be described further
-    user_serialized = UserSerializer(user)
+        #token_expire_handler will check, if the token is expired it will generate new one
+        is_expired, token = token_expire_handler(token)     # The implementation will be described further
+        user_serialized = UserSerializer(user)
 
-    #personal = Personal.objects.get(user=user.id)#.values('tipo_personal')
-    if Personal.objects.filter(user=user.id).exists():
-        personal = Personal.objects.get(user=user.id)
-    # resto de acciones cuando el pedido existe
-    else:
-    # acciones cuando el pedido no existe, redireccionas, envias un mensaje o cualquier opcion que consideres necesario para tratar este caso
-        return Response({'detail': 'Usuario no asociado a un personal'}, status=HTTP_404_NOT_FOUND)
-    tipo = personal.tipo_personal
-    print(personal)
-    print(tipo)
-    return Response({
-        'id': user.id,
-        'username': user.username,#user_serialized.data, 
-        'expires_in': expires_in(token),
-        'token': token.key,
-        'tipoUser': str(tipo)
-    }, status=HTTP_200_OK)
+        #personal = Personal.objects.get(user=user.id)#.values('tipo_personal')
+        if Personal.objects.filter(user=user.id).exists():
+            personal = Personal.objects.get(user=user.id)
+        # resto de acciones cuando el pedido existe
+        else:
+        # acciones cuando el pedido no existe, redireccionas, envias un mensaje o cualquier opcion que consideres necesario para tratar este caso
+            return Response({'detail': 'Usuario no asociado a un personal'}, status=HTTP_404_NOT_FOUND)
+        tipo = personal.tipo_personal
+        print(personal)
+        print(tipo)
+        return Response({
+            'id': user.id,
+            'username': user.username,#user_serialized.data, 
+            'expires_in': expires_in(token),
+            'token': token.key,
+            'tipoUser': str(tipo)
+        }, status=HTTP_200_OK)
 
 class vistaUsuario(ModelViewSet):
     queryset = User.objects.all()
