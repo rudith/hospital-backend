@@ -25,10 +25,14 @@ from apps.Consultorio.models import Cita
 from .serializers import DistritoSerializer, ProvinciaSerializer, DepartamentoSerializer, HistoriaSerializer, HistoriaViewSerializer, DistritosxProvincia, ProvinciasxDepartamento
 #, GrupSangSerializer
 from .models import HorarioCab, HorarioDet, Provincia, Distrito, Departamento, Historia#, GrupSang
-from apps.Consultorio.models import Triaje,Consulta
+from apps.Consultorio.models import Triaje,Consulta, Cita
+from apps.Administrador.models import Especialidad
 import requests
 from .pagination import SmallSetPagination
-
+from reportlab.lib.enums import TA_JUSTIFY, TA_LEFT, TA_CENTER
+x,y=A4
+ca=""
+contador=0
 # class vistaGrupoSang(ModelViewSet):
 #     queryset = GrupSang.objects.all()
 #     serializer_class = GrupSangSerializer
@@ -138,7 +142,7 @@ def reniecDatos(request,dni):
 
 def cancelarCitasFecha(request):
     fecha = datetime.today()
-    fechaInicio = fecha + timedelta(days=-1)
+    fechaInicio = fecha + timedelta(days=-3)
     fechaInicio = fechaInicio.strftime("%Y-%m-%d")
     Cita.objects.filter(fechaAtencion__range=[fechaInicio,fechaInicio]).update(estadoCita="Cancelado")
 
@@ -437,19 +441,160 @@ def HistoriaPDF(request,dni):
     return response
 
 
-# class cancelarCita(generics.RetrieveUpdateDestroyAPIView):
-#     lookup_field = 'dni'
-#     serializer_class = PersonalSerializer
-#     #queryset                = Cita.objects.all()
-#     def get_queryset(self):
-#         qs = Personal.objects.all()
-#         print(qs)
-#         #query = "12348765" #
-#         query = self.kwargs['dni']
-#         print(query)
-#         # busca por codigo
-#         if query is not None:
-#             qs = qs.filter(dni__icontains=query)
-#         qs.update(nombres='Nuevo 2222!!')
-#         print(qs)
-#         return qs
+def reporteDiarioCitas(request):
+    global y,ca,contador
+    especialidades = Especialidad.objects.all()
+    fecha = datetime.today()
+    fecha=fecha.strftime("%Y-%m-%d")
+    width,height =A4
+   
+    citas= Cita.objects.filter(estadoCita__in=["Atendido","NSP"],fechaAtencion=fecha).order_by("especialidad","medico")
+    if citas.count()!=0:
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename=ReporteDiarioCitas_'+fecha+'.pdf'
+        buffer = BytesIO()
+
+        ca = canvas.Canvas(buffer,pagesize=A4)
+        p = ParagraphStyle('test')
+        p.textColor = 'black'
+        p.borderColor = 'black'
+        p.alignment = TA_CENTER
+        p.borderWidth = 1
+        p.fontSize = 10
+        y=800
+        crearCabeceraEspecialidad(str(citas[0].especialidad))
+        crearCabeceraMedico(str(citas[0].medico.nombres+" "+citas[0].medico.apellido_paterno+" "+ citas[0].medico.apellido_materno))
+        crearEncabezados(p)
+        for i in range(citas.count()):
+            
+            imprimir(p,citas[i])
+            if citas.count()!= i+1 :
+                if str(citas[i].especialidad) != str(citas[i+1].especialidad):
+                    y=y-10
+                    crearCabeceraEspecialidad(str(citas[i+1].especialidad))
+                    
+
+
+                if str(citas[i].medico) != str(citas[i+1].medico):
+                    y=y-5
+                    crearCabeceraMedico(str(citas[i+1].medico.nombres+" "+citas[i+1].medico.apellido_paterno+" "+ citas[i+1].medico.apellido_materno))
+                    crearEncabezados(p)
+
+
+
+        ca.save()
+        pdf = buffer.getvalue()
+        buffer.close()
+
+        response.write(pdf)
+        return response 
+    else: 
+        return JsonResponse({'status':'FAIL'})
+    
+
+def crearCabeceraEspecialidad(especialidad):
+    global y,ca,contador
+    contador=0
+    p1 = ParagraphStyle('test')
+    p1.textColor = 'black'
+    p1.borderColor = 'white'
+    p1.alignment = TA_CENTER
+    p1.borderWidth = 1
+    p1.fontSize = 20
+    if (y<41):
+        ca.showPage()
+        y=800
+        
+    
+    fecha = datetime.today()
+    fecha=fecha.strftime("%d-%m-%Y")
+    fecha = datetime.today()
+    fecha=fecha.strftime("%d-%m-%Y")
+    especialidad = Paragraph(str(especialidad),p1)
+    especialidad.wrapOn(ca,500,0)
+    especialidad.drawOn(ca, 40, y)
+    p1.fontSize = 12
+    fecha = Paragraph("Fecha:"+" "+str(fecha),p1)
+    fecha.wrapOn(ca,500,0)
+    fecha.drawOn(ca,40, y-25)
+    y=y-40
+    
+def crearCabeceraMedico(medico):   
+    global y,ca,contador
+    contador=0
+    if (y<20):
+        ca.showPage()
+        y=800
+        
+     
+    ca.setFont('Helvetica',14)
+    ca.drawString(80,y,medico)
+    ca.drawString(40,y,"Dr(a).")
+    y=y-20   
+
+def imprimir(p,cita):
+    global y,ca,contador
+    contador=contador+1
+    if (y<12):
+        ca.showPage()
+        y=800
+    print(cita.id)
+    cont = Paragraph(str(contador),p)
+    cont.wrapOn(ca,15,90)
+    cont.drawOn(ca, 40, y)
+    historia = Paragraph(str(cita.numeroHistoria),p)
+    historia.wrapOn(ca,100,90)
+    historia.drawOn(ca, 55, y)
+    nombre = Paragraph(str(cita.numeroHistoria.nombres)+" "+str(cita.numeroHistoria.apellido_paterno)+" "+str(cita.numeroHistoria.apellido_materno),p)
+    nombre.wrapOn(ca,200,90)
+    nombre.drawOn(ca, 155, y)
+    recibo = Paragraph(str(cita.numeroRecibo),p)
+    recibo.wrapOn(ca,100,90)
+    recibo.drawOn(ca, 355, y)
+    cond = calcularCondicion(cita.numeroHistoria)
+    print(cond)
+    condicion = Paragraph(str(cond),p)
+    condicion.wrapOn(ca,100,90)
+    condicion.drawOn(ca, 455, y)
+    y=y-11.5
+    
+
+def crearEncabezados(p):
+    global y,ca,contador
+    if (y<12):
+        ca.showPage()
+        y=800
+    cont = Paragraph("N°",p)
+    cont.wrapOn(ca,15,90)
+    cont.drawOn(ca, 40, y)
+    historia = Paragraph("N° HISTORIA",p)
+    historia.wrapOn(ca,100,90)
+    historia.drawOn(ca, 55, y)
+    nombre = Paragraph("Apellidos y Nombres",p)
+    nombre.wrapOn(ca,200,90)
+    nombre.drawOn(ca, 155, y)
+    recibo = Paragraph("N° Recibo",p)
+    recibo.wrapOn(ca,100,90)
+    recibo.drawOn(ca, 355, y)
+    condicion = Paragraph("Condicion",p)
+    condicion.wrapOn(ca,100,90)
+    condicion.drawOn(ca, 455, y)
+    y=y-11.5
+def calcularCondicion(numeroHistoria):
+    fecha = datetime.today()
+    fechaInicio = fecha + timedelta(days=-365)
+    fechaInicio = fechaInicio.strftime("%Y-%m-%d")
+    fechaini = fechaInicio
+    fechaFinal = fecha + timedelta(days=-1)
+    fechaFinal = fechaFinal.strftime("%Y-%m-%d")
+    fechafin = fecha.strftime("%Y-%m-%d")
+  
+    
+    citas = Cita.objects.filter(numeroHistoria=numeroHistoria,estadoCita__in=["Atendido","NSP"]).filter(fechaAtencion__range=[fechaini,fechafin])
+
+        
+    if citas.count()==0:
+        return "R"
+    if citas.count()>=1:
+        return "C"
+    return "N"
