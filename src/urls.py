@@ -41,7 +41,7 @@ urlpatterns = [
     path('laboratorio/', include('apps.Laboratorio.api.urls')),
 
     #ruta  para la creacion de token expiracion
-    path('custom-url/', include('django_expiring_token.urls')),
+    #path('custom-url/', include('django_expiring_token.urls')),
 ]
 
 

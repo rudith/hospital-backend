@@ -12,12 +12,64 @@ from django.contrib.auth import authenticate
 from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_200_OK
 
-from django_expiring_token.authentication import token_expire_handler
-from django_expiring_token.models import ExpiringToken
-from django_expiring_token.serializers import UserSigninSerializer
+# from django_expiring_token.authentication import token_expire_handler
+# from django_expiring_token.models import ExpiringToken
+# from django_expiring_token.serializers import UserSigninSerializer
 from .serializers import UserSigninSerializer
 from .authentication import token_expire_handler, expires_in
  
+ 
+from rest_framework.authtoken.models import Token
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+from rest_framework.status import (
+    HTTP_400_BAD_REQUEST,
+    HTTP_404_NOT_FOUND,
+    HTTP_200_OK,
+)
+
+from .serializers import UserSerializer, UserSigninSerializer
+
+@api_view(["POST"])
+@permission_classes((AllowAny,))  # here we specify permission by default we set IsAuthenticated
+def signin(request):
+    signin_serializer = UserSigninSerializer(data = request.data)
+    if not signin_serializer.is_valid():
+        return Response(signin_serializer.errors, status = HTTP_400_BAD_REQUEST)
+
+
+    user = authenticate(
+            username = signin_serializer.data['username'],
+            password = signin_serializer.data['password'] 
+        )
+    if not user:
+        return Response({'detail': 'Invalid Credentials or activate account'}, status=HTTP_404_NOT_FOUND)
+        
+    #TOKEN STUFF
+    token, _ = Token.objects.get_or_create(user = user)
+    
+    #token_expire_handler will check, if the token is expired it will generate new one
+    is_expired, token = token_expire_handler(token)     # The implementation will be described further
+    user_serialized = UserSerializer(user)
+
+    #personal = Personal.objects.get(user=user.id)#.values('tipo_personal')
+    if Personal.objects.filter(user=user.id).exists():
+        personal = Personal.objects.get(user=user.id)
+    # resto de acciones cuando el pedido existe
+    else:
+    # acciones cuando el pedido no existe, redireccionas, envias un mensaje o cualquier opcion que consideres necesario para tratar este caso
+        return Response({'detail': 'Usuario no asociado a un personal'}, status=HTTP_404_NOT_FOUND)
+    tipo = personal.tipo_personal
+    print(personal)
+    print(tipo)
+    return Response({
+        'id': user.id,
+        'username': user.username,#user_serialized.data, 
+        'expires_in': expires_in(token),
+        'token': token.key,
+        'tipoUser': str(tipo)
+    }, status=HTTP_200_OK)
+
 class vistaUsuario(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UsuarioSerializer
@@ -28,46 +80,46 @@ class vistaUsuario2(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UsuarioSerializer
 
-class LoginView(APIView):
-    serializer_class = UserSigninSerializer
-    permission_classes = []
+# class LoginView(APIView):
+#     serializer_class = UserSigninSerializer
+#     permission_classes = []
 
 
-    def post(self, request):
-        signin_serializer = UserSigninSerializer(data=request.data)
+#     def post(self, request):
+#         signin_serializer = UserSigninSerializer(data=request.data)
         
-        if not signin_serializer.is_valid():
-            return Response(signin_serializer.errors, status=HTTP_400_BAD_REQUEST)
+#         if not signin_serializer.is_valid():
+#             return Response(signin_serializer.errors, status=HTTP_400_BAD_REQUEST)
 
-        user = authenticate(
-            username=signin_serializer.data['username'],
-            password=signin_serializer.data['password']
-        )
-        #user = signin_serializer.data['username','password']
-        if not user:
-            return Response({'detail': 'Invalid Credentials'}, status=HTTP_400_BAD_REQUEST)
-        # TOKEN STUFF 
-        token, _ = ExpiringToken.objects.get_or_create(user=user)
+#         user = authenticate(
+#             username=signin_serializer.data['username'],
+#             password=signin_serializer.data['password']
+#         )
+#         #user = signin_serializer.data['username','password']
+#         if not user:
+#             return Response({'detail': 'Invalid Credentials'}, status=HTTP_400_BAD_REQUEST)
+#         # TOKEN STUFF 
+#         token, _ = ExpiringToken.objects.get_or_create(user=user)
 
-        # token_expire_handler will check, if the token is expired it will generate new one
-        is_expired, token = token_expire_handler(token)  # The implementation will be described further
+#         # token_expire_handler will check, if the token is expired it will generate new one
+#         is_expired, token = token_expire_handler(token)  # The implementation will be described further
         
-        personal = Personal.objects.get(user=user.id)#.values('tipo_personal')
-        tipo = personal.tipo_personal
-        print(personal)
-        print(tipo)
-        if not personal:
-            return Response({'detail': 'Personal no asociado'}, status=HTTP_400_BAD_REQUEST)
+#         personal = Personal.objects.get(user=user.id)#.values('tipo_personal')
+#         tipo = personal.tipo_personal
+#         print(personal)
+#         print(tipo)
+#         if not personal:
+#             return Response({'detail': 'Personal no asociado'}, status=HTTP_400_BAD_REQUEST)
 
-        user_serialized = UserSigninSerializer(user)
-        personal_serialized = PersonalDetalleSerializer(personal)
-        return Response({
-            'id': user.id,
-            'usuario': user_serialized.data, 
-            'tiempo de expiracion': expires_in(token),
-            'token': token.key,
-            'tipoUser': str(tipo)
-        }, status=HTTP_200_OK)
+#         user_serialized = UserSigninSerializer(user)
+#         personal_serialized = PersonalDetalleSerializer(personal)
+#         return Response({
+#             'id': user.id,
+#             'usuario': user_serialized.data, 
+#             'tiempo de expiracion': expires_in(token),
+#             'token': token.key,
+#             'tipoUser': str(tipo)
+#         }, status=HTTP_200_OK)
 
 class vistaArea(ModelViewSet):
     queryset = Area.objects.all()

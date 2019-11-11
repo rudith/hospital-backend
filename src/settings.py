@@ -46,10 +46,10 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     
     'rest_framework',
-    #'rest_framework.authtoken',
+    'rest_framework.authtoken',
 
     # app para expiracion de un token
-    'django_expiring_token',
+    #'django_expiring_token',
 
     'allauth',
     'allauth.account',
@@ -68,8 +68,9 @@ INSTALLED_APPS = [
 ]
 
 #token expiracion (se define un tiempo de duracion del token)
-EXPIRING_TOKEN_DURATION=timedelta(hours=12)
+# EXPIRING_TOKEN_DURATION=timedelta(hours=12)
 # EXPIRING_TOKEN_DURATION=timedelta(minutes=2)
+TOKEN_EXPIRED_AFTER_SECONDS = 86400
 MIDDLEWARE = [
     # CORS
     'corsheaders.middleware.CorsMiddleware',
@@ -183,18 +184,14 @@ MEDIA_ROOT = "uploads"
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'django_expiring_token.authentication.ExpiringTokenAuthentication',
-        
+        'apps.Administrador.api.authentication.ExpiringTokenAuthentication',  # custom authentication class
     ),
-    # 'DEFAULT_PERMISSION_CLASSES': [
+    # 'DEFAULT_PERMISSION_CLASSES': (
     #     'rest_framework.permissions.IsAuthenticated',
-    # ]
+    # )
 }
-
 SITE_ID = 1
 
 ACCOUNT_EMAIL_VERIFICATION = "none"
-ACCOUNT_EMAIL_REQUIRED = (True)
+ACCOUNT_EMAIL_REQUIRED = (False)
 
