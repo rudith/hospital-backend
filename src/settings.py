@@ -188,9 +188,9 @@ REST_FRAMEWORK = {
         'django_expiring_token.authentication.ExpiringTokenAuthentication',
         
     ),
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-    ]
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.IsAuthenticated',
+    # ]
 }
 
 SITE_ID = 1
