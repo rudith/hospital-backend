@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 class Area(models.Model):
 
     #codigoArea = models.AutoField(primary_key=True)
-    nombre = models.CharField(max_length=50)
+    nombre = models.CharField(unique=True,max_length=50)
     #estReg = models.CharField(max_length=1)
     #estReg = models.BooleanField(default=True)
 
@@ -15,7 +15,7 @@ class Area(models.Model):
 
 class TipoPersonal(models.Model):
         #codigoTU = models.AutoField(primary_key=True)
-        nombre = models.CharField(max_length=30)
+        nombre = models.CharField(unique=True,max_length=30)
         #estReg = models.BooleanField(default=True)
     
         def __str__(self):
@@ -23,7 +23,7 @@ class TipoPersonal(models.Model):
 
 class Especialidad(models.Model):
         #codigoEsp = models.AutoField(primary_key=True)
-        nombre = models.CharField(max_length=50)
+        nombre = models.CharField(unique=True,max_length=50)
         descripcion = models.CharField(max_length=200,blank=True,null=True)
         #estReg = models.BooleanField(default=True)
  

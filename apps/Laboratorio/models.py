@@ -14,7 +14,7 @@ class ExamenLabCab(models.Model):
     dni = models.CharField(max_length=8,validators=[dni])
     tipoExam = models.ForeignKey(TipoExamen, on_delete=models.CASCADE)
     orden = models.CharField(max_length=100, blank=True, null=True)
-    fecha = models.DateField(validators=[fecha])
+    fecha = models.DateField(auto_now_add=True)
     observaciones = models.TextField(blank=True)
     def __str__(self):
         return self.nombre.__str__()+","+ self.dni.__str__()+","+self.fecha.__str__()+","+self.tipoExam.__str__()

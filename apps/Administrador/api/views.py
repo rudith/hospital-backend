@@ -78,10 +78,12 @@ class vistaUsuario(ModelViewSet):
     serializer_class = UsuarioSerializer
     #serializer_class = UserSigninSerializer
     pagination_class = SmallSetPagination
+    permission_classes = [IsAuthenticated]
 
 class vistaUsuario2(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UsuarioSerializer
+    permission_classes = [IsAuthenticated]
 
 # class LoginView(APIView):
 #     serializer_class = UserSigninSerializer
@@ -128,10 +130,12 @@ class vistaArea(ModelViewSet):
     queryset = Area.objects.all()
     serializer_class = AreaSerializer
     pagination_class = SmallSetPagination
+    permission_classes = [IsAuthenticated]
 
 class BuscarEsp(generics.ListAPIView):
       
     serializer_class = EspecialidadSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         #id = self.kwargs['id']
@@ -141,6 +145,7 @@ class BuscarEsp(generics.ListAPIView):
 class BuscarTip(generics.ListAPIView):
       
     serializer_class = TipoPersonalSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         #id = self.kwargs['id']
@@ -150,6 +155,7 @@ class BuscarTip(generics.ListAPIView):
 class BuscarUser(generics.ListAPIView):
       
     serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         #id = self.kwargs['id']
@@ -158,6 +164,7 @@ class BuscarUser(generics.ListAPIView):
 class BuscarArea(generics.ListAPIView):
       
     serializer_class = AreaSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         #id = self.kwargs['id']
@@ -167,24 +174,29 @@ class BuscarArea(generics.ListAPIView):
 class vistaArea2(ModelViewSet):
     queryset = Area.objects.all()
     serializer_class = AreaSerializer
+    permission_classes = [IsAuthenticated]
 
 class vistaTipoPersonal(ModelViewSet):
     queryset = TipoPersonal.objects.all()
     serializer_class = TipoPersonalSerializer
     pagination_class = SmallSetPagination
+    permission_classes = [IsAuthenticated]
 
 class vistaTipoPersonal2(ModelViewSet):
     queryset = TipoPersonal.objects.all()
     serializer_class = TipoPersonalSerializer
+    permission_classes = [IsAuthenticated]
 
 class vistaEspecialidad(ModelViewSet):
     queryset = Especialidad.objects.all()
     serializer_class = EspecialidadSerializer
     pagination_class = SmallSetPagination
+    permission_classes = [IsAuthenticated]
 
 class vistaEspecialidad2(ModelViewSet):
     queryset = Especialidad.objects.all()
     serializer_class = EspecialidadSerializer
+    permission_classes = [IsAuthenticated]
 
 class vistaCrearPersonal(ModelViewSet):
     queryset = Personal.objects.all()
@@ -193,15 +205,18 @@ class vistaCrearPersonal(ModelViewSet):
     filter_backends = [SearchFilter]
     search_fields = ["dni"]
     pagination_class = SmallSetPagination
+    permission_classes = [IsAuthenticated]
 
 class vistaPersonal(ModelViewSet):
     queryset = Personal.objects.all()
     serializer_class = PersonalViewSerializer
     pagination_class = SmallSetPagination
+    permission_classes = [IsAuthenticated]
 
 class vistaPersonal2(ModelViewSet):
     queryset = Personal.objects.all()
     serializer_class = PersonalViewSerializer
+    permission_classes = [IsAuthenticated]
 
 class vistaPersonales(ModelViewSet):
     queryset = Personal.objects.all()
@@ -213,6 +228,7 @@ class BuscarDni(generics.RetrieveUpdateDestroyAPIView):
 
     lookup_field = 'dni'
     serializer_class = PersonalViewSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return Personal.objects.all()
@@ -220,6 +236,7 @@ class BuscarDni(generics.RetrieveUpdateDestroyAPIView):
 class BuscarEspecialidad(generics.ListAPIView):
   
     serializer_class = PersonalViewSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         #id = self.kwargs['id']

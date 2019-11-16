@@ -21,7 +21,7 @@ from rest_framework.views import APIView
 from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from apps.Consultorio.models import Cita
-
+from rest_framework.decorators import api_view, permission_classes
 from .serializers import DistritoSerializer, ProvinciaSerializer, DepartamentoSerializer, HistoriaSerializer, HistoriaViewSerializer, DistritosxProvincia, ProvinciasxDepartamento
 #, GrupSangSerializer
 from .models import HorarioCab, HorarioDet, Provincia, Distrito, Departamento, Historia#, GrupSang
@@ -41,18 +41,18 @@ class vistaDistrito(ModelViewSet):
     queryset = Distrito.objects.all()
     serializer_class = DistritoSerializer
     pagination_class = SmallSetPagination 
-     # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
 class vistaProvincia(ModelViewSet):
     queryset = Provincia.objects.all()
     serializer_class = ProvinciaSerializer
     pagination_class = SmallSetPagination
-     # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
 class vistaDepartamento(ModelViewSet):
     queryset = Departamento.objects.all()
     serializer_class = DepartamentoSerializer
-     # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
 class vistaCrearHistoria(ModelViewSet):
     queryset = Historia.objects.all()
@@ -61,7 +61,7 @@ class vistaCrearHistoria(ModelViewSet):
     filter_backends = [SearchFilter]
     search_fields = ["dni"]
     #search_fields = ["numeroHistoria"]
-     # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
 class vistaHistoria(ModelViewSet):
     queryset = Historia.objects.all().order_by("-id")
@@ -70,11 +70,12 @@ class vistaHistoria(ModelViewSet):
     filter_backends = [SearchFilter]
     search_fields = ["dni"]
     #search_fields = ["numeroHistoria"]
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
 class BuscarHistoria(generics.ListAPIView):
 
     serializer_class = HistoriaViewSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         nro = self.request.query_params.get('nro')
@@ -84,6 +85,7 @@ class BuscarDNIH(generics.RetrieveUpdateDestroyAPIView):
 
     lookup_field = 'dni'
     serializer_class = HistoriaViewSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return Historia.objects.all()
@@ -92,6 +94,7 @@ class BuscarNombreH(generics.ListAPIView):
     
     serializer_class = HistoriaViewSerializer
     pagination_class = SmallSetPagination
+    permission_classes = [IsAuthenticated]
      
     def get_queryset(self):
         #id = self.kwargs['id']
@@ -105,6 +108,7 @@ class BuscarNombreH(generics.ListAPIView):
 class BuscarDistrito(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
     serializer_class = DistritosxProvincia
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return Provincia.objects.all()
@@ -112,6 +116,7 @@ class BuscarDistrito(generics.RetrieveUpdateDestroyAPIView):
 class BuscarProvincia(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
     serializer_class = ProvinciasxDepartamento
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return Departamento.objects.all()
@@ -119,6 +124,7 @@ class BuscarProvincia(generics.RetrieveUpdateDestroyAPIView):
 class BuscarDistritos(generics.ListAPIView):
     lookup_field = 'id'
     serializer_class = DistritoSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         id = self.request.query_params.get('id')
@@ -126,6 +132,7 @@ class BuscarDistritos(generics.ListAPIView):
 
 class BuscarProvincias(generics.ListAPIView):
     serializer_class = ProvinciaSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         id = self.request.query_params.get('id')
@@ -141,6 +148,7 @@ def reniecDatos(request,dni):
     return JsonResponse(data)
 
 def cancelarCitasFecha(request):
+    permission_classes = [IsAuthenticated]
     fecha = datetime.today()
     fechaInicio = fecha + timedelta(days=-3)
     fechaInicio = fechaInicio.strftime("%Y-%m-%d")
@@ -151,7 +159,6 @@ def cancelarCitasFecha(request):
 
 #Realizado por Julio Vicente: Historial Clinico,contiene datos & Consultas ,con su triaje, del paciente , utiliza libreria reportlab
 def HistoriaPDF(request,dni):
-    
     historia=Historia.objects.filter(dni=dni)
     triaje=Triaje.objects.filter(numeroHistoria=historia[0].id)
     width,height =A4

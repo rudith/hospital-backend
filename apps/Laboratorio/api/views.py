@@ -14,6 +14,7 @@ from datetime import datetime , timedelta
 from rest_framework import generics, mixins, viewsets
 from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
 from .serializers import CrearExamenLabCabSerializer,ExamenLabCabSerializer, TipoExamenSerializer, ExamenLabDetSerializer, BuscarExamenNombreSerializer
@@ -30,17 +31,20 @@ class VistaExamenLabCab(ModelViewSet):
     queryset = ExamenLabCab.objects.all().order_by("-id")                             
     serializer_class = ExamenLabCabSerializer       
     pagination_class = SmallSetPagination
+    permission_classes = [IsAuthenticated]
 
 class VistaCrearExamenLabCab(ModelViewSet):                                  
 
     queryset = ExamenLabCab.objects.all().order_by("-id")                             
     serializer_class = CrearExamenLabCabSerializer       
     pagination_class = SmallSetPagination
+    permission_classes = [IsAuthenticated]
 #Realizado por Julio Vicente: Busqueda por ID de un examen , Serializer muestra todo los campos de Examen Cab y los Detalles 
 class BuscarExamen(generics.RetrieveUpdateDestroyAPIView):
 
     lookup_field = 'id'
     serializer_class = BuscarExamenNombreSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return ExamenLabCab.objects.all()
@@ -49,26 +53,39 @@ class BuscarExamen(generics.RetrieveUpdateDestroyAPIView):
 class VistaTipoExamen(ModelViewSet):
     queryset = TipoExamen.objects.all()
     serializer_class = TipoExamenSerializer
+    permission_classes = [IsAuthenticated]
     
 #Realizado por Julio Vicente: Vista general de Examen Detalle, Get Post Put Delete
 class VistaExamenLabDet(ModelViewSet):
     queryset = ExamenLabDet.objects.all().order_by("-id")
     serializer_class = ExamenLabDetSerializer
+    permission_classes = [IsAuthenticated]
     #pagination_class = SmallSetPagination
 
 #Realizado por Julio Vicente: Lista todos los examenes que tiene una persona el filtro es por nombre
 class filtro(generics.ListAPIView):
 
     serializer_class = BuscarExamenNombreSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         queryset = ExamenLabCab.objects.all()
         nombre = self.request.query_params.get('nombre')
         return ExamenLabCab.objects.filter(nombre=nombre)
 
+class ultimoExamen(generics.ListAPIView):
+    
+    serializer_class = ExamenLabCabSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = ExamenLabCab.objects.all().order_by('id').last()
+        return queryset
+
 #Realizado por Julio Vicente: Lista todos los examenes que tiene una persona el filtro es por DNI
 class filtroDNI(generics.ListAPIView):
     serializer_class = BuscarExamenNombreSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         queryset = ExamenLabCab.objects.all()
@@ -78,6 +95,7 @@ class filtroDNI(generics.ListAPIView):
 #Realizado por Julio Vicente: Lista todos los examenes en un rango de fecha
 class filtrofecha(generics.ListAPIView):
     serializer_class = BuscarExamenNombreSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         #?fecha_inicio=2019-09-25&fecha_final=2019-09-30    -- > ejemplo de url
@@ -88,6 +106,7 @@ class filtrofecha(generics.ListAPIView):
 #Realizado por Julio Vicente: Lista todos los detalles que tiene una cabecera por su ID
 class filtroDetallesCodigoExamen(generics.ListAPIView):
     serializer_class = ExamenLabDetSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         id = self.request.query_params.get('id')
@@ -235,6 +254,7 @@ def resultadoExamen(request,id):
         
     examenLabCab=ExamenLabCab.objects.filter(id=id)
     examenLabDet=ExamenLabDet.objects.filter(codigoExam=id)
+    
     
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename=ResultadoExamen.pdf'
