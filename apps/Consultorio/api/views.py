@@ -133,18 +133,34 @@ class BuscarCitaDni(generics.ListAPIView):
         dni = self.request.query_params.get('dni')
         return Cita.objects.filter(numeroHistoria__dni=dni).order_by("fechaAtencion")
 
+class CitasHistorial(generics.ListAPIView):
+    serializer_class = CitaViewSerializer
+    pagination_class = SmallSetPagination
+    #permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        espera = "Espera"
+        qs = Cita.objects.exclude(estadoCita=espera)
+        triado = "Triado"
+        qs = qs.exclude(estadoCita=triado)
+        return qs.order_by("fechaAtencion")
+
 class BuscarCitaDniE(generics.ListAPIView):
     #lookup_field = 'dni'
     #serializer_class = CitasDniSerializer
     serializer_class = CitaViewSerializer
     pagination_class = SmallSetPagination
     permission_classes = [IsAuthenticated]
-     
+
     def get_queryset(self):
         dni = self.request.query_params.get('dni')
-        estadoCita = "Espera"
+        cancelado = "Cancelado"
+        qs = Cita.objects.exclude(estadoCita=cancelado)
+        atendido = "Atendido"
+        qs = qs.exclude(estadoCita=atendido)
         fecha=datetime.now().date()
-        return Cita.objects.filter(numeroHistoria__dni=dni,estadoCita=estadoCita,fechaAtencion=fecha).order_by("fechaAtencion")
+        return qs.filter(numeroHistoria__dni=dni, fechaAtencion=fecha).order_by("fechaAtencion")
+     
         
 class BuscarCitaMedico(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
@@ -170,17 +186,19 @@ class BuscarCitaMedicoEstado(generics.ListAPIView):
         return Cita.objects.filter(medico__pk=id,estadoCita=estadoCita).order_by("fechaAtencion")
         
 class BuscarCitasEspera(generics.ListAPIView):
-    
     serializer_class = CitaViewSerializer
     pagination_class = SmallSetPagination
     permission_classes = [IsAuthenticated]
-     
+
     def get_queryset(self):
-        #id = self.kwargs['id']
-        #id = self.request.query_params.get('id')
-        estadoCita = "Espera"
+        dni = self.request.query_params.get('dni')
+        cancelado = "Cancelado"
+        qs = Cita.objects.exclude(estadoCita=cancelado)
+        atendido = "Atendido"
+        qs = qs.exclude(estadoCita=atendido)
         fecha=datetime.now().date()
-        return Cita.objects.filter(estadoCita=estadoCita,fechaAtencion=fecha).order_by("fechaAtencion")
+        return qs.filter(fechaAtencion=fecha).order_by("fechaAtencion")
+
 
 class BuscarCitaNombre (generics.ListAPIView):
     

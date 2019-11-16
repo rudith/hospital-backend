@@ -2,7 +2,7 @@ from django.urls import include, path
 from django.conf.urls import url
 from rest_framework.routers import DefaultRouter
 #from .views import (ProfileViewSet, ProfileStatusViewSet)
-from .views import (vistaCrearOrden, vistaOrden, vistaTriaje, vistaCrearTriaje, vistaCita, vistaCrearCita, vistaConsulta, vistaCrearConsulta, cancelarCita, BuscarCitaDni, BuscarConsultaHistoria
+from .views import (CitasHistorial,vistaCrearOrden, vistaOrden, vistaTriaje, vistaCrearTriaje, vistaCita, vistaCrearCita, vistaConsulta, vistaCrearConsulta, cancelarCita, BuscarCitaDni, BuscarConsultaHistoria
                     ,BuscarConsultaDni,BuscarTriajeHistoria, BuscarCitaMedico, BuscarTriajeCita, BuscarHistorialClinico, atenderCita, triajeCita,BuscarCitaEspecialidad
                     ,atenderOrden,buscarOrden,buscarSol,buscarSol2,BuscarCitaMedicoEstado, BuscarCitasEspera,BuscarCitaDniE,BuscarHistorialClinicoDNI,BuscarCitaHistoria,BuscarCitaNombre,BuscarCitaEspecialidad2,VerSolicitudes)#, vistaCitaTemporal)# vistaHistoriaConsulta)
 
@@ -49,6 +49,7 @@ urlpatterns = [
     url(r'^citasenespera/$', BuscarCitasEspera.as_view(), name="BuscarCitasEspera"),
     url(r'^citasporhistoria/$', BuscarCitaHistoria.as_view(), name="BuscarCitasHistoria"),
     url(r'^citaspornombre/$', BuscarCitaNombre.as_view(), name="BuscarCitasNombre"),
+    url(r'^historialdecitas/$', CitasHistorial.as_view(), name="BuscarCitasNombre"),
     #url(r'^consultahistoria/(?P<numeroHistoria>\d+)/$', BuscarConsultaHistoria.as_view(), name="BuscarConsultaHistoria"),
     #url(r'^citaspormedico/(?P<id>\d+)/$', BuscarCitaMedico.as_view(), name="BuscarCitasMedico"),
     url(r'^triajeporcita/(?P<cita>\d+)/$', BuscarTriajeCita.as_view(), name="BuscarTriajeCita"),
