@@ -136,7 +136,7 @@ class BuscarCitaDni(generics.ListAPIView):
 class CitasHistorial(generics.ListAPIView):
     serializer_class = CitaViewSerializer
     pagination_class = SmallSetPagination
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         espera = "Espera"
