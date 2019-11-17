@@ -97,6 +97,16 @@ class filtroDNI(generics.ListAPIView):
         dni = self.request.query_params.get('dni')
         return ExamenLabCab.objects.filter(dni=dni)
 
+class filtroDNI2(generics.ListAPIView):
+    serializer_class = BuscarExamenNombreSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = SmallSetPagination
+
+    def get_queryset(self):
+        queryset = ExamenLabCab.objects.all()
+        dni = self.request.query_params.get('dni')
+        return ExamenLabCab.objects.filter(dni=dni)
+
 #Realizado por Julio Vicente: Lista todos los examenes en un rango de fecha
 class filtrofecha(generics.ListAPIView):
     serializer_class = BuscarExamenNombreSerializer

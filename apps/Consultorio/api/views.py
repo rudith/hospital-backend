@@ -78,16 +78,20 @@ class vistaCrearCita(ModelViewSet):
     permission_classes = [IsAuthenticated]
      # permission_classes = [IsAuthenticated]
 
-class vistaCita(ModelViewSet):
-    queryset = Cita.objects.all().order_by("fechaAtencion")
+class vistaCita(generics.ListAPIView):
+
     serializer_class = CitaViewSerializer
     pagination_class = SmallSetPagination
-    permission_classes = [IsAuthenticated]
-     # permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
-# class vistaCitaTemporal(ModelViewSet):
-#     queryset = Cita.objects.all()
-#     serializer_class = CitaTemporal
+    def get_queryset(self):
+        cancelado = "Cancelado"
+        qs = Cita.objects.exclude(estadoCita=cancelado)
+        atendido = "Atendido"
+        qs = qs.exclude(estadoCita=atendido)
+        fecha=datetime.now().date()
+        return qs.order_by("fechaAtencion")
+
 
 class vistaCrearConsulta(ModelViewSet):
     queryset = Consulta.objects.all()

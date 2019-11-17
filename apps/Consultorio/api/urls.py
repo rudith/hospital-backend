@@ -15,7 +15,7 @@ router.register(r"crear-triaje",vistaCrearTriaje)
 router.register(r"crear-cita",vistaCrearCita)
 router.register(r"crear-consulta",vistaCrearConsulta)
 router.register(r"ver-triajes",vistaTriaje)
-router.register(r"ver-citas",vistaCita)
+#router.register(r"ver-citas",vistaCita)
 router.register(r"ver-consultas",vistaConsulta)
 router.register(r"crear-orden",vistaCrearOrden)
 router.register(r"ver-orden",vistaOrden)
@@ -32,6 +32,7 @@ urlpatterns = [
     # path("profiles/<int:pk>/", profile_detail, name="profile-detail")
     #path("consulta/<int:pk>/", vistaHistoriaDetalle.as_view(), name="consultas-detail"),
     path("", include(router.urls)),
+    url(r'^ver-citas/$', vistaCita.as_view(), name="VerCitas"),
     url(r'^buscarSolHis/$', buscarSol.as_view(), name="BUSCAH"),
     url(r'^buscarSolNom/$', buscarSol2.as_view(), name="cancelarCita"),
     url(r'^buscarOrden/$', buscarOrden.as_view(), name="cancelarCita"),
