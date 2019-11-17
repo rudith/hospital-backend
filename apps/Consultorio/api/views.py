@@ -253,6 +253,16 @@ class BuscarTriajeHistoria(generics.ListAPIView):
     def get_queryset(self):
         nro = self.request.query_params.get('nro')
         return Triaje.objects.filter(cita__numeroHistoria__numeroHistoria=nro)
+
+#class BuscarTriajefechaReg(generics.ListAPIView):
+
+#    serializer_class = TriajeViewSerializer
+#    pagination_class = SmallSetPagination
+#    permission_classes = [IsAuthenticated]
+#    def get_queryset(self):
+#        
+#        fecha=datetime.now().date()      
+#        return Triaje.objects.filter(fechaReg=fecha).order_by("fechaReg")
         
 class BuscarConsultaDni(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'dni'
@@ -271,6 +281,18 @@ class BuscarConsultaHistoria(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Historia.objects.all()
+
+#class BuscarConsultafechaCreacion(generics.RetrieveUpdateDestroyAPIView):
+#    lookup_field = 'numeroHistoria'
+#    serializer_class = ConsultasDniSerializer
+#    pagination_class = SmallSetPagination
+#    permission_classes = [IsAuthenticated]
+
+#    def get_queryset(self):
+#        fecha=datetime.now().date()      
+#       return Consulta.objects.filter(fechaCreacion=fecha).order_by("fechaCreacion")
+
+
 
 # class BuscarNombreCita(generics.ListAPIView):
     
