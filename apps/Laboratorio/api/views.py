@@ -7,7 +7,7 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.utils import ImageReader
 from reportlab.platypus import Image,Table, Spacer, TableStyle, Paragraph
 from reportlab.lib.styles import getSampleStyleSheet
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 
 from datetime import datetime , timedelta
 
@@ -73,14 +73,19 @@ class filtro(generics.ListAPIView):
         nombre = self.request.query_params.get('nombre')
         return ExamenLabCab.objects.filter(nombre=nombre)
 
-class ultimoExamen(generics.ListAPIView):
-    
-    serializer_class = ExamenLabCabSerializer
-    permission_classes = [IsAuthenticated]
+def ultimoExamen(request):
+        
+    id = ExamenLabCab.objects.latest('pk')
+    if id!=None:
+        return JsonResponse({'id': str(id.pk)})
+    else:
+        return JsonResponse({'status':'No hay examenes'})
 
-    def get_queryset(self):
-        queryset = ExamenLabCab.objects.all().order_by('id').last()
-        return queryset
+def eliminarExamenCompleto(request,id):
+        
+    ExamenLabDet.objects.filter(codigoExam=id).delete()
+    ExamenLabCab. objects.filter(pk=id).delete()
+    return JsonResponse({'status':'Eliminado'})
 
 #Realizado por Julio Vicente: Lista todos los examenes que tiene una persona el filtro es por DNI
 class filtroDNI(generics.ListAPIView):

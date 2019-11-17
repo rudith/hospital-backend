@@ -2,7 +2,7 @@ from django.conf.urls import url
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 #from .views import (ProfileViewSet, ProfileStatusViewSet)
-from .views import (ultimoExamen,VistaCrearExamenLabCab, VistaExamenLabCab, VistaTipoExamen, BuscarExamen, VistaExamenLabDet,filtro,filtrofecha,filtroDNI,reporte,reporteSemanalExamenes,reporteMensualExamenes,resultadoExamen,reporteTipoExamen,filtroDetallesCodigoExamen )
+from .views import (eliminarExamenCompleto,ultimoExamen,VistaCrearExamenLabCab, VistaExamenLabCab, VistaTipoExamen, BuscarExamen, VistaExamenLabDet,filtro,filtrofecha,filtroDNI,reporte,reporteSemanalExamenes,reporteMensualExamenes,resultadoExamen,reporteTipoExamen,filtroDetallesCodigoExamen )
 
 # profile_list = ProfileViewSet.as_view({"get": "list"})
 # profile_detail = ProfileViewSet.as_view({"get": "retrieve"})
@@ -30,6 +30,7 @@ urlpatterns = [
     url(r'^reporteTipoExamen/(?P<tipoExam>\w+)/$',reporteTipoExamen,name="Reporte Tipo De Examen"),
     url(r'^resultadoExamen/(?P<id>\d+)/$',resultadoExamen,name="Resultados"),
     url(r'^buscarUltimoExamen/$',ultimoExamen,name="UltimoExam"),
+     url(r'^eliminarExamenCompleto/(?P<id>\d+)/$',eliminarExamenCompleto,name="Eliminar Examen Completo"),
     #url(r'^cancelar/(?P<dni>\d+)/$', cancelarCita.as_view(), name="cancelarCita"),
 ]
 
