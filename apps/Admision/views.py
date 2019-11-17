@@ -525,6 +525,32 @@ def crearCabeceraEspecialidad(especialidad):
     fecha.wrapOn(ca,500,0)
     fecha.drawOn(ca,40, y-25)
     y=y-40
+def crearCabeceraEspecialidadRango(especialidad,fechainicio,fechafinal):
+    global y,ca,contador
+    contador=0
+    p1 = ParagraphStyle('test')
+    p1.textColor = 'black'
+    p1.borderColor = 'white'
+    p1.alignment = TA_CENTER
+    p1.borderWidth = 1
+    p1.fontSize = 20
+    if (y<41):
+        ca.showPage()
+        y=800
+        
+    
+    fecha = datetime.today()
+    fecha=fecha.strftime("%d-%m-%Y")
+    fecha = datetime.today()
+    fecha=fecha.strftime("%d-%m-%Y")
+    especialidad = Paragraph(str(especialidad),p1)
+    especialidad.wrapOn(ca,500,0)
+    especialidad.drawOn(ca, 40, y)
+    p1.fontSize = 12
+    fecha = Paragraph("De:"+" "+str(fechainicio)+"   Hasta: "+str(fechafinal),p1)
+    fecha.wrapOn(ca,500,0)
+    fecha.drawOn(ca,40, y-25)
+    y=y-40
     
 def crearCabeceraMedico(medico):   
     global y,ca,contador
@@ -545,7 +571,7 @@ def imprimir(p,cita):
     if (y<12):
         ca.showPage()
         y=800
-    print(cita.id)
+    
     cont = Paragraph(str(contador),p)
     cont.wrapOn(ca,15,90)
     cont.drawOn(ca, 40, y)
@@ -559,7 +585,7 @@ def imprimir(p,cita):
     recibo.wrapOn(ca,100,90)
     recibo.drawOn(ca, 355, y)
     cond = calcularCondicion(cita.numeroHistoria)
-    print(cond)
+    
     condicion = Paragraph(str(cond),p)
     condicion.wrapOn(ca,100,90)
     condicion.drawOn(ca, 455, y)
@@ -605,3 +631,55 @@ def calcularCondicion(numeroHistoria):
     if citas.count()>=1:
         return "C"
     return "N"
+
+def reporteCitasRangoFecha(request,fecha_inicio,fecha_final):
+    global y,ca,contador
+    fechaini = fecha_inicio
+    fechafin = fecha_final
+    especialidades = Especialidad.objects.all()
+    fecha = datetime.today()
+    fecha=fecha.strftime("%Y-%m-%d")
+    width,height =A4
+   
+    citas= Cita.objects.filter(estadoCita__in=["Atendido","Cancelado"],fechaAtencion__range=[fechaini,fechafin]).order_by("especialidad","medico")
+    if citas.count()!=0:
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename=Reporte'+fechaini+"_"+fechafin+'.pdf'
+        buffer = BytesIO()
+
+        ca = canvas.Canvas(buffer,pagesize=A4)
+        p = ParagraphStyle('test')
+        p.textColor = 'black'
+        p.borderColor = 'black'
+        p.alignment = TA_CENTER
+        p.borderWidth = 1
+        p.fontSize = 10
+        y=800
+        crearCabeceraEspecialidadRango(str(citas[0].especialidad),fechaini,fechafin)
+        crearCabeceraMedico(str(citas[0].medico.nombres+" "+citas[0].medico.apellido_paterno+" "+ citas[0].medico.apellido_materno))
+        crearEncabezados(p)
+        for i in range(citas.count()):
+            
+            imprimir(p,citas[i])
+            if citas.count()!= i+1 :
+                if str(citas[i].especialidad) != str(citas[i+1].especialidad):
+                    y=y-10
+                    crearCabeceraEspecialidad(str(citas[i+1].especialidad))
+                    
+
+
+                if str(citas[i].medico) != str(citas[i+1].medico):
+                    y=y-5
+                    crearCabeceraMedico(str(citas[i+1].medico.nombres+" "+citas[i+1].medico.apellido_paterno+" "+ citas[i+1].medico.apellido_materno))
+                    crearEncabezados(p)
+
+
+
+        ca.save()
+        pdf = buffer.getvalue()
+        buffer.close()
+
+        response.write(pdf)
+        return response 
+    else: 
+        return JsonResponse({'status':'FAIL'})
