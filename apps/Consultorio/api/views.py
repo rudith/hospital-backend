@@ -44,7 +44,7 @@ class vistaCrearTriaje(ModelViewSet):
     queryset = Triaje.objects.all()
     serializer_class = TriajeSerializer
     pagination_class = SmallSetPagination
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
         #return qs
     #filter_backends = [SearchFilter]
@@ -58,7 +58,7 @@ class vistaTriaje(ModelViewSet):
     queryset = Triaje.objects.all()
     serializer_class = TriajeViewSerializer
     pagination_class = SmallSetPagination
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
      # permission_classes = [IsAuthenticated]
 
 class BuscarTriajeCita(generics.RetrieveUpdateDestroyAPIView):
@@ -75,7 +75,7 @@ class vistaCrearCita(ModelViewSet):
     pagination_class = SmallSetPagination
     filter_backends = [SearchFilter]
     search_fields = ["numeroRecibo"]
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
      # permission_classes = [IsAuthenticated]
 
 class vistaCita(generics.ListAPIView):
@@ -97,7 +97,7 @@ class vistaCrearConsulta(ModelViewSet):
     queryset = Consulta.objects.all()
     serializer_class = ConsultaSerializer
     pagination_class = SmallSetPagination
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
 class vistaConsulta(ModelViewSet):
     queryset = Consulta.objects.all().order_by("-fechaCreacion")
