@@ -37,4 +37,8 @@ def fecha(value):
 #    if not  a <= 0 :
 #     raise ValidationError('datos de cita inicorrectos')
 
-
+#validacion de dni 
+#Verifica la longitud de de atributo dni --> que contenga 8 caracteres
+def dni(value):
+    if not  len(value) == 8 :
+        raise ValidationError('numero de caracteres incorrectos')

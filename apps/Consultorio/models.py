@@ -4,7 +4,7 @@ from apps.Admision.models import HorarioCab, HorarioDet, Historia, Provincia, Di
 from apps.Laboratorio.models import TipoExamen
 from django.contrib.auth.models import User
 from .validators import  fechaSeparacion,fechaAtencion,valoresnegativos,fecha
-
+from .validators import dni
 
 class Cita(models.Model):
     
@@ -20,14 +20,15 @@ class Cita(models.Model):
     exonerado = models.BooleanField(default=False)
     estReg = models.BooleanField(default=True)
     updated_at = models.DateTimeField(auto_now=True)
+
     def __str__(self):
         return self.pk.__str__()
 
 class Triaje(models.Model):
 
-    numeroHistoria = models.ForeignKey(Historia,related_name='triajes', on_delete=models.CASCADE)
     personal = models.ForeignKey(Personal, on_delete=models.CASCADE)
     cita = models.OneToOneField(Cita, on_delete=models.CASCADE)
+    numeroHistoria = models.ForeignKey(Historia,related_name='triajes', on_delete=models.CASCADE)
     talla = models.FloatField(validators=[valoresnegativos])
     peso = models.FloatField(validators=[valoresnegativos])
     temperatura = models.FloatField(validators=[valoresnegativos])
@@ -38,10 +39,13 @@ class Triaje(models.Model):
 
     def __str__(self):
         return self.pk.__str__() 
+    
+    def numeroHistoria(self):        
+       return self.cita.numeroHistoria
 
 class Orden(models.Model):
     numeroHistoria = models.ForeignKey(Historia,related_name='ordenes', on_delete=models.CASCADE,blank=True,null=True)
-    dni = models.CharField(max_length=8)
+    dni = models.CharField(max_length=8,validators=[dni])
     nombre = models.CharField(max_length=100)
     medico = models.CharField(max_length=100,blank=True,null=True)
     orden = models.CharField(max_length=100,blank=True,null=True)
@@ -65,8 +69,11 @@ class Consulta(models.Model):
     diagnostico = models.TextField(max_length=300)
     tratamiento = models.TextField(max_length=300)
     ordenExam = models.TextField(max_length=200,blank=True,null=True)
-    proximaCita = models.DateField(blank=True,null=True)     
+    proximaCita = models.DateField(blank=True,null=True,validators=[fechaAtencion])     
     fechaCreacion = models.DateField(auto_now_add=True)
     def __str__(self):  
         return self.pk.__str__() 
+
+    def numeroHistoria(self):        
+       return self.triaje.cita.numeroHistoria
     

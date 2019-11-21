@@ -50,7 +50,7 @@ class TriajeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Triaje
         #fields = "__all__"  
-        fields = ['id','numeroHistoria','talla','peso','temperatura','frecuenciaR','frecuenciaC','presionArt','fechaReg','personal','cita']
+        fields = ['id','talla','peso','temperatura','frecuenciaR','frecuenciaC','presionArt','fechaReg','personal','cita']
 
 
 class TriajeViewSerializer(serializers.ModelSerializer):

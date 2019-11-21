@@ -74,12 +74,13 @@ class filtro(generics.ListAPIView):
         return ExamenLabCab.objects.filter(nombre=nombre)
 
 def ultimoExamen(request):
-        
-    id = ExamenLabCab.objects.latest('pk')
-    if id!=None:
-        return JsonResponse({'id': str(id.pk)})
-    else:
+    
+    id = ExamenLabCab.objects.all().order_by('id').last()
+    if not id:
         return JsonResponse({'status':'No hay examenes'})
+    else:
+        return JsonResponse({'id': str(id.pk)})
+
 
 def eliminarExamenCompleto(request,id):
         

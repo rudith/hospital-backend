@@ -61,7 +61,7 @@ class vistaCrearHistoria(ModelViewSet):
     filter_backends = [SearchFilter]
     search_fields = ["dni"]
     #search_fields = ["numeroHistoria"]
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
 class vistaHistoria(ModelViewSet):
     queryset = Historia.objects.all().order_by("-id")
