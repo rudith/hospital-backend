@@ -112,9 +112,9 @@ class ConsultaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Consulta
-        fields = "__all__" 
-        # fields = ['id','motivoConsulta','apetito','orina','deposiciones','examenFisico','diagnostico',
-        # 'tratamiento','proximaCita','triaje','numeroHistoria','medico']  
+        #fields = "__all__" 
+        fields = ['motivoConsulta','apetito','orina','deposiciones','examenFisico','diagnostico',
+        'tratamiento','proximaCita','triaje','medico','orden']  
 
 class ConsultaViewSerializer(serializers.ModelSerializer):
     #triaje = serializers.StringRelatedField(read_only=True)
@@ -147,8 +147,8 @@ class ConsultaHistoriaViewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Consulta
         fields = "__all__"
-        # fields = ['id','motivoConsulta','apetito','orina','deposiciones','examenFisico','diagnostico',
-        # 'tratamiento','proximaCita','triaje','numeroHistoria','medico']  
+        # fields = ['motivoConsulta','apetito','orina','deposiciones','examenFisico','diagnostico',
+        #  'tratamiento','proximaCita','triaje','numeroHistoria','numeroHistoriaId','medico','medicoId','orden']  
 class CitasDniSerializer(serializers.ModelSerializer):
     citas = CitaViewSerializer(many=True, read_only=True)
 

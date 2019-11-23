@@ -152,7 +152,9 @@ def cancelarCitasFecha(request):
     fecha = datetime.today()
     fechaInicio = fecha + timedelta(days=-3)
     fechaInicio = fechaInicio.strftime("%Y-%m-%d")
-    Cita.objects.filter(fechaAtencion__range=[fechaInicio,fechaInicio]).update(estadoCita="Cancelado")
+    fechaFin = fecha + timedelta(days=-1)
+    fechaFin = fechaFin.strftime("%Y-%m-%d")
+    Cita.objects.filter(fechaAtencion__range=[fechaInicio,fechaFin]).update(estadoCita="Cancelado")
 
     return JsonResponse({'status':'done'})
 

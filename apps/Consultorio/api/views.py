@@ -27,6 +27,7 @@ from .pagination import SmallSetPagination
 class vistaCrearOrden(ModelViewSet):
     queryset = Orden.objects.all()
     serializer_class = OrdenSerializer
+
     pagination_class = SmallSetPagination
     permission_classes = [IsAuthenticated]
 
@@ -37,7 +38,17 @@ class vistaOrden(ModelViewSet):
     permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
-        estadoO = "Creada"
+        estadoO = "Creado"
+        return Orden.objects.filter(estadoOrden=estadoO)
+
+class vistaOrdenLab(ModelViewSet):
+    queryset = Orden.objects.all()
+    serializer_class = OrdenViewSerializer
+    pagination_class = SmallSetPagination
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        estadoO = "Pagado"
         return Orden.objects.filter(estadoOrden=estadoO)
 
 class vistaCrearTriaje(ModelViewSet):
@@ -45,6 +56,17 @@ class vistaCrearTriaje(ModelViewSet):
     serializer_class = TriajeSerializer
     pagination_class = SmallSetPagination
     permission_classes = [IsAuthenticated]
+
+def cancelarOrdenFecha(request):
+    permission_classes = [IsAuthenticated]
+    fecha = datetime.today()
+    fechaInicio = fecha + timedelta(days=-3)
+    fechaInicio = fechaInicio.strftime("%Y-%m-%d")
+    fechaFin = fecha + timedelta(days=-1)
+    fechaFin = fechaFin.strftime("%Y-%m-%d")
+    Orden.objects.filter(fechaA__range=[fechaInicio,fechaFin]).update(estadoOrden="Cancelado")
+
+    return JsonResponse({'status':'done'})
 
         #return qs
     #filter_backends = [SearchFilter]
@@ -97,7 +119,7 @@ class vistaCrearConsulta(ModelViewSet):
     queryset = Consulta.objects.all()
     serializer_class = ConsultaSerializer
     pagination_class = SmallSetPagination
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
 class vistaConsulta(ModelViewSet):
     queryset = Consulta.objects.all().order_by("-fechaCreacion")
@@ -135,7 +157,25 @@ class BuscarCitaDni(generics.ListAPIView):
      
     def get_queryset(self):
         dni = self.request.query_params.get('dni')
-        return Cita.objects.filter(numeroHistoria__dni=dni).order_by("fechaAtencion")
+        cancelado = "Cancelado"
+        qs = Cita.objects.exclude(estadoCita=cancelado)
+        atendido = "Atendido"
+        qs = qs.exclude(estadoCita=atendido)
+        return qs.filter(numeroHistoria__dni=dni).order_by("fechaAtencion")
+
+class BuscarCitaHDni(generics.ListAPIView):
+        
+    serializer_class = CitaViewSerializer
+    pagination_class = SmallSetPagination
+    permission_classes = [IsAuthenticated]
+     
+    def get_queryset(self):
+        dni = self.request.query_params.get('dni')
+        espera = "Espera"
+        qs = Cita.objects.exclude(estadoCita=espera)
+        triado = "Triado"
+        qs = qs.exclude(estadoCita=triado)
+        return qs.filter(numeroHistoria__dni=dni).order_by("fechaAtencion")
 
 class CitasHistorial(generics.ListAPIView):
     serializer_class = CitaViewSerializer
@@ -213,11 +253,33 @@ class BuscarCitaNombre (generics.ListAPIView):
     def get_queryset(self):
         #id = self.kwargs['id']
         nombre = self.request.query_params.get('nom')
-        qs = Cita.objects.filter(numeroHistoria__nombres__icontains = nombre) 
+        cancelado = "Cancelado"
+        qs = Cita.objects.exclude(estadoCita=cancelado)
+        atendido = "Atendido"
+        qs = qs.exclude(estadoCita=atendido)
+        qs = qs.filter(numeroHistoria__nombres__icontains = nombre) 
         if qs.all().count()<1:
-                qs = Cita.objects.filter(numeroHistoria__apellido_paterno__icontains=nombre)
+                qs = qs.filter(numeroHistoria__apellido_paterno__icontains=nombre)
         return qs.order_by("fechaAtencion")
-        
+
+class BuscarCitaHNombre (generics.ListAPIView):
+    
+    serializer_class = CitaViewSerializer
+    pagination_class = SmallSetPagination
+    permission_classes = [IsAuthenticated]
+     
+    def get_queryset(self):
+        #id = self.kwargs['id']
+        nombre = self.request.query_params.get('nom')
+        espera = "Espera"
+        qs = Cita.objects.exclude(estadoCita=espera)
+        triado = "Triado"
+        qs = qs.exclude(estadoCita=triado)
+        qs = qs.filter(numeroHistoria__nombres__icontains = nombre) 
+        if qs.all().count()<1:
+                qs = qs.filter(numeroHistoria__apellido_paterno__icontains=nombre)
+        return qs.order_by("fechaAtencion")
+
 class BuscarCitaHistoria(generics.ListAPIView):
     
     serializer_class = CitaViewSerializer
@@ -227,7 +289,26 @@ class BuscarCitaHistoria(generics.ListAPIView):
     def get_queryset(self):
         #id = self.kwargs['id']
         nro = self.request.query_params.get('nro')
-        return Cita.objects.filter(numeroHistoria__numeroHistoria__icontains = nro).order_by("fechaAtencion")    
+        cancelado = "Cancelado"
+        qs = Cita.objects.exclude(estadoCita=cancelado)
+        atendido = "Atendido"
+        qs = qs.exclude(estadoCita=atendido)
+        return qs.objects.filter(numeroHistoria__numeroHistoria__icontains = nro).order_by("fechaAtencion")  
+
+class BuscarCitaHHistoria(generics.ListAPIView):
+    
+    serializer_class = CitaViewSerializer
+    pagination_class = SmallSetPagination
+    permission_classes = [IsAuthenticated]
+     
+    def get_queryset(self):
+        #id = self.kwargs['id']
+        nro = self.request.query_params.get('nro')
+        espera = "Espera"
+        qs = Cita.objects.exclude(estadoCita=espera)
+        triado = "Triado"
+        qs = qs.exclude(estadoCita=triado)
+        return qs.objects.filter(numeroHistoria__numeroHistoria__icontains = nro).order_by("fechaAtencion")      
 
 class BuscarCitaEspecialidad(generics.ListAPIView):
     serializer_class = CitaViewSerializer
@@ -237,7 +318,11 @@ class BuscarCitaEspecialidad(generics.ListAPIView):
     def get_queryset(self):
         #id = self.kwargs['id']
         id = self.request.query_params.get('id')
-        return Cita.objects.filter(especialidad = id).order_by("fechaAtencion")    
+        cancelado = "Cancelado"
+        qs = Cita.objects.exclude(estadoCita=cancelado)
+        atendido = "Atendido"
+        qs = qs.exclude(estadoCita=atendido)
+        return qs.objects.filter(especialidad = id).order_by("fechaAtencion")    
 
 class BuscarCitaEspecialidad2(generics.ListAPIView):
     serializer_class = CitaViewSerializer
@@ -247,7 +332,39 @@ class BuscarCitaEspecialidad2(generics.ListAPIView):
     def get_queryset(self):
         #id = self.kwargs['id']
         esp = self.request.query_params.get('esp')
-        return Cita.objects.filter(especialidad__nombre__icontains = esp).order_by("fechaAtencion")  
+        cancelado = "Cancelado"
+        qs = Cita.objects.exclude(estadoCita=cancelado)
+        atendido = "Atendido"
+        qs = qs.exclude(estadoCita=atendido)
+        return qs.objects.filter(especialidad__nombre__icontains = esp).order_by("fechaAtencion")  
+
+class BuscarCitaHEspecialidad(generics.ListAPIView):
+    serializer_class = CitaViewSerializer
+    pagination_class = SmallSetPagination
+    permission_classes = [IsAuthenticated]
+     
+    def get_queryset(self):
+        #id = self.kwargs['id']
+        id = self.request.query_params.get('id')
+        espera = "Espera"
+        qs = Cita.objects.exclude(estadoCita=espera)
+        triado = "Triado"
+        qs = qs.exclude(estadoCita=triado)
+        return qs.objects.filter(especialidad = id).order_by("fechaAtencion")    
+
+class BuscarCitaHEspecialidad2(generics.ListAPIView):
+    serializer_class = CitaViewSerializer
+    pagination_class = SmallSetPagination
+    permission_classes = [IsAuthenticated]
+     
+    def get_queryset(self):
+        #id = self.kwargs['id']
+        esp = self.request.query_params.get('esp')
+        espera = "Espera"
+        qs = Cita.objects.exclude(estadoCita=espera)
+        triado = "Triado"
+        qs = qs.exclude(estadoCita=triado)
+        return qs.objects.filter(especialidad__nombre__icontains = esp).order_by("fechaAtencion")  
 
 class BuscarTriajeHistoria(generics.ListAPIView):
 
@@ -348,6 +465,32 @@ class atenderOrden(generics.RetrieveUpdateDestroyAPIView):
         if query is not None:
             qs = qs.filter(pk=query)
         qs.update(estadoOrden='Atendido')
+        return qs
+
+class cancelarOrden(generics.RetrieveUpdateDestroyAPIView):
+    lookup_field = 'id'
+    serializer_class = OrdenViewSerializer
+    permission_classes = [IsAuthenticated]
+    def get_queryset(self):
+        qs = Orden.objects.all()
+        query = self.kwargs['id']
+        # busca por codigo
+        if query is not None:
+            qs = qs.filter(pk=query)
+        qs.update(estadoOrden='Cancelado')
+        return qs
+
+class pagarOrden(generics.RetrieveUpdateDestroyAPIView):
+    lookup_field = 'id'
+    serializer_class = OrdenViewSerializer
+    permission_classes = [IsAuthenticated]
+    def get_queryset(self):
+        qs = Orden.objects.all()
+        query = self.kwargs['id']
+        # busca por codigo
+        if query is not None:
+            qs = qs.filter(pk=query)
+        qs.update(estadoOrden='Pagado')
         return qs
 
 class triajeCita(generics.RetrieveUpdateDestroyAPIView):

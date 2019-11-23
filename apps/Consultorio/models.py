@@ -43,18 +43,9 @@ class Triaje(models.Model):
     def numeroHistoria(self):        
        return self.cita.numeroHistoria
 
-class Orden(models.Model):
-    numeroHistoria = models.ForeignKey(Historia,related_name='ordenes', on_delete=models.CASCADE,blank=True,null=True)
-    dni = models.CharField(max_length=8,validators=[dni])
-    nombre = models.CharField(max_length=100)
-    medico = models.CharField(max_length=100,blank=True,null=True)
-    orden = models.CharField(max_length=100,blank=True,null=True)
-    tipoExam = models.ForeignKey(TipoExamen, on_delete=models.CASCADE)
-    fechaA = models.DateField(validators=[fechaAtencion])
-    fechaCreacion = models.DateField(auto_now_add=True)
-    estadoOrden= models.CharField(max_length=10,blank=True,null=True)
-    def __str__(self):  
-        return self.pk.__str__() 
+
+
+
         
 class Consulta(models.Model):
     #FK Triaje
@@ -71,9 +62,48 @@ class Consulta(models.Model):
     ordenExam = models.TextField(max_length=200,blank=True,null=True)
     proximaCita = models.DateField(blank=True,null=True,validators=[fechaAtencion])     
     fechaCreacion = models.DateField(auto_now_add=True)
+    #orden =  models.TextField(max_length=10)
     def __str__(self):  
         return self.pk.__str__() 
 
     def numeroHistoria(self):        
-       return self.triaje.cita.numeroHistoria
+        print ("Entro a Hosptroa!")
+        return self.triaje.cita.numeroHistoria
     
+    # def orden(self):
+        
+    #     print ("Entro a Orden!!")
+    #     #orden = Orden(numeroHistoria = self.triaje.cita.numeroHistoria)
+    #     nroConsulta = self.triaje
+    #     print ("TRIAJE:!")
+    #     print (nroConsulta)
+    #     if (Orden.objects.filter(consulta=nroConsulta).exists() ):
+    #         print ("La Orden ya ha sido creada")
+    #         return "si"
+    #     else:
+    #         orden = Orden.objects.create(numeroHistoria = self.triaje.cita.numeroHistoria,
+    #                                     dni = self.triaje.cita.numeroHistoria.dni,
+    #                                     nombre = self.triaje.cita.numeroHistoria.nombres + ' ' + self.triaje.cita.numeroHistoria.apellido_paterno + ' ' + self.triaje.cita.numeroHistoria.apellido_materno,
+    #                                     medico = self.medico.nombres + ' ' + self.medico.apellido_paterno + ' ' + self.medico.apellido_materno,
+    #                                     orden = self.triaje.cita.especialidad.nombre,
+    #                                     estadoOrden = 'Creado',
+    #                                     consulta = str(self.triaje))
+    #         orden.save()
+ 
+        
+    #         return 'si'
+
+
+class Orden(models.Model):
+    numeroHistoria = models.ForeignKey(Historia,related_name='ordenes', on_delete=models.CASCADE,blank=True,null=True)
+    dni = models.CharField(blank=True,null=True,max_length=8,validators=[dni])
+    nombre = models.CharField(blank=True,null=True,max_length=100)
+    medico = models.CharField(max_length=100,blank=True,null=True)
+    orden = models.CharField(max_length=100,blank=True,null=True)
+    tipoExam = models.ForeignKey(TipoExamen, on_delete=models.CASCADE,blank=True,null=True)
+    fechaA = models.DateField(blank=True,null=True, validators=[fechaAtencion])
+    fechaCreacion = models.DateField(auto_now_add=True)
+    estadoOrden= models.CharField(max_length=10,blank=True,null=True)
+
+    def __str__(self):  
+        return self.pk.__str__() 
