@@ -59,7 +59,7 @@ class Consulta(models.Model):
     examenFisico = models.CharField(max_length=100,blank=True,null=True)
     diagnostico = models.TextField(max_length=300)
     tratamiento = models.TextField(max_length=300)
-    ordenExam = models.TextField(max_length=200,blank=True,null=True)
+    #ordenExam = models.TextField(max_length=200,blank=True,null=True)
     proximaCita = models.DateField(blank=True,null=True,validators=[fechaAtencion])     
     fechaCreacion = models.DateField(auto_now_add=True)
     #orden =  models.TextField(max_length=10)

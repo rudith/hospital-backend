@@ -114,7 +114,7 @@ class ConsultaSerializer(serializers.ModelSerializer):
         model = Consulta
         #fields = "__all__" 
         fields = ['motivoConsulta','apetito','orina','deposiciones','examenFisico','diagnostico',
-        'tratamiento','proximaCita','triaje','medico','orden']  
+        'tratamiento','proximaCita','triaje','medico']  
 
 class ConsultaViewSerializer(serializers.ModelSerializer):
     #triaje = serializers.StringRelatedField(read_only=True)
@@ -135,7 +135,7 @@ class ConsultaOrdenSerializer(serializers.ModelSerializer):
     #medicoId = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Personal.objects.all(), source='medico')
     class Meta:
         model = Consulta
-        fields = ['triaje','numeroHistoria','numeroHistoriaId','medico', 'ordenExam', 'fechaCreacion'] 
+        fields = ['triaje','numeroHistoria','numeroHistoriaId','medico', 'fechaCreacion'] 
 
 class ConsultaHistoriaViewSerializer(serializers.ModelSerializer):
     #triaje = serializers.StringRelatedField(read_only=True)
