@@ -33,6 +33,10 @@ from reportlab.lib.enums import TA_JUSTIFY, TA_LEFT, TA_CENTER
 x,y=A4
 ca=""
 contador=0
+continuador=0
+nuevo=0
+reingreso=0
+
 # class vistaGrupoSang(ModelViewSet):
 #     queryset = GrupSang.objects.all()
 #     serializer_class = GrupSangSerializer
@@ -454,13 +458,13 @@ def HistoriaPDF(request,dni):
 
 
 def reporteDiarioCitas(request):
-    global y,ca,contador
+    global y,ca,contador,nuevo,reingreso,continuado
     especialidades = Especialidad.objects.all()
     fecha = datetime.today()
     fecha=fecha.strftime("%Y-%m-%d")
     width,height =A4
    
-    citas= Cita.objects.filter(estadoCita__in=["Atendido","NSP"],fechaAtencion=fecha).order_by("especialidad","medico")
+    citas= Cita.objects.filter(estadoCita__in=["Atendido","Cancelado"],fechaAtencion=fecha).order_by("especialidad","medico")
     if citas.count()!=0:
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename=ReporteDiarioCitas_'+fecha+'.pdf'
@@ -482,17 +486,25 @@ def reporteDiarioCitas(request):
             imprimir(p,citas[i])
             if citas.count()!= i+1 :
                 if str(citas[i].especialidad) != str(citas[i+1].especialidad):
+                    if contador!=0 or nuevo!=0 or reingreso !=0 or continuador!=0:
+                        y=y-10
+                        contadorEstados(p)
                     y=y-10
                     crearCabeceraEspecialidad(str(citas[i+1].especialidad))
                     
 
 
                 if str(citas[i].medico) != str(citas[i+1].medico):
+                    if contador!=0 or nuevo!=0 or reingreso !=0 or continuador!=0:
+                        y=y-10
+                        contadorEstados(p)
                     y=y-5
                     crearCabeceraMedico(str(citas[i+1].medico.nombres+" "+citas[i+1].medico.apellido_paterno+" "+ citas[i+1].medico.apellido_materno))
                     crearEncabezados(p)
-
-
+                
+            if citas.count()-1== i :
+                y=y-10
+                contadorEstados(p)
 
         ca.save()
         pdf = buffer.getvalue()
@@ -502,11 +514,46 @@ def reporteDiarioCitas(request):
         return response 
     else: 
         return JsonResponse({'status':'FAIL'})
-    
+
+def contadorEstados(p):
+    global y,ca,contador,nuevo,continuador,reingreso
+    if (y<24):
+        ca.showPage()
+        y=800
+    nuev = Paragraph("Nuevos",p)
+    nuev.wrapOn(ca,130,90)
+    nuev.drawOn(ca,40 , y)
+    reingre = Paragraph("Reingreso",p)
+    reingre.wrapOn(ca,130,90)
+    reingre.drawOn(ca, 170, y)
+    aten = Paragraph("Continuador",p)
+    aten.wrapOn(ca,130,90)
+    aten.drawOn(ca, 300, y)
+    conti = Paragraph("Atendidos",p)
+    conti.wrapOn(ca,125,90)
+    conti.drawOn(ca, 430, y)
+    y=y-11.5
+    nuev = Paragraph(str(nuevo),p)
+    nuev.wrapOn(ca,130,90)
+    nuev.drawOn(ca, 40, y)
+    reingre = Paragraph(str(reingreso),p)
+    reingre.wrapOn(ca,130,90)
+    reingre.drawOn(ca, 170, y)
+    conti = Paragraph(str(continuador),p)
+    conti.wrapOn(ca,130,90)
+    conti.drawOn(ca, 300, y)
+    aten = Paragraph(str(contador),p)
+    aten.wrapOn(ca,125,90)
+    aten.drawOn(ca, 430, y)
+    y=y-11.5
+    contador=0
+    nuevo=0
+    continuador=0
+    reingreso=0
 
 def crearCabeceraEspecialidad(especialidad):
     global y,ca,contador
-    contador=0
+    #contador=0
     p1 = ParagraphStyle('test')
     p1.textColor = 'black'
     p1.borderColor = 'white'
@@ -532,7 +579,7 @@ def crearCabeceraEspecialidad(especialidad):
     y=y-40
 def crearCabeceraEspecialidadRango(especialidad,fechainicio,fechafinal):
     global y,ca,contador
-    contador=0
+    #contador=0
     p1 = ParagraphStyle('test')
     p1.textColor = 'black'
     p1.borderColor = 'white'
@@ -596,6 +643,31 @@ def imprimir(p,cita):
     condicion.drawOn(ca, 455, y)
     y=y-11.5
     
+def imprimirRango(p,cita):
+    global y,ca,contador
+    contador=contador+1
+    if (y<12):
+        ca.showPage()
+        y=800
+    
+    cont = Paragraph(str(contador),p)
+    cont.wrapOn(ca,15,90)
+    cont.drawOn(ca, 40, y)
+    historia = Paragraph(str(cita.numeroHistoria),p)
+    historia.wrapOn(ca,100,90)
+    historia.drawOn(ca, 55, y)
+    nombre = Paragraph(str(cita.numeroHistoria.nombres)+" "+str(cita.numeroHistoria.apellido_paterno)+" "+str(cita.numeroHistoria.apellido_materno),p)
+    nombre.wrapOn(ca,200,90)
+    nombre.drawOn(ca, 155, y)
+    recibo = Paragraph(str(cita.numeroRecibo),p)
+    recibo.wrapOn(ca,100,90)
+    recibo.drawOn(ca, 355, y)
+   
+    
+    fecha = Paragraph(str(cita.fechaAtencion),p)
+    fecha.wrapOn(ca,100,90)
+    fecha.drawOn(ca, 455, y)
+    y=y-11.5
 
 def crearEncabezados(p):
     global y,ca,contador
@@ -618,24 +690,52 @@ def crearEncabezados(p):
     condicion.wrapOn(ca,100,90)
     condicion.drawOn(ca, 455, y)
     y=y-11.5
+
+def crearEncabezadosRango(p):
+    global y,ca,contador
+    if (y<12):
+        ca.showPage()
+        y=800
+    cont = Paragraph("N°",p)
+    cont.wrapOn(ca,15,90)
+    cont.drawOn(ca, 40, y)
+    historia = Paragraph("N° HISTORIA",p)
+    historia.wrapOn(ca,100,90)
+    historia.drawOn(ca, 55, y)
+    nombre = Paragraph("Apellidos y Nombres",p)
+    nombre.wrapOn(ca,200,90)
+    nombre.drawOn(ca, 155, y)
+    recibo = Paragraph("N° Recibo",p)
+    recibo.wrapOn(ca,100,90)
+    recibo.drawOn(ca, 355, y)
+    condicion = Paragraph("Fecha",p)
+    condicion.wrapOn(ca,100,90)
+    condicion.drawOn(ca, 455, y)
+    y=y-11.5
+
 def calcularCondicion(numeroHistoria):
+    global reingreso,continuador,nuevo
     fecha = datetime.today()
     fechaInicio = fecha + timedelta(days=-365)
     fechaInicio = fechaInicio.strftime("%Y-%m-%d")
     fechaini = fechaInicio
     fechaFinal = fecha + timedelta(days=-1)
     fechaFinal = fechaFinal.strftime("%Y-%m-%d")
-    fechafin = fecha.strftime("%Y-%m-%d")
-  
-    
-    citas = Cita.objects.filter(numeroHistoria=numeroHistoria,estadoCita__in=["Atendido","NSP"]).filter(fechaAtencion__range=[fechaini,fechafin])
+    fechafin = fechaFinal
+    tienecitas= Cita.objects.filter(numeroHistoria=numeroHistoria)
+    citas = Cita.objects.filter(numeroHistoria=numeroHistoria,estadoCita__in=["Atendido","Cancelado"]).filter(fechaAtencion__range=[fechaini,fechafin])
 
+    if tienecitas.count()-1==0:
+        nuevo=nuevo+1
+        return "N"
         
     if citas.count()==0:
+        reingreso=reingreso+1
         return "R"
     if citas.count()>=1:
+        continuador=continuador+1
         return "C"
-    return "N"
+ 
 
 def reporteCitasRangoFecha(request,fecha_inicio,fecha_final):
     global y,ca,contador
@@ -662,21 +762,21 @@ def reporteCitasRangoFecha(request,fecha_inicio,fecha_final):
         y=800
         crearCabeceraEspecialidadRango(str(citas[0].especialidad),fechaini,fechafin)
         crearCabeceraMedico(str(citas[0].medico.nombres+" "+citas[0].medico.apellido_paterno+" "+ citas[0].medico.apellido_materno))
-        crearEncabezados(p)
+        crearEncabezadosRango(p)
         for i in range(citas.count()):
-            
-            imprimir(p,citas[i])
+
+            imprimirRango(p,citas[i])
             if citas.count()!= i+1 :
                 if str(citas[i].especialidad) != str(citas[i+1].especialidad):
                     y=y-10
-                    crearCabeceraEspecialidad(str(citas[i+1].especialidad))
+                    crearCabeceraEspecialidadRango(str(citas[i+1].especialidad),fechaini,fechafin)
                     
 
 
                 if str(citas[i].medico) != str(citas[i+1].medico):
                     y=y-5
                     crearCabeceraMedico(str(citas[i+1].medico.nombres+" "+citas[i+1].medico.apellido_paterno+" "+ citas[i+1].medico.apellido_materno))
-                    crearEncabezados(p)
+                    crearEncabezadosRango(p)
 
 
 

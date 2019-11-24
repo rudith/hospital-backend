@@ -6,7 +6,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.utils import ImageReader
 from reportlab.platypus import Image,Table, Spacer, TableStyle, Paragraph
-from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.styles import getSampleStyleSheet,ParagraphStyle
 from django.http import HttpResponse, JsonResponse
 
 from datetime import datetime , timedelta
@@ -24,6 +24,10 @@ from rest_framework.generics import get_object_or_404
 from rest_framework import status
 styles = getSampleStyleSheet()
 from .pagination import SmallSetPagination
+from reportlab.lib.enums import TA_JUSTIFY, TA_LEFT, TA_CENTER
+y=0
+ca=""
+contador=0
 
 #Realizado por Julio Vicente: Vista general de Examen Cabecera, Get Post Put Delete
 class VistaExamenLabCab(ModelViewSet):                                  
@@ -68,9 +72,8 @@ class VistaTipoExamen(ModelViewSet):
 class VistaTipoExamen2(ModelViewSet):
     queryset = TipoExamen.objects.all()
     serializer_class = TipoExamenSerializer
-    permission_classes = [IsAuthenticated]  
     pagination_class = SmallSetPagination
-
+    permission_classes = [IsAuthenticated]  
 #Realizado por Julio Vicente: Vista general de Examen Detalle, Get Post Put Delete
 class VistaExamenLabDet(ModelViewSet):
     queryset = ExamenLabDet.objects.all().order_by("-id")
@@ -151,66 +154,92 @@ def reporteMensualExamenes(request):
     fechaInicio = fechaInicio.strftime("%Y-%m-%d")
     fechaini = fechaInicio
     fechafin = fecha.strftime("%Y-%m-%d")
-    
-    Examenes= ExamenLabCab.objects.filter(fecha__range=[fechaini,fechafin])
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename=ReporteMensual.pdf'
-    buffer = BytesIO()
-    c = canvas.Canvas(buffer,pagesize=A4)
 
-    #Cabecera__________________________________________
-    c.setLineWidth(.3)
-    c.setFont('Helvetica',24)
-    c.drawString(175,750,'REPORTE MENSUAL')
-    c.setFont('Helvetica', 24)
-    c.drawString(230, 730, 'EXAMENES')
-    c.line(40,695,550,695)
-    fecha = datetime.now()
-    fecha = fecha.strftime("%d-%m-%Y")
-    c.setFont('Helvetica', 13)
-    c.drawString(440, 697, 'Fecha:')
-    c.drawString(480,697,str(fecha))
-    c.drawImage("apps/Laboratorio/static/Unsa.png",45,700,width=85, height=110, mask='auto')
-    width,height =A4
-    #Cabecera_____________________________________________
-    #TABLA_______________________________________________
-    datos=[]
-    tablaCampos = ('NOMBRE', 'DNI', 'FECHA', 'EXAMEN')
-    contador=0
-    for var in Examenes:
-        # creo variable p para guardar la descripcion
-        nombre=Paragraph(var.nombre, styles['Normal'])
-        dni=Paragraph(var.dni, styles['Normal'])
-        fecha=Paragraph(var.fecha.__str__(), styles['Normal'])
-        tipoExam=Paragraph(var.tipoExam.__str__(), styles['Normal'])
-        # añado a la lista la llave primaria de acl y ademas la descripcion contenida en p
-        datos.append((nombre,dni,fecha,tipoExam))
-        contador+=1
-   
-    tabla = Table(data=[tablaCampos] + datos,colWidths=[9*cm,3*cm,3*cm,3*cm])
-    tabla.setStyle(TableStyle([
-        ('INNERGRID',(0,0),(-1,-1),0.25,colors.black),
-        ('ALIGN',(0,-1),(-1,-1),'CENTER'), 
-        ('BOX',(0,0),(-1,-1),0.25,colors.black),]))
-    tabla.wrapOn(c,width,height)
-    distancia=25
-    if (contador==0 or contador==1 or contador==2):
-        if(contador==0):
-            contador=1
-        distancia=38
-    tabla.drawOn(c,40,695-contador*distancia)
-    
-    
-    #TABLA_______________________________________________
+    Examenes= ExamenLabCab.objects.filter(fecha__range=[fechaini,fechafin]).order_by("fecha")
+    if Examenes.count()!=0:
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename=Reporte'+fechaini+"_"+fechafin+'.pdf'
+        buffer = BytesIO()
+        ca = canvas.Canvas(buffer,pagesize=A4)
+        p = ParagraphStyle('test')
+        p.textColor = 'black'
+        p.borderColor = 'black'
+        p.alignment = TA_CENTER
+        p.borderWidth = 1
+        p.fontSize = 10
+        contador=0
+        y=800
+        #Cabecera__________________________________________
+        ca.setLineWidth(.3)
+        ca.setFont('Helvetica',24)
+        ca.drawString(175,750,'REPORTE MENSUAL')
+        ca.setFont('Helvetica', 24)
+        ca.drawString(230, 730, 'EXAMENES')
+        ca.line(40,695,550,695)
+        fecha = datetime.now()
+        fecha = fecha.strftime("%d-%m-%Y")
+        ca.setFont('Helvetica', 13)
+        ca.drawString(440, 697, 'Fecha:')
+        ca.drawString(480,697,str(fecha))
+        ca.drawImage("apps/Laboratorio/static/Unsa.png",45,700,width=85, height=110, mask='auto')
+        width,height =A4
+        #Cabecera_____________________________________________
+        y=y-120
+        #Cabecera TABLA_______________________________________
+        cont = Paragraph("N°",p)
+        cont.wrapOn(ca,15,90)
+        cont.drawOn(ca, 40, y)
+        historia = Paragraph("DNI",p)
+        historia.wrapOn(ca,100,90)
+        historia.drawOn(ca, 55, y)
+        nombre = Paragraph("NOMBRE",p)
+        nombre.wrapOn(ca,200,90)
+        nombre.drawOn(ca, 155, y)
+        recibo = Paragraph("TIPO DE EXAMEN",p)
+        recibo.wrapOn(ca,100,90)
+        recibo.drawOn(ca, 355, y)
+        condicion = Paragraph("FECHA",p)
+        condicion.wrapOn(ca,100,90)
+        condicion.drawOn(ca, 455, y)
+        y=y-11.5
+        
+        for i in range(Examenes.count()):
+            
+            imprimir(p,Examenes[i])
+        
+        ca.save()
+        pdf = buffer.getvalue()
+        buffer.close()
 
-    # Cierre PDF .
-    c.showPage()
-    c.save()
-    pdf = buffer.getvalue()
-    buffer.close()
-    response.write(pdf)
+        response.write(pdf)
+        return response 
+    else: 
+        return JsonResponse({'status':'FAIL'})
 
-    return response
+def imprimir(p,examen):
+    global y,ca,contador
+    contador=contador+1
+    if (y<12):
+        ca.showPage()
+        y=800
+
+    cont = Paragraph(str(contador),p)
+    cont.wrapOn(ca,15,90)
+    cont.drawOn(ca, 40, y)
+    nombre = Paragraph(str(examen.dni),p)
+    nombre.wrapOn(ca,100,90)
+    nombre.drawOn(ca, 55, y)
+    dni = Paragraph(str(examen.nombre),p)
+    dni.wrapOn(ca,200,90)
+    dni.drawOn(ca, 155, y)
+    fecha1 = Paragraph(str(examen.tipoExam),p)
+    fecha1.wrapOn(ca,100,90)
+    fecha1.drawOn(ca, 355, y)     
+    condicion = Paragraph(str(examen.fecha),p)
+    condicion.wrapOn(ca,100,90)
+    condicion.drawOn(ca, 455, y)
+    y=y-11.5
+
 
 #Realizado por Julio Vicente: Reporte de todos los examenes en una semana, utiliza libreria reportlab
 def reporteSemanalExamenes(request):
@@ -220,66 +249,67 @@ def reporteSemanalExamenes(request):
     fechaini = fechaInicio
     fechafin = fecha.strftime("%Y-%m-%d")
     
-    Examenes= ExamenLabCab.objects.filter(fecha__range=[fechaini,fechafin])
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename=ReporteSemanal.pdf'
-    buffer = BytesIO()
-    c = canvas.Canvas(buffer,pagesize=A4)
+    Examenes= ExamenLabCab.objects.filter(fecha__range=[fechaini,fechafin]).order_by("fecha")
+    if Examenes.count()!=0:
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename=Reporte'+fechaini+"_"+fechafin+'.pdf'
+        buffer = BytesIO()
+        ca = canvas.Canvas(buffer,pagesize=A4)
+        p = ParagraphStyle('test')
+        p.textColor = 'black'
+        p.borderColor = 'black'
+        p.alignment = TA_CENTER
+        p.borderWidth = 1
+        p.fontSize = 10
+        contador=0
+        y=800
+        #Cabecera__________________________________________
+        ca.setLineWidth(.3)
+        ca.setFont('Helvetica',24)
+        ca.drawString(175,750,'REPORTE SEMANAL')
+        ca.setFont('Helvetica', 24)
+        ca.drawString(230, 730, 'EXAMENES')
+        ca.line(40,695,550,695)
+        fecha = datetime.now()
+        fecha = fecha.strftime("%d-%m-%Y")
+        ca.setFont('Helvetica', 13)
+        ca.drawString(440, 697, 'Fecha:')
+        ca.drawString(480,697,str(fecha))
+        ca.drawImage("apps/Laboratorio/static/Unsa.png",45,700,width=85, height=110, mask='auto')
+        width,height =A4
+        #Cabecera_____________________________________________
+        y=y-120
+        #Cabecera TABLA_______________________________________
+        cont = Paragraph("N°",p)
+        cont.wrapOn(ca,15,90)
+        cont.drawOn(ca, 40, y)
+        historia = Paragraph("DNI",p)
+        historia.wrapOn(ca,100,90)
+        historia.drawOn(ca, 55, y)
+        nombre = Paragraph("NOMBRE",p)
+        nombre.wrapOn(ca,200,90)
+        nombre.drawOn(ca, 155, y)
+        recibo = Paragraph("TIPO DE EXAMEN",p)
+        recibo.wrapOn(ca,100,90)
+        recibo.drawOn(ca, 355, y)
+        condicion = Paragraph("FECHA",p)
+        condicion.wrapOn(ca,100,90)
+        condicion.drawOn(ca, 455, y)
+        y=y-11.5
+        
+        for i in range(Examenes.count()):
+               
+            imprimir(p,Examenes[i])
+        
+        ca.save()
+        pdf = buffer.getvalue()
+        buffer.close()
 
-    #Cabecera__________________________________________
-    c.setLineWidth(.3)
-    c.setFont('Helvetica',24)
-    c.drawString(175,750,'REPORTE SEMANAL')
-    c.setFont('Helvetica', 24)
-    c.drawString(230, 730, 'EXAMENES')
-    c.line(40,695,550,695)
-    fecha = datetime.now()
-    fecha = fecha.strftime("%d-%m-%Y")
-    c.setFont('Helvetica', 13)
-    c.drawString(440, 697, 'Fecha:')
-    c.drawString(480,697,str(fecha))
-    c.drawImage("apps/Laboratorio/static/Unsa.png",45,700,width=85, height=110, mask='auto')
-    width,height =A4
-    #Cabecera_____________________________________________
-    #TABLA_______________________________________________
-    datos=[]
-    tablaCampos = ('NOMBRE', 'DNI', 'FECHA', 'EXAMEN')
-    contador=0
-    for var in Examenes:
-        # creo variable p para guardar la descripcion
-        nombre=Paragraph(var.nombre, styles['Normal'])
-        dni=Paragraph(var.dni, styles['Normal'])
-        fecha=Paragraph(var.fecha.__str__(), styles['Normal'])
-        tipoExam=Paragraph(var.tipoExam.__str__(), styles['Normal'])
-        # añado a la lista la llave primaria de acl y ademas la descripcion contenida en p
-        datos.append((nombre,dni,fecha,tipoExam))
-        contador+=1
-   
-    tabla = Table(data=[tablaCampos] + datos,colWidths=[9*cm,3*cm,3*cm,3*cm])
-    tabla.setStyle(TableStyle([
-        ('INNERGRID',(0,0),(-1,-1),0.25,colors.black),
-        ('ALIGN',(0,-1),(-1,-1),'CENTER'), 
-        ('BOX',(0,0),(-1,-1),0.25,colors.black),]))
-    tabla.wrapOn(c,width,height)
-    distancia=25
-    if (contador==0 or contador==1 or contador==2):
-        if(contador==0):
-            contador=1
-        distancia=38
-    tabla.drawOn(c,40,695-contador*distancia)
-    
+        response.write(pdf)
+        return response 
+    else: 
+        return JsonResponse({'status':'FAIL'})
 
-    
-    #TABLA_______________________________________________
-
-    # Cierre PDF
-    c.showPage()
-    c.save()
-    pdf = buffer.getvalue()
-    buffer.close()
-    response.write(pdf)
-
-    return response
 
 #Realizado por Julio Vicente: Muestra en PDF resultados de un examen (Cabecera,detalle,tip), utiliza libreria reportlab
 def resultadoExamen(request,id):
@@ -372,68 +402,69 @@ def resultadoExamen(request,id):
 
 #Realizado por Julio Vicente: Reporte de todos los examenes por tipo de Examen, utiliza libreria reportlab
 def reporteTipoExamen(request,tipoExam):
+    global y,ca,contador
+    Examenes=ExamenLabCab.objects.filter(tipoExam__nombre=tipoExam).order_by("fecha")
+    if Examenes.count()!=0:
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename=Reporte'+tipoExam+'.pdf'
+        buffer = BytesIO()
+        ca = canvas.Canvas(buffer,pagesize=A4)
+        p = ParagraphStyle('test')
+        p.textColor = 'black'
+        p.borderColor = 'black'
+        p.alignment = TA_CENTER
+        p.borderWidth = 1
+        p.fontSize = 10
+        contador=0
+        y=800
+        #Cabecera__________________________________________
+        ca.setLineWidth(.3)
+        ca.setFont('Helvetica',24)
+        ca.drawString(195,750,'REPORTE TIPO')
+        ca.setFont('Helvetica', 24)
+        ca.drawString(230, 730, 'EXAMEN')
+        ca.line(40,695,550,695)
+        fecha = datetime.now()
+        fecha = fecha.strftime("%d-%m-%Y")
+        ca.setFont('Helvetica', 13)
+        ca.drawString(440, 697, 'Fecha:')
+        ca.drawString(480,697,str(fecha))
+        ca.drawImage("apps/Laboratorio/static/Unsa.png",45,700,width=85, height=110, mask='auto')
+        width,height =A4
+        #Cabecera_____________________________________________
+        y=y-120
+        #Cabecera TABLA_______________________________________
+        cont = Paragraph("N°",p)
+        cont.wrapOn(ca,15,90)
+        cont.drawOn(ca, 40, y)
+        historia = Paragraph("DNI",p)
+        historia.wrapOn(ca,100,90)
+        historia.drawOn(ca, 55, y)
+        nombre = Paragraph("NOMBRE",p)
+        nombre.wrapOn(ca,200,90)
+        nombre.drawOn(ca, 155, y)
+        recibo = Paragraph("TIPO DE EXAMEN",p)
+        recibo.wrapOn(ca,100,90)
+        recibo.drawOn(ca, 355, y)
+        condicion = Paragraph("FECHA",p)
+        condicion.wrapOn(ca,100,90)
+        condicion.drawOn(ca, 455, y)
+        y=y-11.5
+
+        for i in range(Examenes.count()):
+            
+            imprimir(p,Examenes[i])
         
-    examenLabCab=ExamenLabCab.objects.filter(tipoExam__nombre=tipoExam)
-    
-    
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename=ReporteTipoExamen.pdf'
-    buffer = BytesIO()
-    c = canvas.Canvas(buffer,pagesize=A4)
+        ca.save()
+        pdf = buffer.getvalue()
+        buffer.close()
 
-    #Cabecera__________________________________________
-    c.setLineWidth(.3)
-    c.setFont('Helvetica',24)
-    c.drawString(195,750,'REPORTE TIPO')
-    c.setFont('Helvetica', 24)
-    c.drawString(230, 730, 'EXAMEN')
-    c.line(40,695,550,695)
-    fecha = datetime.now()
-    fecha = fecha.strftime("%d-%m-%Y")
-    c.setFont('Helvetica', 13)
-    c.drawString(440, 697, 'Fecha:')
-    c.drawString(480,697,str(fecha))
-    c.drawImage("apps/Laboratorio/static/Unsa.png",45,700,width=85, height=110, mask='auto')
-    width,height =A4
-    #Cabecera_____________________________________________
-    #TABLA_______________________________________________
-    datos=[]
-    tablaCampos = ('NOMBRE', 'DNI', 'FECHA', 'EXAMEN')
-    contador=0
-    for var in examenLabCab:
-        # creo variable p para guardar la descripcion
-        nombre=Paragraph(var.nombre, styles['Normal'])
-        dni=Paragraph(var.dni, styles['Normal'])
-        fecha=Paragraph(var.fecha.__str__(), styles['Normal'])
-        tipoExam=Paragraph(var.tipoExam.__str__(), styles['Normal'])
-        # añado a la lista la llave primaria de acl y ademas la descripcion contenida en p
-        datos.append((nombre,dni,fecha,tipoExam))
-        contador+=1
-   
-    tabla = Table(data=[tablaCampos] + datos,colWidths=[9*cm,3*cm,3*cm,3*cm])
-    tabla.setStyle(TableStyle([
-        ('INNERGRID',(0,0),(-1,-1),0.25,colors.black),
-        ('ALIGN',(0,-1),(-1,-1),'CENTER'), 
-        ('BOX',(0,0),(-1,-1),0.25,colors.black),]))
-    tabla.wrapOn(c,width,height)
-    distancia=25
-    if (contador==0 or contador==1 or contador==2):
-        if(contador==0):
-            contador=1
-        distancia=38
-    tabla.drawOn(c,40,695-contador*distancia)
+        response.write(pdf)
+        return response 
+    else: 
+        return JsonResponse({'status':'FAIL'})
 
-    
-    #TABLA_______________________________________________
 
-    # Close the PDF object cleanly.
-    c.showPage()
-    c.save()
-    pdf = buffer.getvalue()
-    buffer.close()
-    response.write(pdf)
-
-    return response
 
 #Realizado por Julio Vicente: Reporte ejemplo, utiliza libreria reportlab
 def reporte(request):
