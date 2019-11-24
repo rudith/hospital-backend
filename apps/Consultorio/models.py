@@ -67,7 +67,6 @@ class Consulta(models.Model):
         return self.pk.__str__() 
 
     def numeroHistoria(self):        
-        print ("Entro a Hosptroa!")
         return self.triaje.cita.numeroHistoria
     
     # def orden(self):

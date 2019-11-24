@@ -49,12 +49,28 @@ class BuscarExamen(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         return ExamenLabCab.objects.all()
 
+class BuscarTipoExamen(generics.ListAPIView):
+
+    serializer_class = TipoExamenSerializer
+    #permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = TipoExamen.objects.all()
+        tipo = self.request.query_params.get('tipo')
+        return TipoExamen.objects.filter(nombre__icontains = tipo)
+
 #Realizado por Julio Vicente: Vista general de Tipo Examen, Get Post Put Delete
 class VistaTipoExamen(ModelViewSet):
     queryset = TipoExamen.objects.all()
     serializer_class = TipoExamenSerializer
     permission_classes = [IsAuthenticated]
-    
+
+class VistaTipoExamen2(ModelViewSet):
+    queryset = TipoExamen.objects.all()
+    serializer_class = TipoExamenSerializer
+    permission_classes = [IsAuthenticated]  
+    pagination_class = SmallSetPagination
+
 #Realizado por Julio Vicente: Vista general de Examen Detalle, Get Post Put Delete
 class VistaExamenLabDet(ModelViewSet):
     queryset = ExamenLabDet.objects.all().order_by("-id")

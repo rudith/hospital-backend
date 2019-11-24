@@ -2,7 +2,8 @@ from django.conf.urls import url
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 #from .views import (ProfileViewSet, ProfileStatusViewSet)
-from .views import (eliminarExamenCompleto,ultimoExamen,VistaCrearExamenLabCab, VistaExamenLabCab, VistaTipoExamen, BuscarExamen, VistaExamenLabDet,filtro,filtrofecha,filtroDNI,filtroDNI2,reporte,reporteSemanalExamenes,reporteMensualExamenes,resultadoExamen,reporteTipoExamen,filtroDetallesCodigoExamen )
+from .views import (eliminarExamenCompleto,ultimoExamen,VistaCrearExamenLabCab, VistaExamenLabCab, VistaTipoExamen, BuscarExamen, VistaExamenLabDet,filtro,filtrofecha,filtroDNI,filtroDNI2,reporte,reporteSemanalExamenes,reporteMensualExamenes,resultadoExamen
+                    ,reporteTipoExamen,filtroDetallesCodigoExamen, BuscarTipoExamen,VistaTipoExamen2)
 
 # profile_list = ProfileViewSet.as_view({"get": "list"})
 # profile_detail = ProfileViewSet.as_view({"get": "retrieve"})
@@ -12,6 +13,8 @@ router = DefaultRouter()
 router.register(r"ExamenLabCab", VistaExamenLabCab)
 router.register(r"CrearExamenLabCab", VistaCrearExamenLabCab)
 router.register(r"TipoExamen", VistaTipoExamen)
+router.register(r"TipoExamenPa", VistaTipoExamen2)
+
 router.register(r"ExamenLabDet", VistaExamenLabDet)
 
 urlpatterns = [
@@ -24,7 +27,7 @@ urlpatterns = [
     url(r'^filtro/Detalles/$', filtroDetallesCodigoExamen.as_view(), name="Filtro Detalles Codigo Examen"),
     
     url(r'^buscarExamen/(?P<id>\d+)/$', BuscarExamen.as_view(), name="actualizarPersonal"),
-    
+    url(r'^buscarTipoExamen/$', BuscarTipoExamen.as_view(), name="tipoExam"),
     url(r'^reporte/$', reporte, name="Reporte"),
     url(r'^reporteSemanal/$',reporteSemanalExamenes,name="Reporte Semanal"),
     url(r'^reporteMensual/$',reporteMensualExamenes,name="Reporte Mensual"),

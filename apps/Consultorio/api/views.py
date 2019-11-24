@@ -135,23 +135,23 @@ class BuscarHistorialClinico(generics.ListAPIView):
     #queryset = Consulta.objects.all()
     serializer_class = ConsultaHistoriaViewSerializer
     pagination_class = SmallSetPagination
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
     #serializer_class = HistorialClinicoSerializer
 
     def get_queryset(self):
         nro = self.request.query_params.get('nro')
-        return Consulta.objects.filter(numeroHistoria__numeroHistoria=nro).order_by("-fechaCreacion")
+        return Consulta.objects.filter(triaje__cita__numeroHistoria__numeroHistoria=nro).order_by("-fechaCreacion")
 
 class BuscarHistorialClinicoDNI(generics.ListAPIView):
     #queryset = Consulta.objects.all()
     serializer_class = ConsultaHistoriaViewSerializer
     pagination_class = SmallSetPagination
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
     #serializer_class = HistorialClinicoSerializer
 
     def get_queryset(self):
         dni = self.request.query_params.get('dni')
-        return Consulta.objects.filter(numeroHistoria__dni=dni).order_by("-fechaCreacion")
+        return Consulta.objects.filter(triaje__cita__numeroHistoria__dni=dni).order_by("-fechaCreacion")
 
 class BuscarCitaDni(generics.ListAPIView):
     
@@ -297,7 +297,7 @@ class BuscarCitaHistoria(generics.ListAPIView):
         qs = Cita.objects.exclude(estadoCita=cancelado)
         atendido = "Atendido"
         qs = qs.exclude(estadoCita=atendido)
-        return qs.objects.filter(numeroHistoria__numeroHistoria__icontains = nro).order_by("fechaAtencion")  
+        return qs.filter(numeroHistoria__numeroHistoria__icontains = nro).order_by("fechaAtencion")  
 
 class BuscarCitaHHistoria(generics.ListAPIView):
     
@@ -312,7 +312,7 @@ class BuscarCitaHHistoria(generics.ListAPIView):
         qs = Cita.objects.exclude(estadoCita=espera)
         triado = "Triado"
         qs = qs.exclude(estadoCita=triado)
-        return qs.objects.filter(numeroHistoria__numeroHistoria__icontains = nro).order_by("fechaAtencion")      
+        return qs.filter(numeroHistoria__numeroHistoria__icontains = nro).order_by("fechaAtencion")      
 
 class BuscarCitaEspecialidad(generics.ListAPIView):
     serializer_class = CitaViewSerializer
@@ -326,7 +326,7 @@ class BuscarCitaEspecialidad(generics.ListAPIView):
         qs = Cita.objects.exclude(estadoCita=cancelado)
         atendido = "Atendido"
         qs = qs.exclude(estadoCita=atendido)
-        return qs.objects.filter(especialidad = id).order_by("fechaAtencion")    
+        return qs.filter(especialidad = id).order_by("fechaAtencion")    
 
 class BuscarCitaEspecialidad2(generics.ListAPIView):
     serializer_class = CitaViewSerializer
@@ -340,7 +340,7 @@ class BuscarCitaEspecialidad2(generics.ListAPIView):
         qs = Cita.objects.exclude(estadoCita=cancelado)
         atendido = "Atendido"
         qs = qs.exclude(estadoCita=atendido)
-        return qs.objects.filter(especialidad__nombre__icontains = esp).order_by("fechaAtencion")  
+        return qs.filter(especialidad__nombre__icontains = esp).order_by("fechaAtencion")  
 
 class BuscarCitaHEspecialidad(generics.ListAPIView):
     serializer_class = CitaViewSerializer
@@ -354,7 +354,7 @@ class BuscarCitaHEspecialidad(generics.ListAPIView):
         qs = Cita.objects.exclude(estadoCita=espera)
         triado = "Triado"
         qs = qs.exclude(estadoCita=triado)
-        return qs.objects.filter(especialidad = id).order_by("fechaAtencion")    
+        return qs.filter(especialidad = id).order_by("fechaAtencion")    
 
 class BuscarCitaHEspecialidad2(generics.ListAPIView):
     serializer_class = CitaViewSerializer
@@ -368,7 +368,7 @@ class BuscarCitaHEspecialidad2(generics.ListAPIView):
         qs = Cita.objects.exclude(estadoCita=espera)
         triado = "Triado"
         qs = qs.exclude(estadoCita=triado)
-        return qs.objects.filter(especialidad__nombre__icontains = esp).order_by("fechaAtencion")  
+        return qs.filter(especialidad__nombre__icontains = esp).order_by("fechaAtencion")  
 
 class BuscarTriajeHistoria(generics.ListAPIView):
 
@@ -552,7 +552,40 @@ class  buscarOrden(generics.ListAPIView):
     def get_queryset(self):
         #id = self.kwargs['id']
         dni= self.request.query_params.get('dni')
-        qs = Orden.objects.filter(dni__icontains = dni) 
+        qs = Orden.objects.filter(dni__icontains = dni, estadoOrden = 'Creado') 
+        return qs.order_by("fechaA")
+
+class  buscarOrdenLab(generics.ListAPIView):
+    
+    serializer_class = OrdenSerializer
+    pagination_class = SmallSetPagination
+    permission_classes = [IsAuthenticated]
+    def get_queryset(self):
+        #id = self.kwargs['id']
+        dni= self.request.query_params.get('dni')
+        qs = Orden.objects.filter(dni__icontains = dni, estadoOrden = 'Pagado') 
+        return qs.order_by("fechaA")
+
+class  buscarNombreOrden(generics.ListAPIView):
+    
+    serializer_class = OrdenSerializer
+    pagination_class = SmallSetPagination
+    permission_classes = [IsAuthenticated]
+    def get_queryset(self):
+        #id = self.kwargs['id']
+        dni= self.request.query_params.get('nom')
+        qs = Orden.objects.filter(nombre__icontains = dni, estadoOrden = 'Creado') 
+        return qs.order_by("fechaA")
+
+class  buscarNombreOrdenLab(generics.ListAPIView):
+    
+    serializer_class = OrdenSerializer
+    pagination_class = SmallSetPagination
+    permission_classes = [IsAuthenticated]
+    def get_queryset(self):
+        #id = self.kwargs['id']
+        nombre = self.request.query_params.get('nom')
+        qs = Orden.objects.filter(nombre__icontains = nombre, estadoOrden = 'Pagado') 
         return qs.order_by("fechaA")
 
 
