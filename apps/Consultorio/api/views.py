@@ -17,10 +17,11 @@ from .serializers import (OrdenViewSerializer, TriajeSerializer, TriajeViewSeria
 from ..models import Triaje, Cita, Consulta, Orden
 from apps.Admision.models import Historia
 from rest_framework.response import Response
+from django.http import HttpResponse, JsonResponse
 from rest_framework.generics import get_object_or_404
 from rest_framework import status
-from datetime import datetime
 from datetime import date
+from datetime import datetime , timedelta
 from .pagination import SmallSetPagination
     
 
@@ -64,9 +65,12 @@ def cancelarOrdenFecha(request):
     fechaInicio = fechaInicio.strftime("%Y-%m-%d")
     fechaFin = fecha + timedelta(days=-1)
     fechaFin = fechaFin.strftime("%Y-%m-%d")
-    Orden.objects.filter(fechaA__range=[fechaInicio,fechaFin]).update(estadoOrden="Cancelado")
-
-    return JsonResponse({'status':'done'})
+    qs = Orden.objects.filter(fechaA__range=[fechaInicio,fechaFin])
+    if qs.exists():
+        qs.update(estadoOrden="Cancelado")
+        return JsonResponse({'status':'done'})
+    else:
+        return JsonResponse({'status':'No existen Ordenes'})
 
         #return qs
     #filter_backends = [SearchFilter]

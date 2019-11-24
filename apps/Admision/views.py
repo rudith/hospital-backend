@@ -154,9 +154,12 @@ def cancelarCitasFecha(request):
     fechaInicio = fechaInicio.strftime("%Y-%m-%d")
     fechaFin = fecha + timedelta(days=-1)
     fechaFin = fechaFin.strftime("%Y-%m-%d")
-    Cita.objects.filter(fechaAtencion__range=[fechaInicio,fechaFin]).update(estadoCita="Cancelado")
-
-    return JsonResponse({'status':'done'})
+    qs = Cita.objects.filter(fechaAtencion__range=[fechaInicio,fechaFin])
+    if qs.exists():
+        qs.update(estadoCita="Cancelado")
+        return JsonResponse({'status':'done'})
+    else:
+        return JsonResponse({'status':'No existen Citas'})
 
 
 #Realizado por Julio Vicente: Historial Clinico,contiene datos & Consultas ,con su triaje, del paciente , utiliza libreria reportlab
