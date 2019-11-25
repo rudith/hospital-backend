@@ -41,23 +41,27 @@ reingreso=0
 #     queryset = GrupSang.objects.all()
 #     serializer_class = GrupSangSerializer
 
+#Vista general de todos los  Distritos, Get Post Put Delete
 class vistaDistrito(ModelViewSet):
     queryset = Distrito.objects.all()
     serializer_class = DistritoSerializer
     pagination_class = SmallSetPagination 
     permission_classes = [IsAuthenticated]
 
+#Vista general de todos las provincias , Get Post Put Delete
 class vistaProvincia(ModelViewSet):
     queryset = Provincia.objects.all()
     serializer_class = ProvinciaSerializer
     pagination_class = SmallSetPagination
     permission_classes = [IsAuthenticated]
 
+#Vista general de todos las provincias , Get Post Put Delete
 class vistaDepartamento(ModelViewSet):
     queryset = Departamento.objects.all()
     serializer_class = DepartamentoSerializer
     permission_classes = [IsAuthenticated]
 
+#Vista para crear historias , Get Post Put Delete
 class vistaCrearHistoria(ModelViewSet):
     queryset = Historia.objects.all()
     serializer_class = HistoriaSerializer
@@ -67,6 +71,7 @@ class vistaCrearHistoria(ModelViewSet):
     #search_fields = ["numeroHistoria"]
     permission_classes = [IsAuthenticated]
 
+#Vista general de todos las historias clinicas, Get Post Put Delete
 class vistaHistoria(ModelViewSet):
     queryset = Historia.objects.all().order_by("-id")
     serializer_class = HistoriaViewSerializer
@@ -76,6 +81,7 @@ class vistaHistoria(ModelViewSet):
     #search_fields = ["numeroHistoria"]
     permission_classes = [IsAuthenticated]
 
+#Busqueda por numero de historia , Serializer muestra todas las historias
 class BuscarHistoria(generics.ListAPIView):
 
     serializer_class = HistoriaViewSerializer
@@ -85,6 +91,7 @@ class BuscarHistoria(generics.ListAPIView):
         nro = self.request.query_params.get('nro')
         return Historia.objects.filter(numeroHistoria=nro)
 
+#Busqueda de las historias clinicas por  DNI , Serializer muestra todas las historias
 class BuscarDNIH(generics.RetrieveUpdateDestroyAPIView):
 
     lookup_field = 'dni'
@@ -94,6 +101,7 @@ class BuscarDNIH(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         return Historia.objects.all()
 
+#Busqueda historia por nombre del paciente , Serializer muestra todas las historias
 class BuscarNombreH(generics.ListAPIView):
     
     serializer_class = HistoriaViewSerializer
@@ -108,7 +116,7 @@ class BuscarNombreH(generics.ListAPIView):
             qs = Historia.objects.filter(apellido_paterno__icontains=nombre)
         return qs
 
-
+#Busqueda de distritos , Serializer muestra todos los distritos
 class BuscarDistrito(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
     serializer_class = DistritosxProvincia
@@ -117,6 +125,7 @@ class BuscarDistrito(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         return Provincia.objects.all()
 
+#Busqueda de provincias, Serializer muestra todas las provincias
 class BuscarProvincia(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
     serializer_class = ProvinciasxDepartamento
@@ -125,6 +134,7 @@ class BuscarProvincia(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         return Departamento.objects.all()
 
+#Busqueda de Distritos, Serializer muestra todas los Distritos
 class BuscarDistritos(generics.ListAPIView):
     lookup_field = 'id'
     serializer_class = DistritoSerializer
@@ -134,6 +144,7 @@ class BuscarDistritos(generics.ListAPIView):
         id = self.request.query_params.get('id')
         return Distrito.objects.filter(provincia__id=id)
 
+#Busqueda de provincias, Serializer muestra todas las provincias
 class BuscarProvincias(generics.ListAPIView):
     serializer_class = ProvinciaSerializer
     permission_classes = [IsAuthenticated]

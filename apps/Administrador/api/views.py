@@ -126,12 +126,14 @@ class vistaUsuario2(ModelViewSet):
 #             'tipoUser': str(tipo)
 #         }, status=HTTP_200_OK)
 
+#Vista general de las areas, Get Post Put Delete
 class vistaArea(ModelViewSet):
     queryset = Area.objects.all()
     serializer_class = AreaSerializer
     pagination_class = SmallSetPagination
     permission_classes = [IsAuthenticated]
 
+#Busqueda por especialidad , Serializer muestra todas las especialidades 
 class BuscarEsp(generics.ListAPIView):
       
     serializer_class = EspecialidadSerializer
@@ -142,6 +144,7 @@ class BuscarEsp(generics.ListAPIView):
         esp = self.request.query_params.get('esp')
         return Especialidad.objects.filter(nombre__icontains=esp)
 
+#Busqueda por tipopersonal , Serializer muestra todas los tipos de personal
 class BuscarTip(generics.ListAPIView):
       
     serializer_class = TipoPersonalSerializer
@@ -152,6 +155,7 @@ class BuscarTip(generics.ListAPIView):
         id = self.request.query_params.get('tip')
         return TipoPersonal.objects.filter(nombre__icontains=id)
 
+#Busqueda por usuario , Serializer muestra todas los usuarios
 class BuscarUser(generics.ListAPIView):
       
     serializer_class = UserSerializer
@@ -161,6 +165,8 @@ class BuscarUser(generics.ListAPIView):
         #id = self.kwargs['id']
         us = self.request.query_params.get('us')
         return User.objects.filter(username__icontains=us)
+
+#Busqueda por Area , Serializer muestra todas las areas
 class BuscarArea(generics.ListAPIView):
       
     serializer_class = AreaSerializer
@@ -171,32 +177,38 @@ class BuscarArea(generics.ListAPIView):
         ar = self.request.query_params.get('ar')
         return Area.objects.filter(nombre__icontains=ar) 
 
+#Vista general de las Areas, Get Post Put Delete
 class vistaArea2(ModelViewSet):
     queryset = Area.objects.all()
     serializer_class = AreaSerializer
     permission_classes = [IsAuthenticated]
 
+#Vista general de todos los tipos de personal, Get Post Put Delete
 class vistaTipoPersonal(ModelViewSet):
     queryset = TipoPersonal.objects.all()
     serializer_class = TipoPersonalSerializer
     pagination_class = SmallSetPagination
     permission_classes = [IsAuthenticated]
 
+#Vista general de todos los tipos de personal, Get Post Put Delete
 class vistaTipoPersonal2(ModelViewSet):
     queryset = TipoPersonal.objects.all()
     serializer_class = TipoPersonalSerializer
     permission_classes = [IsAuthenticated]
 
+#Vista general de todas las especialidades, Get Post Put Delete
 class vistaEspecialidad(ModelViewSet):
     queryset = Especialidad.objects.all()
     serializer_class = EspecialidadSerializer
     pagination_class = SmallSetPagination
     permission_classes = [IsAuthenticated]
 
+#Vista general de todas las especialidades, Get Post Put Delete
 class vistaEspecialidad2(ModelViewSet):
     queryset = Especialidad.objects.all()
     serializer_class = EspecialidadSerializer
     permission_classes = [IsAuthenticated]
+
 
 class vistaCrearPersonal(ModelViewSet):
     queryset = Personal.objects.all()
@@ -206,23 +218,27 @@ class vistaCrearPersonal(ModelViewSet):
     pagination_class = SmallSetPagination
     permission_classes = [IsAuthenticated]
 
+#Vista general de todas los personales , Get Post Put Delete
 class vistaPersonal(ModelViewSet):
     queryset = Personal.objects.all()
     serializer_class = PersonalViewSerializer
     pagination_class = SmallSetPagination
     permission_classes = [IsAuthenticated]
 
+#Vista general de todas las especialidades, Get Post Put Delete
 class vistaPersonal2(ModelViewSet):
     queryset = Personal.objects.all()
     serializer_class = PersonalViewSerializer
     permission_classes = [IsAuthenticated]
 
+#Vista general de todas las especialidades, Get Post Put Delete
 class vistaPersonales(ModelViewSet):
     queryset = Personal.objects.all()
     serializer_class = PersonalViewSerializer
     pagination_class = SmallSetPagination
     permission_classes = [IsAuthenticated]
 
+#Busqueda por DNI, Serializer muestra todas los personales
 class BuscarDni(generics.RetrieveUpdateDestroyAPIView):
 
     lookup_field = 'dni'
@@ -232,6 +248,7 @@ class BuscarDni(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         return Personal.objects.all()
 
+#Busqueda por especialidad, Serializer muestra todas los personales
 class BuscarEspecialidad(generics.ListAPIView):
   
     serializer_class = PersonalViewSerializer

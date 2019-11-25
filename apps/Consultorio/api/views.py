@@ -24,7 +24,7 @@ from datetime import date
 from datetime import datetime , timedelta
 from .pagination import SmallSetPagination
     
-
+#Vista para crear Ordenes , Get Post Put Delete
 class vistaCrearOrden(ModelViewSet):
     queryset = Orden.objects.all()
     serializer_class = OrdenSerializer
@@ -32,6 +32,7 @@ class vistaCrearOrden(ModelViewSet):
     pagination_class = SmallSetPagination
     permission_classes = [IsAuthenticated]
 
+#Vista general de todas las ordenes con un tipo de estado especifco, Get Post Put Delete
 class vistaOrden(ModelViewSet):
     queryset = Orden.objects.all()
     serializer_class = OrdenViewSerializer
@@ -42,6 +43,7 @@ class vistaOrden(ModelViewSet):
         estadoO = "Creado"
         return Orden.objects.filter(estadoOrden=estadoO)
 
+#Vista general de todas las ordenes de laboratorio, Get Post Put Delete
 class vistaOrdenLab(ModelViewSet):
     queryset = Orden.objects.all()
     serializer_class = OrdenViewSerializer
@@ -52,6 +54,7 @@ class vistaOrdenLab(ModelViewSet):
         estadoO = "Pagado"
         return Orden.objects.filter(estadoOrden=estadoO)
 
+#Vista para crear triajes, Get Post Put Delete
 class vistaCrearTriaje(ModelViewSet):
     queryset = Triaje.objects.all()
     serializer_class = TriajeSerializer
@@ -80,13 +83,14 @@ def cancelarOrdenFecha(request):
     #     serializer.save(personal=personal)
      # permission_classes = [IsAuthenticated]
 
+#Vista general de todos los triajes, Get Post Put Delete
 class vistaTriaje(ModelViewSet):
     queryset = Triaje.objects.all()
     serializer_class = TriajeViewSerializer
     pagination_class = SmallSetPagination
     permission_classes = [IsAuthenticated]
     
-
+#Busqueda de todos los triajes por cita , Serializer muestra todos los triajes
 class BuscarTriajeCita(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'cita'
     serializer_class = TriajeViewSerializer
@@ -94,7 +98,8 @@ class BuscarTriajeCita(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Triaje.objects.all()
-    
+
+#Vista para crear citas, Get Post Put Delete   
 class vistaCrearCita(ModelViewSet):
     queryset = Cita.objects.all()
     serializer_class = CitaSerializer
@@ -103,7 +108,7 @@ class vistaCrearCita(ModelViewSet):
     search_fields = ["numeroRecibo"]
     permission_classes = [IsAuthenticated]
      
-
+#Vista general de todos las citas, Get Post Put Del
 class vistaCita(generics.ListAPIView):
 
     serializer_class = CitaViewSerializer
@@ -118,19 +123,21 @@ class vistaCita(generics.ListAPIView):
         fecha=datetime.now().date()
         return qs.order_by("fechaAtencion")
 
-
+#Vista general para crear consultas, Get Post Put Del
 class vistaCrearConsulta(ModelViewSet):
     queryset = Consulta.objects.all()
     serializer_class = ConsultaSerializer
     pagination_class = SmallSetPagination
     permission_classes = [IsAuthenticated]
 
+#Vista general de todos las consultas, Get Post Put Del
 class vistaConsulta(ModelViewSet):
     queryset = Consulta.objects.all().order_by("-fechaCreacion")
     serializer_class = ConsultaHistoriaViewSerializer
     pagination_class = SmallSetPagination
     permission_classes = [IsAuthenticated]
 
+#Busqueda de las consultas por numero de historia , Serializer muestra todos las consultas
 class BuscarHistorialClinico(generics.ListAPIView):
     #queryset = Consulta.objects.all()
     serializer_class = ConsultaHistoriaViewSerializer
@@ -142,6 +149,7 @@ class BuscarHistorialClinico(generics.ListAPIView):
         nro = self.request.query_params.get('nro')
         return Consulta.objects.filter(triaje__cita__numeroHistoria__numeroHistoria=nro).order_by("-fechaCreacion")
 
+#Busqueda de las consultas por DNI , Serializer muestra todos las consultas
 class BuscarHistorialClinicoDNI(generics.ListAPIView):
     #queryset = Consulta.objects.all()
     serializer_class = ConsultaHistoriaViewSerializer
@@ -153,6 +161,7 @@ class BuscarHistorialClinicoDNI(generics.ListAPIView):
         dni = self.request.query_params.get('dni')
         return Consulta.objects.filter(triaje__cita__numeroHistoria__dni=dni).order_by("-fechaCreacion")
 
+#Busqueda de las citas por DNI , cancelado ,atendido , Serializer muestra todos las citas
 class BuscarCitaDni(generics.ListAPIView):
     
     serializer_class = CitaViewSerializer
@@ -167,6 +176,7 @@ class BuscarCitaDni(generics.ListAPIView):
         qs = qs.exclude(estadoCita=atendido)
         return qs.filter(numeroHistoria__dni=dni).order_by("fechaAtencion")
 
+#Busqueda de las citas por DNI,espera,triado, Serializer muestra todos las consultas
 class BuscarCitaHDni(generics.ListAPIView):
         
     serializer_class = CitaViewSerializer
@@ -209,7 +219,7 @@ class BuscarCitaDniE(generics.ListAPIView):
         fecha=datetime.now().date()
         return qs.filter(numeroHistoria__dni=dni, fechaAtencion=fecha).order_by("fechaAtencion")
      
-        
+#Busqueda de citas de un medico , Serializer muestra todos las citas  de medico    
 class BuscarCitaMedico(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
     serializer_class = CitasMedicoViewSerializer
@@ -219,7 +229,8 @@ class BuscarCitaMedico(generics.RetrieveUpdateDestroyAPIView):
     
     def get_queryset(self):
         return User.objects.all()
-        
+
+#Busqueda de las citas de un medico por id, estado , Serializer muestra todos las citas
 class BuscarCitaMedicoEstado(generics.ListAPIView):
     
     serializer_class = CitaViewSerializer
