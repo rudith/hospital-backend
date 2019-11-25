@@ -152,7 +152,7 @@ def reniecDatos(request,dni):
     return JsonResponse(data)
 
 def cancelarCitasFecha(request):
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
     fecha = datetime.today()
     fechaInicio = fecha + timedelta(days=-3)
     fechaInicio = fechaInicio.strftime("%Y-%m-%d")

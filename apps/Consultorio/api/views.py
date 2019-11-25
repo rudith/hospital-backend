@@ -59,7 +59,7 @@ class vistaCrearTriaje(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
 def cancelarOrdenFecha(request):
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
     fecha = datetime.today()
     fechaInicio = fecha + timedelta(days=-3)
     fechaInicio = fechaInicio.strftime("%Y-%m-%d")
@@ -85,7 +85,7 @@ class vistaTriaje(ModelViewSet):
     serializer_class = TriajeViewSerializer
     pagination_class = SmallSetPagination
     permission_classes = [IsAuthenticated]
-     # permission_classes = [IsAuthenticated]
+    
 
 class BuscarTriajeCita(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'cita'
@@ -94,7 +94,7 @@ class BuscarTriajeCita(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Triaje.objects.all()
-     # permission_classes = [IsAuthenticated]
+    
 class vistaCrearCita(ModelViewSet):
     queryset = Cita.objects.all()
     serializer_class = CitaSerializer
@@ -102,13 +102,13 @@ class vistaCrearCita(ModelViewSet):
     filter_backends = [SearchFilter]
     search_fields = ["numeroRecibo"]
     permission_classes = [IsAuthenticated]
-     # permission_classes = [IsAuthenticated]
+     
 
 class vistaCita(generics.ListAPIView):
 
     serializer_class = CitaViewSerializer
     pagination_class = SmallSetPagination
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         cancelado = "Cancelado"
@@ -123,7 +123,7 @@ class vistaCrearConsulta(ModelViewSet):
     queryset = Consulta.objects.all()
     serializer_class = ConsultaSerializer
     pagination_class = SmallSetPagination
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
 class vistaConsulta(ModelViewSet):
     queryset = Consulta.objects.all().order_by("-fechaCreacion")
@@ -135,7 +135,7 @@ class BuscarHistorialClinico(generics.ListAPIView):
     #queryset = Consulta.objects.all()
     serializer_class = ConsultaHistoriaViewSerializer
     pagination_class = SmallSetPagination
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     #serializer_class = HistorialClinicoSerializer
 
     def get_queryset(self):
@@ -146,7 +146,7 @@ class BuscarHistorialClinicoDNI(generics.ListAPIView):
     #queryset = Consulta.objects.all()
     serializer_class = ConsultaHistoriaViewSerializer
     pagination_class = SmallSetPagination
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     #serializer_class = HistorialClinicoSerializer
 
     def get_queryset(self):

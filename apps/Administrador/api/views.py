@@ -201,7 +201,6 @@ class vistaEspecialidad2(ModelViewSet):
 class vistaCrearPersonal(ModelViewSet):
     queryset = Personal.objects.all()
     serializer_class = PersonalSerializer
-    # permission_classes = [IsAuthenticated]
     filter_backends = [SearchFilter]
     search_fields = ["dni"]
     pagination_class = SmallSetPagination
