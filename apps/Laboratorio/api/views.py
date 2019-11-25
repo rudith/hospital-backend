@@ -149,6 +149,7 @@ class filtroDetallesCodigoExamen(generics.ListAPIView):
 
 #Realizado por Julio Vicente: Reporte de todos los examenes en un mes, utiliza libreria reportlab
 def reporteMensualExamenes(request):
+    global y,ca,contador 
     fecha = datetime.today()
     fechaInicio = fecha + timedelta(days=-30)
     fechaInicio = fechaInicio.strftime("%Y-%m-%d")
@@ -179,8 +180,8 @@ def reporteMensualExamenes(request):
         fecha = datetime.now()
         fecha = fecha.strftime("%d-%m-%Y")
         ca.setFont('Helvetica', 13)
-        ca.drawString(440, 697, 'Fecha:')
-        ca.drawString(480,697,str(fecha))
+        ca.drawString(350, 697, 'Fecha: ')
+        ca.drawString(400,697,str(fechaini)+"  a  "+str(fechafin))
         ca.drawImage("apps/Laboratorio/static/Unsa.png",45,700,width=85, height=110, mask='auto')
         width,height =A4
         #Cabecera_____________________________________________
@@ -215,7 +216,7 @@ def reporteMensualExamenes(request):
         return response 
     else: 
         return JsonResponse({'status':'FAIL'})
-
+#Realizado por Julio Vicente: coloca los atributos por examen cab en el pdf
 def imprimir(p,examen):
     global y,ca,contador
     contador=contador+1
@@ -243,6 +244,7 @@ def imprimir(p,examen):
 
 #Realizado por Julio Vicente: Reporte de todos los examenes en una semana, utiliza libreria reportlab
 def reporteSemanalExamenes(request):
+    global y,ca,contador
     fecha = datetime.today()
     fechaInicio = fecha + timedelta(days=-7)
     fechaInicio = fechaInicio.strftime("%Y-%m-%d")
@@ -273,8 +275,8 @@ def reporteSemanalExamenes(request):
         fecha = datetime.now()
         fecha = fecha.strftime("%d-%m-%Y")
         ca.setFont('Helvetica', 13)
-        ca.drawString(440, 697, 'Fecha:')
-        ca.drawString(480,697,str(fecha))
+        ca.drawString(360, 697, 'Fecha:')
+        ca.drawString(400,697,str(fechaini)+"  a  "+str(fechafin))
         ca.drawImage("apps/Laboratorio/static/Unsa.png",45,700,width=85, height=110, mask='auto')
         width,height =A4
         #Cabecera_____________________________________________
@@ -453,7 +455,7 @@ def reporteTipoExamen(request,tipoExam):
 
         for i in range(Examenes.count()):
             
-            imprimir(p,Examenes[i])
+            imprimir(p,Examenes[i]) #Funcion imprimir
         
         ca.save()
         pdf = buffer.getvalue()
