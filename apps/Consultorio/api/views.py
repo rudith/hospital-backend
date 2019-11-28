@@ -41,7 +41,7 @@ class vistaOrden(ModelViewSet):
     
     def get_queryset(self):
         estadoO = "Creado"
-        return Orden.objects.filter(estadoOrden=estadoO)
+        return Orden.objects.filter(estadoOrden=estadoO).order_by("-fechaCreacion")
 
 #Vista general de todas las ordenes de laboratorio, Get Post Put Delete
 class vistaOrdenLab(ModelViewSet):
@@ -52,7 +52,7 @@ class vistaOrdenLab(ModelViewSet):
     
     def get_queryset(self):
         estadoO = "Pagado"
-        return Orden.objects.filter(estadoOrden=estadoO)
+        return Orden.objects.filter(estadoOrden=estadoO).order_by("fechaA")
 
 #Vista para crear triajes, Get Post Put Delete
 class vistaCrearTriaje(ModelViewSet):
@@ -564,7 +564,7 @@ class  buscarOrden(generics.ListAPIView):
         #id = self.kwargs['id']
         dni= self.request.query_params.get('dni')
         qs = Orden.objects.filter(dni__icontains = dni, estadoOrden = 'Creado') 
-        return qs.order_by("fechaA")
+        return qs.order_by("fechaCreacion")
 
 class  buscarOrdenLab(generics.ListAPIView):
     
@@ -586,7 +586,7 @@ class  buscarNombreOrden(generics.ListAPIView):
         #id = self.kwargs['id']
         dni= self.request.query_params.get('nom')
         qs = Orden.objects.filter(nombre__icontains = dni, estadoOrden = 'Creado') 
-        return qs.order_by("fechaA")
+        return qs.order_by("fechaCreacion")
 
 class  buscarNombreOrdenLab(generics.ListAPIView):
     
@@ -599,6 +599,27 @@ class  buscarNombreOrdenLab(generics.ListAPIView):
         qs = Orden.objects.filter(nombre__icontains = nombre, estadoOrden = 'Pagado') 
         return qs.order_by("fechaA")
 
+class  buscarDNIOrden(generics.ListAPIView):
+    
+    serializer_class = OrdenSerializer
+    pagination_class = SmallSetPagination
+    permission_classes = [IsAuthenticated]
+    def get_queryset(self):
+        #id = self.kwargs['id']
+        dni= self.request.query_params.get('dni')
+        qs = Orden.objects.filter(dni__icontains = dni, estadoOrden = 'Creado') 
+        return qs.order_by("fechaCreacion")
+
+class  buscarDNIOrdenLab(generics.ListAPIView):
+    
+    serializer_class = OrdenSerializer
+    pagination_class = SmallSetPagination
+    permission_classes = [IsAuthenticated]
+    def get_queryset(self):
+        #id = self.kwargs['id']
+        nombre = self.request.query_params.get('dni')
+        qs = Orden.objects.filter(dni__icontains = nombre, estadoOrden = 'Pagado') 
+        return qs.order_by("fechaA")
 
 class vistaHistoriaDetalle(APIView):
     pagination_class = SmallSetPagination

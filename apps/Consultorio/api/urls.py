@@ -6,7 +6,7 @@ from .views import (CitasHistorial,vistaCrearOrden, vistaOrden, vistaTriaje, vis
                     ,BuscarConsultaDni,BuscarTriajeHistoria, BuscarCitaMedico, BuscarTriajeCita, BuscarHistorialClinico, atenderCita, triajeCita,BuscarCitaEspecialidad
                     ,atenderOrden,buscarOrden,buscarSol,buscarSol2,BuscarCitaMedicoEstado, BuscarCitasEspera,BuscarCitaDniE,BuscarHistorialClinicoDNI,BuscarCitaHistoria,BuscarCitaNombre,BuscarCitaEspecialidad2,VerSolicitudes,
                     cancelarOrden,vistaOrdenLab,BuscarCitaHHistoria,BuscarCitaHNombre,pagarOrden,BuscarCitaHEspecialidad,BuscarCitaHEspecialidad2,cancelarOrdenFecha,
-                    buscarOrdenLab, buscarNombreOrdenLab, buscarNombreOrden)#, vistaCitaTemporal)# vistaHistoriaConsulta)
+                    buscarOrdenLab, buscarNombreOrdenLab, buscarNombreOrden,buscarDNIOrdenLab,buscarDNIOrden)#, vistaCitaTemporal)# vistaHistoriaConsulta)
 
 # profile_list = ProfileViewSet.as_view({"get": "list"})
 # profile_detail = ProfileViewSet.as_view({"get": "retrieve"})
@@ -36,12 +36,14 @@ urlpatterns = [
     #path("consulta/<int:pk>/", vistaHistoriaDetalle.as_view(), name="consultas-detail"),
     path("", include(router.urls)),
     url(r'^ver-citas/$', vistaCita.as_view(), name="VerCitas"),
-    url(r'^buscarOrden/$', buscarOrden.as_view(), name="cancelarCita"),
-    url(r'^buscarOrdenLab/$', buscarOrdenLab.as_view(), name="cancelarCita"),
-    url(r'^buscarNombreOrdenLab/$', buscarNombreOrdenLab.as_view(), name="cancelarCita"),
-    url(r'^buscarNombreOrden/$', buscarNombreOrden.as_view(), name="cancelarCita"),
-    url(r'^atenderOrden/(?P<id>\d+)$', atenderOrden.as_view(), name="cancelarCita"),
-    url(r'^cancelarOrden/(?P<id>\d+)$', cancelarOrden.as_view(), name="cancelarCita"),
+    url(r'^buscarOrden/$', buscarOrden.as_view(), name="buscarOrden"),
+    url(r'^buscarOrdenLab/$', buscarOrdenLab.as_view(), name="buscarOrdenLab"),
+    url(r'^buscarNombreOrdenLab/$', buscarNombreOrdenLab.as_view(), name="buscarNombreOrdenLab"),
+    url(r'^buscarNombreOrden/$', buscarNombreOrden.as_view(), name="buscarNombreOrden"),
+    url(r'^buscarDNIOrdenLab/$', buscarDNIOrdenLab.as_view(), name="buscarDNIOrdenLab"),
+    url(r'^buscarDNIOrden/$', buscarDNIOrden.as_view(), name="buscarDNIOrden"),
+    url(r'^atenderOrden/(?P<id>\d+)$', atenderOrden.as_view(), name="atenderOrden"),
+    url(r'^cancelarOrden/(?P<id>\d+)$', cancelarOrden.as_view(), name="cancelarOrden"),
     url(r'^cancelarOrdenFecha/$',cancelarOrdenFecha,name="CancelarOrdenes"),
     url(r'^pagarOrden/(?P<id>\d+)$', pagarOrden.as_view(), name="paarOrdenCita"),
     url(r'^cancelarcita/(?P<id>\d+)/$', cancelarCita.as_view(), name="cancelarCita"),

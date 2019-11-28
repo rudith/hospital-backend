@@ -42,6 +42,15 @@ reingreso=0
 #     serializer_class = GrupSangSerializer
 
 #Vista general de todos los  Distritos, Get Post Put Delete
+
+def ultimaHistoria(request):
+    
+    nro = Historia.objects.all().order_by('numeroHistoria').last()
+    if not nro:
+        return JsonResponse({'status':'No hay Historias'})
+    else:
+        return JsonResponse({'NroHistoria': str(nro)})
+
 class vistaDistrito(ModelViewSet):
     queryset = Distrito.objects.all()
     serializer_class = DistritoSerializer
@@ -143,6 +152,7 @@ class BuscarDistritos(generics.ListAPIView):
     def get_queryset(self):
         id = self.request.query_params.get('id')
         return Distrito.objects.filter(provincia__id=id)
+
 
 #Busqueda de provincias, Serializer muestra todas las provincias
 class BuscarProvincias(generics.ListAPIView):
