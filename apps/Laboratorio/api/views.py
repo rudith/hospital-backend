@@ -28,6 +28,8 @@ from reportlab.lib.enums import TA_JUSTIFY, TA_LEFT, TA_CENTER
 y=0
 ca=""
 contador=0
+c=""
+y1=0
 
 #Realizado por Julio Vicente: Vista general de Examen Cabecera, Get Post Put Delete
 class VistaExamenLabCab(ModelViewSet):                                  
@@ -313,95 +315,124 @@ def reporteSemanalExamenes(request):
     else: 
         return JsonResponse({'status':'FAIL'})
 
+def imprimirDet(p,det):
+    global y1,c,contador
+    contador=contador+1
+    if (y1<12):
+        c.showPage()
+        y1=800
+
+    cont = Paragraph(str(contador),p)
+    cont.wrapOn(c,15,90)
+    cont.drawOn(c, 40, y1)
+    nombre = Paragraph(str(det.descripcion),p)
+    nombre.wrapOn(c,180,90)
+    nombre.drawOn(c, 55, y1)
+    dni = Paragraph(str(det.resultado_obtenido),p)
+    dni.wrapOn(c,80,90)
+    dni.drawOn(c, 235, y1)
+    fecha1 = Paragraph(str(det.unidades),p)
+    fecha1.wrapOn(c,80,90)
+    fecha1.drawOn(c, 315, y1)     
+    condicion = Paragraph(str(det.rango_referencia),p)
+    condicion.wrapOn(c,155,90)
+    condicion.drawOn(c, 395, y1)
+    y1=y1-11.5
+
 
 #Realizado por Julio Vicente: Muestra en PDF resultados de un examen (Cabecera,detalle,tip), utiliza libreria reportlab
 def resultadoExamen(request,id):
-        
+    global c, y1, contador
     examenLabCab=ExamenLabCab.objects.filter(id=id)
     examenLabDet=ExamenLabDet.objects.filter(codigoExam=id)
     
+    if examenLabCab.count()!=0:
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename=ResultadoExamen.pdf'
+        buffer = BytesIO()
+        c = canvas.Canvas(buffer,pagesize=A4)
+        p = ParagraphStyle('test')
+        p.textColor = 'black'
+        p.borderColor = 'black'
+        p.alignment = TA_CENTER
+        p.borderWidth = 1
+        p.fontSize = 10
+        contador=0
+
+        #Cabecera__________________________________________
+        c.setLineWidth(.3)
+        c.setFont('Helvetica',20)
+        c.drawString(185,750,'Resultado de Examen')
+        c.drawString(415, 770, 'Examen N°')
+        c.drawString(455,725,examenLabCab[0].id.__str__())
+        c.drawImage("apps/Laboratorio/static/Unsa.png",60,700,width=85, height=110, mask='auto')
+        c.line(40,695,550,695)
+        c.line(40,820,550,820)
+        c.line(40,695,40,820)
+        c.line(165,695,165,820)
+        c.line(395,695,395,820)
+        c.line(550,695,550,820)
+        c.line(395,750,550,750)
+        #Cabecera_____________________________________________
+        y=-10
+        c.setFont('Helvetica',13)
+        c.drawString(45,675+y,'Nombre: ')
+        c.drawString(100,675+y,examenLabCab[0].nombre.__str__())
+        c.drawString(400,675+y,'DNI: ')
+        c.drawString(440,675+y,examenLabCab[0].dni.__str__())
+        c.drawString(400,655+y,'Fecha: ')
+        c.drawString(440,655+y,examenLabCab[0].fecha.__str__())
+        c.drawString(45,655+y,'Orden: ')
+        c.drawString(100,655+y,examenLabCab[0].orden.__str__())
+        c.line(40,690+y,550,690+y)
+        c.line(40,650+y,550,650+y)
+        c.line(40,650+y,40,690+y)
+        c.line(395,650+y,395,690+y)
+        c.line(550,650+y,550,690+y)
+        
+        c.drawString(40,630+y,'Examen de: ')
+        c.drawString(115,630+y,examenLabCab[0].tipoExam.__str__())
+        y1=600
+
+        #_______________Detalles______________________
+        
+        cont = Paragraph("N°",p)
+        cont.wrapOn(c,15,90)
+        cont.drawOn(c, 40, y1)
+        historia = Paragraph("DESCRIPCION",p)
+        historia.wrapOn(c,180,90)
+        historia.drawOn(c, 55, y1)
+        nombre = Paragraph("RESULTADO",p)
+        nombre.wrapOn(c,80,90)
+        nombre.drawOn(c, 235, y1)
+        recibo = Paragraph("UNIDADES",p)
+        recibo.wrapOn(c,80,90)
+        recibo.drawOn(c, 315, y1)
+        condicion = Paragraph("RANGO DE REFERENCIA",p)
+        condicion.wrapOn(c,155,90)
+        condicion.drawOn(c,395, y1)
+        y1=y1-11.5
+        for var in examenLabDet:
+                
+            imprimirDet(p,var) #Funcion imprimir
     
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename=ResultadoExamen.pdf'
-    buffer = BytesIO()
-    c = canvas.Canvas(buffer,pagesize=A4)
+        if (y1<25) :
+            c.showPage()
+            y1=800   
+        c.drawString(40,y1-10, 'Observaciones :')
+        c.setFont('Helvetica',11)
+        c.drawString(40,y1-20 ,examenLabCab[0].observaciones.__str__())
+        
 
-    #Cabecera__________________________________________
-    c.setLineWidth(.3)
-    c.setFont('Helvetica',20)
-    c.drawString(185,750,'Resultado de Examen')
-    c.drawString(415, 770, 'Examen N°')
-    c.drawString(455,725,examenLabCab[0].id.__str__())
-    c.drawImage("apps/Laboratorio/static/Unsa.png",60,700,width=85, height=110, mask='auto')
-    c.line(40,695,550,695)
-    c.line(40,820,550,820)
-    c.line(40,695,40,820)
-    c.line(165,695,165,820)
-    c.line(395,695,395,820)
-    c.line(550,695,550,820)
-    c.line(395,750,550,750)
-    #Cabecera_____________________________________________
-    y=-10
-    c.setFont('Helvetica',13)
-    c.drawString(45,675+y,'Nombre: ')
-    c.drawString(100,675+y,examenLabCab[0].nombre.__str__())
-    c.drawString(400,675+y,'DNI: ')
-    c.drawString(440,675+y,examenLabCab[0].dni.__str__())
-    c.drawString(400,655+y,'Fecha: ')
-    c.drawString(440,655+y,examenLabCab[0].fecha.__str__())
-    c.drawString(45,655+y,'Orden: ')
-    c.drawString(100,655+y,examenLabCab[0].orden.__str__())
-    c.line(40,690+y,550,690+y)
-    c.line(40,650+y,550,650+y)
-    c.line(40,650+y,40,690+y)
-    c.line(395,650+y,395,690+y)
-    c.line(550,650+y,550,690+y)
-    
-    c.drawString(40,630+y,'Examen de: ')
-    c.drawString(115,630+y,examenLabCab[0].tipoExam.__str__())
-
-
-    #_______________Detalles______________________
-    width,height =A4
-    datos=[]
-    tablaCampos = ('DESCRIPCION ', 'RESULTADO', 'UNIDADES', 'RANGO DE REFERENCIA')
-    contador=0
-    for var in examenLabDet:
-        # creo variable p para guardar la descripcion
-        descripcion=Paragraph(var.descripcion.__str__(), styles['Normal'])
-        resultado=Paragraph(var.resultado_obtenido.__str__(), styles['Normal'])
-        unidades=Paragraph(var.unidades.__str__(), styles['Normal'])
-        rango=Paragraph(var.rango_referencia.__str__(), styles['Normal'])
-        # añado a la lista la llave primaria de acl y ademas la descripcion contenida en p
-        datos.append((descripcion,resultado,unidades,rango))
-        contador+=1
-   
-    tabla = Table(data=[tablaCampos] + datos,colWidths=[8*cm,2.5*cm,2.5*cm,5*cm])
-    tabla.setStyle(TableStyle([
-        ('INNERGRID',(0,0),(-1,-1),0.25,colors.black),
-        ('ALIGN',(0,-1),(-1,-1),'CENTER'), 
-        ('BOX',(0,0),(-1,-1),0.25,colors.black),]))
-    tabla.wrapOn(c,width,height)
-    distancia=25
-    if (contador==0 or contador==1 or contador==2):
-        if(contador==0):
-            contador=1
-        distancia=38
-    tabla.drawOn(c,40,630-contador*distancia)
-    fintabla=630-contador*distancia-20
-
-    c.drawString(40,fintabla, 'Observaciones :')
-    c.setFont('Helvetica',11)
-    c.drawString(40,fintabla-20 ,examenLabCab[0].observaciones.__str__())
-    
-
-    # Cierre PDF
-    c.showPage()
-    c.save()
-    pdf = buffer.getvalue()
-    buffer.close()
-    response.write(pdf)
-    return response
+        # Cierre PDF
+        c.showPage()
+        c.save()
+        pdf = buffer.getvalue()
+        buffer.close()
+        response.write(pdf)
+        return response
+    else: 
+        return JsonResponse({'status':'FAIL'})
 
 #Realizado por Julio Vicente: Reporte de todos los examenes por tipo de Examen, utiliza libreria reportlab
 def reporteTipoExamen(request,tipoExam):
@@ -466,6 +497,12 @@ def reporteTipoExamen(request,tipoExam):
         return response 
     else: 
         return JsonResponse({'status':'FAIL'})
+
+
+
+
+
+
 
 
 
