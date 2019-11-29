@@ -36,6 +36,9 @@ contador=0
 continuador=0
 nuevo=0
 reingreso=0
+dy=0
+can=""
+    
 
 # class vistaGrupoSang(ModelViewSet):
 #     queryset = GrupSang.objects.all()
@@ -189,6 +192,7 @@ def cancelarCitasFecha(request):
 
 #Realizado por Julio Vicente: Historial Clinico,contiene datos & Consultas ,con su triaje, del paciente , utiliza libreria reportlab
 def HistoriaPDF(request,dni):
+    global c,dy
     historia=Historia.objects.filter(dni=dni)
     width,height =A4
     
@@ -323,168 +327,123 @@ def HistoriaPDF(request,dni):
     c.line(550,285,550,325)
      # Close the PDF object cleanly.
     c.showPage()
-    contador=1
+    
     cita = Cita.objects.filter(numeroHistoria=historia[0].id)
-    
-    
+
+    p = ParagraphStyle('test')
+    p.textColor = 'black'
+    p.borderColor = 'white'
+    p.alignment = TA_CENTER
+    p.borderWidth = 1
+    p.fontSize = 9
+    dy=800
+    count=0
     if (cita!=None):
-        
-        
+                
         for citas in cita:
             triaje=Triaje.objects.filter(cita=citas.id)
             if triaje.count()>0:
                 consulta=Consulta.objects.filter(pk=triaje[0].id.__str__())#Filtro de consultas por el id de triaje
-           
-           
-            if triaje.count()>0 and consulta.count()>0: 
-                
-                if(contador==1):
-                    c.setFont('Helvetica',20)
-                    c.line(40,820,560,820)#Linea arriba
-                    c.line(40,420,560,420)#Linea media
-                    c.line(40,20,560,20)#Linea abajo
-                    c.line(40,760,560,760)#Linea entre triaje y consulta 1 
-                    c.line(40,20,40,820) # Linea izquierda
-                    c.line(560,20,560,820) # Linea derecha
-                    #_____________________Triaje_________________________
-                    c.drawString(50,790,'Fecha:')
-                    c.drawString(50,770, triaje[0].fechaReg.__str__()) 
-                    c.setFont('Helvetica',13)
-                    c.drawString(240,800,'Talla:')
-                    c.drawString(280,800, triaje[0].talla.__str__())
-                    c.drawString(330,800,'Peso:')
-                    c.drawString(370,800, triaje[0].peso.__str__())
-                    c.drawString(420,800,'T°:')
-                    c.drawString(460,800, triaje[0].temperatura.__str__())
-                    c.drawString(240,780,'F.R:')
-                    c.drawString(280,780, triaje[0].frecuenciaR.__str__())
-                    c.drawString(330,780,'F.C:')
-                    c.drawString(370,780, triaje[0].frecuenciaC.__str__())
-                    c.drawString(420,780,'P.A:')
-                    c.drawString(460,780, triaje[0].presionArt.__str__())
-                    #__________________Consulta______________________
-                    c.setFont('Helvetica',13)
-                    c.drawString(50,740,'Motivo Consulta:')
-                    c.drawString(50,640,'Apetito:')
-                    c.drawString(230,640,'Orina:')
-                    c.drawString(400,640,'Deposiciones:')
-                    c.drawString(50,600,'Examen Fisico:')
-                    c.drawString(310,600,'Diagnostico:')
-                    c.drawString(50,500,'Tratamiento:')
-                    c.drawString(310,500,'Proxima Cita')
-                    
-                            
-                    p = ParagraphStyle('test')
-                    p.textColor = 'black'
-                    p.borderColor = 'white'
-                    p.borderWidth = 1
-                    p.fontSize = 10
-                    motivo = Paragraph(consulta[0].motivoConsulta.__str__(),p)
-                    motivo.wrapOn(c,500,90)
-                    motivo.drawOn(c, 50, 680)
-                    apetito = Paragraph(consulta[0].apetito.__str__(),p)
-                    apetito.wrapOn(c,170,90)
-                    apetito.drawOn(c,50, 620)
-                    orina = Paragraph(consulta[0].orina.__str__(),p)
-                    orina.wrapOn(c,160,90)
-                    orina.drawOn(c,230, 620)
-                    deposiciones = Paragraph(consulta[0].deposiciones.__str__(),p)
-                    deposiciones.wrapOn(c,160,90)
-                    deposiciones.drawOn(c,400, 620)
-                    examenFisico = Paragraph(consulta[0].examenFisico.__str__(),p)
-                    examenFisico.wrapOn(c,245,90)
-                    examenFisico.drawOn(c, 50, 560)
-                    diagnostico = Paragraph(consulta[0].diagnostico.__str__(),p)
-                    diagnostico.wrapOn(c,245,90)
-                    diagnostico.drawOn(c, 310, 560)
-                    tratamiento = Paragraph(consulta[0].tratamiento.__str__(),p)
-                    tratamiento.wrapOn(c,245,90)
-                    tratamiento.drawOn(c, 50, 460)
-                    p.fontSize = 15
-                    proximaCita = Paragraph(consulta[0].proximaCita.__str__(),p)
-                    proximaCita.wrapOn(c,245,100)
-                    proximaCita.drawOn(c, 310, 480)
-                
-                
-                    
+                      
+            if  triaje.count()>0 and consulta.count()>0: 
+                imprimirTriaje(p,triaje[0])
+                imprimirConsulta(p,consulta[0])    
+                dibujarBorde()
+                count=count+1
+            if count==4:
+                c.showPage()
+                dy=800
 
+            dy=dy-23 
 
-
-
-                if(contador==2):
-                    c.setFont('Helvetica',20)
-                    c.line(40,360,560,360)#Linea entre triaje y consulta 2 
-                    #_____________________Triaje_________________________
-                    c.drawString(50,390,'Fecha:')
-                    c.drawString(50,370, triaje[0].fechaReg.__str__()) 
-                    c.setFont('Helvetica',13)
-                    c.drawString(240,400,'Talla:')
-                    c.drawString(280,400, triaje[0].talla.__str__())
-                    c.drawString(330,400,'Peso:')
-                    c.drawString(370,400, triaje[0].peso.__str__())
-                    c.drawString(420,400,'T°:')
-                    c.drawString(460,400, triaje[0].temperatura.__str__())
-                    c.drawString(240,380,'F.R:')
-                    c.drawString(280,380, triaje[0].frecuenciaR.__str__())
-                    c.drawString(330,380,'F.C:')
-                    c.drawString(370,380, triaje[0].frecuenciaC.__str__())
-                    c.drawString(420,380,'P.A:')
-                    c.drawString(460,380, triaje[0].presionArt.__str__())
-                    #__________________Consulta______________________
-                    c.setFont('Helvetica',13)
-                    c.drawString(50,340,'Motivo Consulta:')
-                    c.drawString(50,240,'Apetito:')
-                    c.drawString(230,240,'Orina:')
-                    c.drawString(400,240,'Deposiciones:')
-                    c.drawString(50,200,'Examen Fisico:')
-                    c.drawString(310,200,'Diagnostico:')
-                    c.drawString(50,100,'Tratamiento:')
-                    c.drawString(310,100,'Proxima Cita')
-                    
-                    p = ParagraphStyle('test')
-                    p.textColor = 'black'
-                    p.borderColor = 'white'
-                    p.borderWidth = 1
-                    p.fontSize = 10
-                    motivo = Paragraph(consulta[0].motivoConsulta.__str__(),p)
-                    motivo.wrapOn(c,500,90)
-                    motivo.drawOn(c, 50, 280)
-                    apetito = Paragraph(consulta[0].apetito.__str__(),p)
-                    apetito.wrapOn(c,170,90)
-                    apetito.drawOn(c,50, 220)
-                    orina = Paragraph(consulta[0].orina.__str__(),p)
-                    orina.wrapOn(c,160,90)
-                    orina.drawOn(c,230, 220)
-                    deposiciones = Paragraph(consulta[0].deposiciones.__str__(),p)
-                    deposiciones.wrapOn(c,160,90)
-                    deposiciones.drawOn(c,400, 220)
-                    examenFisico = Paragraph(consulta[0].examenFisico.__str__(),p)
-                    examenFisico.wrapOn(c,245,90)
-                    examenFisico.drawOn(c, 50, 160)
-                    diagnostico = Paragraph(consulta[0].diagnostico.__str__(),p)
-                    diagnostico.wrapOn(c,245,90)
-                    diagnostico.drawOn(c, 310, 160)
-                    tratamiento = Paragraph(consulta[0].tratamiento.__str__(),p)
-                    tratamiento.wrapOn(c,245,90)
-                    tratamiento.drawOn(c, 50, 60)
-                    p.fontSize = 15
-                    proximaCita = Paragraph(consulta[0].proximaCita.__str__(),p)
-                    proximaCita.wrapOn(c,245,100)
-                    proximaCita.drawOn(c, 310, 80)
-
-                    contador=0
-                    c.showPage()
-            
-                contador=contador+1
-
-    
-   
     c.save()
     pdf = buffer.getvalue()
     buffer.close()
     response.write(pdf)
 
     return response
+#JULIO DibujarBordes      
+def dibujarBorde():
+    global c,dy
+    c.line(35,dy+174.5,560,dy+174.5)
+    c.line(35,dy+151.5,560,dy+151.5)
+    c.line(35,dy,560,dy)
+    c.line(35,dy,35,dy+174.5)
+    c.line(560,dy,560,dy+174.5)
+    
+                    
+                            
+                    
+
+                  
+#JULIO VICENTE IMPRIMIR TRIAJE
+def imprimirTriaje(p,triaje):
+    global dy,c
+    p.alignment = TA_CENTER
+    
+    fecha=Paragraph("Fecha ",p) 
+    fecha.wrapOn(c,130,90)
+    fecha.drawOn(c, 40, dy)  
+    fecha=Paragraph(str(triaje.fechaReg),p) 
+    fecha.wrapOn(c,130,90)
+    fecha.drawOn(c, 40, dy-11.5)  
+    talla=Paragraph("Talla: " + str(triaje.talla),p) 
+    talla.wrapOn(c,130,90)
+    talla.drawOn(c, 170, dy) 
+    peso=Paragraph("Peso: " + str(triaje.peso),p) 
+    peso.wrapOn(c,130,90)
+    peso.drawOn(c, 300, dy)  
+    temperatura=Paragraph("T°:" + str(triaje.temperatura),p) 
+    temperatura.wrapOn(c,130,90)
+    temperatura.drawOn(c, 430, dy)      
+    frecuenciaR=Paragraph("F.R:" + str(triaje.frecuenciaR),p) 
+    frecuenciaR.wrapOn(c,130,90)
+    frecuenciaR.drawOn(c, 170, dy-11.5)   
+    frecuenciaC=Paragraph("F.C:" + str(triaje.frecuenciaC),p) 
+    frecuenciaC.wrapOn(c,130,90)
+    frecuenciaC.drawOn(c, 300, dy-11.5)   
+    frecuenciaC=Paragraph("P.A:" + str(triaje.presionArt),p) 
+    frecuenciaC.wrapOn(c,130,90)
+    frecuenciaC.drawOn(c, 430, dy-11.5)   
+    dy=dy-23
+
+def imprimirConsulta(p,consulta):
+    global dy,c
+    p.alignment = TA_JUSTIFY
+    motivo=Paragraph(" MOTIVO CONSULTA: " + str(consulta.motivoConsulta),p) 
+    motivo.wrapOn(c,520,180)
+    motivo.drawOn(c, 40, dy-23)  
+    dy=dy-34.5
+    apetito=Paragraph(" APETITO: " + str(consulta.apetito),p) 
+    apetito.wrapOn(c,258,180)
+    apetito.drawOn(c, 40, dy-11.5)  
+    orina=Paragraph(" ORINA: " + str(consulta.orina),p) 
+    orina.wrapOn(c,258,180)
+    orina.drawOn(c, 300, dy-11.5) 
+    dy=dy-23
+    deposiciones=Paragraph(" DEPOSICIONES: " + str(consulta.deposiciones),p) 
+    deposiciones.wrapOn(c,258,180)
+    deposiciones.drawOn(c, 40, dy-11.5)    
+    examenFisico=Paragraph(" EXAMEN FISICO: " + str(consulta.examenFisico),p) 
+    examenFisico.wrapOn(c,258,180)
+    examenFisico.drawOn(c, 300, dy-11.5)  
+    dy=dy-23 
+    diagnostico=Paragraph(" DIAGNOSTICO: " + str(consulta.diagnostico),p) 
+    diagnostico.wrapOn(c,258,180)
+    diagnostico.drawOn(c, 40, dy-34.5)     
+    tratamiento=Paragraph(" TRATAMIENTO: " + str(consulta.tratamiento),p) 
+    tratamiento.wrapOn(c,258,180)
+    tratamiento.drawOn(c, 300, dy-34.5) 
+    dy=dy-34.5
+    proximaCita=Paragraph(" PROXIMA CITA: " + str(consulta.proximaCita),p) 
+    proximaCita.wrapOn(c,258,180)
+    proximaCita.drawOn(c, 40, dy-23) 
+    dy=dy-23     
+
+
+
+
+               
 
 #JULIO VICENTE: MUESTRA EL REPORTE DE CITAS DEL DIA CON ESTADO ATENDIDO Y CANCELADO
 def reporteDiarioCitas(request):
@@ -508,7 +467,7 @@ def reporteDiarioCitas(request):
         p.borderWidth = 1
         p.fontSize = 10
         y=800
-        crearCabeceraEspecialidad(str(citas[0].especialidad))
+        crearCabeceraEspecialidad(str(citas[0].especialidad),fecha)
         crearCabeceraMedico(str(citas[0].medico.nombres+" "+citas[0].medico.apellido_paterno+" "+ citas[0].medico.apellido_materno))
         crearEncabezados(p)
         for i in range(citas.count()):
@@ -520,7 +479,7 @@ def reporteDiarioCitas(request):
                         y=y-10
                         contadorEstados(p)
                     y=y-10
-                    crearCabeceraEspecialidad(str(citas[i+1].especialidad))
+                    crearCabeceraEspecialidad(str(citas[i+1].especialidad),fecha)
                     
 
 
@@ -581,7 +540,7 @@ def contadorEstados(p):
     continuador=0
     reingreso=0
 #JULIO VICENTE: CREA EL TITULO CON LA ESPECIALIDAD Y LA FECHA 
-def crearCabeceraEspecialidad(especialidad):
+def crearCabeceraEspecialidad(especialidad,fecha):
     global y,ca,contador
     #contador=0
     p1 = ParagraphStyle('test')
@@ -595,10 +554,7 @@ def crearCabeceraEspecialidad(especialidad):
         y=800
         
     
-    fecha = datetime.today()
-    fecha=fecha.strftime("%d-%m-%Y")
-    fecha = datetime.today()
-    fecha=fecha.strftime("%d-%m-%Y")
+    
     especialidad = Paragraph(str(especialidad),p1)
     especialidad.wrapOn(ca,500,0)
     especialidad.drawOn(ca, 40, y)
@@ -607,33 +563,7 @@ def crearCabeceraEspecialidad(especialidad):
     fecha.wrapOn(ca,500,0)
     fecha.drawOn(ca,40, y-25)
     y=y-40
-#JULIO VICENTE: CREA EL TITULO CON LA ESPECIALIDAD Y LA FECHA PARA EL REPORTE POR RANGO DE CITAS
-def crearCabeceraEspecialidadRango(especialidad,fechainicio,fechafinal):
-    global y,ca,contador
-    #contador=0
-    p1 = ParagraphStyle('test')
-    p1.textColor = 'black'
-    p1.borderColor = 'white'
-    p1.alignment = TA_CENTER
-    p1.borderWidth = 1
-    p1.fontSize = 20
-    if (y<41):
-        ca.showPage()
-        y=800
-        
-    
-    fecha = datetime.today()
-    fecha=fecha.strftime("%d-%m-%Y")
-    fecha = datetime.today()
-    fecha=fecha.strftime("%d-%m-%Y")
-    especialidad = Paragraph(str(especialidad),p1)
-    especialidad.wrapOn(ca,500,0)
-    especialidad.drawOn(ca, 40, y)
-    p1.fontSize = 12
-    fecha = Paragraph("De:"+" "+str(fechainicio)+"   Hasta: "+str(fechafinal),p1)
-    fecha.wrapOn(ca,500,0)
-    fecha.drawOn(ca,40, y-25)
-    y=y-40
+
 # JULIO VICENTE: COLOCA EL NOMBRE DEL MEDICO EN PDF
 def crearCabeceraMedico(medico):   
     global y,ca,contador
@@ -673,32 +603,8 @@ def imprimir(p,cita):
     condicion.wrapOn(ca,100,90)
     condicion.drawOn(ca, 455, y)
     y=y-11.5
-# JULIO VICENTE: COLOCA LOS ATRIBUTOS DE LA CITA PARA EL REPORTE DE RANGO DE FECHAS
-def imprimirRango(p,cita):
-    global y,ca,contador
-    contador=contador+1
-    if (y<12):
-        ca.showPage()
-        y=800
-    
-    cont = Paragraph(str(contador),p)
-    cont.wrapOn(ca,15,90)
-    cont.drawOn(ca, 40, y)
-    historia = Paragraph(str(cita.numeroHistoria),p)
-    historia.wrapOn(ca,100,90)
-    historia.drawOn(ca, 55, y)
-    nombre = Paragraph(str(cita.numeroHistoria.nombres)+" "+str(cita.numeroHistoria.apellido_paterno)+" "+str(cita.numeroHistoria.apellido_materno),p)
-    nombre.wrapOn(ca,200,90)
-    nombre.drawOn(ca, 155, y)
-    recibo = Paragraph(str(cita.numeroRecibo),p)
-    recibo.wrapOn(ca,100,90)
-    recibo.drawOn(ca, 355, y)
-   
-    
-    fecha = Paragraph(str(cita.fechaAtencion),p)
-    fecha.wrapOn(ca,100,90)
-    fecha.drawOn(ca, 455, y)
-    y=y-11.5
+
+
 # JULIO VICENTE: CREAR EL ENCABEZADO DE LA TABLA 
 def crearEncabezados(p):
     global y,ca,contador
@@ -721,28 +627,7 @@ def crearEncabezados(p):
     condicion.wrapOn(ca,100,90)
     condicion.drawOn(ca, 455, y)
     y=y-11.5
-# JULIO VICENTE: CREAR EL ENCABEZADO DE LA TABLA  PARA REPORTE RANGO DE FECHAS
-def crearEncabezadosRango(p):
-    global y,ca,contador
-    if (y<12):
-        ca.showPage()
-        y=800
-    cont = Paragraph("N°",p)
-    cont.wrapOn(ca,15,90)
-    cont.drawOn(ca, 40, y)
-    historia = Paragraph("N° HISTORIA",p)
-    historia.wrapOn(ca,100,90)
-    historia.drawOn(ca, 55, y)
-    nombre = Paragraph("Apellidos y Nombres",p)
-    nombre.wrapOn(ca,200,90)
-    nombre.drawOn(ca, 155, y)
-    recibo = Paragraph("N° Recibo",p)
-    recibo.wrapOn(ca,100,90)
-    recibo.drawOn(ca, 355, y)
-    condicion = Paragraph("Fecha",p)
-    condicion.wrapOn(ca,100,90)
-    condicion.drawOn(ca, 455, y)
-    y=y-11.5
+
 # JULIO VICENTE: CALCULA LA CONDICION DE CADA CITA (NUEVO, REINGRESO,ATENDIDAS,CONTINUADOR)
 def calcularCondicion(numeroHistoria):
     global reingreso,continuador,nuevo
@@ -769,18 +654,15 @@ def calcularCondicion(numeroHistoria):
  
 #JULIO VICENTE: MUESTRA EL REPORTE DE CITAS RANGO DE FECHA CON ESTADO ATENDIDO Y CANCELADO
 def reporteCitasRangoFecha(request,fecha_inicio,fecha_final):
-    global y,ca,contador
-    fechaini = fecha_inicio
-    fechafin = fecha_final
-    especialidades = Especialidad.objects.all()
-    fecha = datetime.today()
-    fecha=fecha.strftime("%Y-%m-%d")
+    global y,ca,contador,nuevo,reingreso,continuado
+    fecha=fecha_inicio
+    especialidades = Especialidad.objects.all()    
     width,height =A4
    
-    citas= Cita.objects.filter(estadoCita__in=["Atendido","Cancelado"],fechaAtencion__range=[fechaini,fechafin]).order_by("especialidad","medico")
+    citas= Cita.objects.filter(estadoCita__in=["Atendido","Cancelado"],fechaAtencion=fecha).order_by("especialidad","medico")
     if citas.count()!=0:
         response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename=Reporte'+fechaini+"_"+fechafin+'.pdf'
+        response['Content-Disposition'] = 'attachment; filename=ReporteDiario_'+fecha+'.pdf'
         buffer = BytesIO()
 
         ca = canvas.Canvas(buffer,pagesize=A4)
@@ -791,25 +673,33 @@ def reporteCitasRangoFecha(request,fecha_inicio,fecha_final):
         p.borderWidth = 1
         p.fontSize = 10
         y=800
-        crearCabeceraEspecialidadRango(str(citas[0].especialidad),fechaini,fechafin)
+        crearCabeceraEspecialidad(str(citas[0].especialidad),fecha)
         crearCabeceraMedico(str(citas[0].medico.nombres+" "+citas[0].medico.apellido_paterno+" "+ citas[0].medico.apellido_materno))
-        crearEncabezadosRango(p)
+        crearEncabezados(p)
         for i in range(citas.count()):
-
-            imprimirRango(p,citas[i])
+            
+            imprimir(p,citas[i])
             if citas.count()!= i+1 :
                 if str(citas[i].especialidad) != str(citas[i+1].especialidad):
+                    if contador!=0 or nuevo!=0 or reingreso !=0 or continuador!=0:
+                        y=y-10
+                        contadorEstados(p)
                     y=y-10
-                    crearCabeceraEspecialidadRango(str(citas[i+1].especialidad),fechaini,fechafin)
+                    crearCabeceraEspecialidad(str(citas[i+1].especialidad),fecha)
                     
 
 
                 if str(citas[i].medico) != str(citas[i+1].medico):
+                    if contador!=0 or nuevo!=0 or reingreso !=0 or continuador!=0:
+                        y=y-10
+                        contadorEstados(p)
                     y=y-5
                     crearCabeceraMedico(str(citas[i+1].medico.nombres+" "+citas[i+1].medico.apellido_paterno+" "+ citas[i+1].medico.apellido_materno))
-                    crearEncabezadosRango(p)
-
-
+                    crearEncabezados(p)
+                
+            if citas.count()-1== i :
+                y=y-10
+                contadorEstados(p)
 
         ca.save()
         pdf = buffer.getvalue()
