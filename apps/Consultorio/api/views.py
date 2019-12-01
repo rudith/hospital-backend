@@ -557,7 +557,7 @@ class buscarSol2(generics.ListAPIView):
 
 class  buscarOrden(generics.ListAPIView):
     
-    serializer_class = OrdenSerializer
+    serializer_class = OrdenViewSerializer
     pagination_class = SmallSetPagination
     permission_classes = [IsAuthenticated]
     def get_queryset(self):
@@ -568,7 +568,7 @@ class  buscarOrden(generics.ListAPIView):
 
 class  buscarOrdenLab(generics.ListAPIView):
     
-    serializer_class = OrdenSerializer
+    serializer_class = OrdenViewSerializer
     pagination_class = SmallSetPagination
     permission_classes = [IsAuthenticated]
     def get_queryset(self):
@@ -579,7 +579,7 @@ class  buscarOrdenLab(generics.ListAPIView):
 
 class  buscarNombreOrden(generics.ListAPIView):
     
-    serializer_class = OrdenSerializer
+    serializer_class = OrdenViewSerializer
     pagination_class = SmallSetPagination
     permission_classes = [IsAuthenticated]
     def get_queryset(self):
@@ -590,7 +590,7 @@ class  buscarNombreOrden(generics.ListAPIView):
 
 class  buscarNombreOrdenLab(generics.ListAPIView):
     
-    serializer_class = OrdenSerializer
+    serializer_class = OrdenViewSerializer
     pagination_class = SmallSetPagination
     permission_classes = [IsAuthenticated]
     def get_queryset(self):

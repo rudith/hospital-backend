@@ -653,7 +653,7 @@ def calcularCondicion(numeroHistoria):
         return "C"
  
 #JULIO VICENTE: MUESTRA EL REPORTE DE CITAS RANGO DE FECHA CON ESTADO ATENDIDO Y CANCELADO
-def reporteCitasRangoFecha(request,fecha_inicio,fecha_final):
+def reporteCitasRangoFecha(request,fecha_inicio):
     global y,ca,contador,nuevo,reingreso,continuado
     fecha=fecha_inicio
     especialidades = Especialidad.objects.all()    
