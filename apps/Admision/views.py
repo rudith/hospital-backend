@@ -174,6 +174,14 @@ def reniecDatos(request,dni):
     #print(data)
       
     return JsonResponse(data)
+#JULIO VICENTE HAY CITAS EL DIA DE HOY
+def haycitas(request,fecha):
+    citas= Cita.objects.filter(estadoCita__in=["Atendido","Cancelado"],fechaAtencion=fecha)
+    if citas.count()>0:
+        return JsonResponse({'hayCitas':'si'})
+    else:
+        return JsonResponse({'hayCitas':'no'})
+
 
 def cancelarCitasFecha(request):
     #permission_classes = [IsAuthenticated]
@@ -376,7 +384,7 @@ def dibujarBorde():
                     
 
                   
-#JULIO VICENTE IMPRIMIR TRIAJE
+#JULIO VICENTE COLOCA LOS ELEMENTOS DE  TRIAJE DE CITA PARA HISTORIA PDF
 def imprimirTriaje(p,triaje):
     global dy,c
     p.alignment = TA_CENTER
@@ -407,6 +415,7 @@ def imprimirTriaje(p,triaje):
     frecuenciaC.drawOn(c, 430, dy-11.5)   
     dy=dy-23
 
+#JULIO VICENTE COLOCA LOS ELEMENTOS DE CONSULTA DEL TRIAJE DE LA CITA PARA HISTORIA PDF
 def imprimirConsulta(p,consulta):
     global dy,c
     p.alignment = TA_JUSTIFY
@@ -415,18 +424,18 @@ def imprimirConsulta(p,consulta):
     motivo.drawOn(c, 40, dy-23)  
     dy=dy-34.5
     apetito=Paragraph(" APETITO: " + str(consulta.apetito),p) 
-    apetito.wrapOn(c,258,180)
+    apetito.wrapOn(c,172,180)
     apetito.drawOn(c, 40, dy-11.5)  
     orina=Paragraph(" ORINA: " + str(consulta.orina),p) 
-    orina.wrapOn(c,258,180)
-    orina.drawOn(c, 300, dy-11.5) 
-    dy=dy-23
+    orina.wrapOn(c,172,180)
+    orina.drawOn(c, 212, dy-11.5) 
     deposiciones=Paragraph(" DEPOSICIONES: " + str(consulta.deposiciones),p) 
-    deposiciones.wrapOn(c,258,180)
-    deposiciones.drawOn(c, 40, dy-11.5)    
+    deposiciones.wrapOn(c,172,180)
+    deposiciones.drawOn(c,384 , dy-11.5) 
+    dy=dy-23   
     examenFisico=Paragraph(" EXAMEN FISICO: " + str(consulta.examenFisico),p) 
     examenFisico.wrapOn(c,258,180)
-    examenFisico.drawOn(c, 300, dy-11.5)  
+    examenFisico.drawOn(c, 40, dy-11.5)  
     dy=dy-23 
     diagnostico=Paragraph(" DIAGNOSTICO: " + str(consulta.diagnostico),p) 
     diagnostico.wrapOn(c,258,180)
@@ -503,42 +512,51 @@ def reporteDiarioCitas(request):
         return response 
     else: 
         return JsonResponse({'status':'FAIL'})
+
 #JULIO VICENTE: CREA LA TABLA DONDE ESTAN TODOS LOS ESTADOS 
 def contadorEstados(p):
     global y,ca,contador,nuevo,continuador,reingreso
+    p.borderColor = 'white'
     if (y<24):
         ca.showPage()
         y=800
     nuev = Paragraph("Nuevos",p)
-    nuev.wrapOn(ca,130,90)
+    nuev.wrapOn(ca,103,90)
     nuev.drawOn(ca,40 , y)
     reingre = Paragraph("Reingreso",p)
-    reingre.wrapOn(ca,130,90)
-    reingre.drawOn(ca, 170, y)
+    reingre.wrapOn(ca,103,90)
+    reingre.drawOn(ca, 143, y)
+    atendidos = Paragraph("Atendidos",p)
+    atendidos.wrapOn(ca,103,90)
+    atendidos.drawOn(ca, 246, y)
     aten = Paragraph("Continuador",p)
-    aten.wrapOn(ca,130,90)
-    aten.drawOn(ca, 300, y)
-    conti = Paragraph("Atendidos",p)
-    conti.wrapOn(ca,125,90)
-    conti.drawOn(ca, 430, y)
+    aten.wrapOn(ca,103,90)
+    aten.drawOn(ca, 349, y)
+    conti = Paragraph("Atenciones",p)
+    conti.wrapOn(ca,103,90)
+    conti.drawOn(ca, 452, y)
     y=y-11.5
     nuev = Paragraph(str(nuevo),p)
-    nuev.wrapOn(ca,130,90)
-    nuev.drawOn(ca, 40, y)
+    nuev.wrapOn(ca,103,90)
+    nuev.drawOn(ca,40 , y)
     reingre = Paragraph(str(reingreso),p)
-    reingre.wrapOn(ca,130,90)
-    reingre.drawOn(ca, 170, y)
+    reingre.wrapOn(ca,103,90)
+    reingre.drawOn(ca, 143, y)
+    atendidos = Paragraph(str(reingreso+nuevo),p)
+    atendidos.wrapOn(ca,103,90)
+    atendidos.drawOn(ca, 246, y)
     conti = Paragraph(str(continuador),p)
-    conti.wrapOn(ca,130,90)
-    conti.drawOn(ca, 300, y)
+    conti.wrapOn(ca,103,90)
+    conti.drawOn(ca, 349, y)
     aten = Paragraph(str(contador),p)
-    aten.wrapOn(ca,125,90)
-    aten.drawOn(ca, 430, y)
+    aten.wrapOn(ca,103,90)
+    aten.drawOn(ca, 452, y)
     y=y-11.5
     contador=0
     nuevo=0
     continuador=0
     reingreso=0
+    p.borderColor = 'black'
 #JULIO VICENTE: CREA EL TITULO CON LA ESPECIALIDAD Y LA FECHA 
 def crearCabeceraEspecialidad(especialidad,fecha):
     global y,ca,contador
@@ -552,9 +570,6 @@ def crearCabeceraEspecialidad(especialidad,fecha):
     if (y<41):
         ca.showPage()
         y=800
-        
-    
-    
     especialidad = Paragraph(str(especialidad),p1)
     especialidad.wrapOn(ca,500,0)
     especialidad.drawOn(ca, 40, y)
@@ -653,9 +668,9 @@ def calcularCondicion(numeroHistoria):
         return "C"
  
 #JULIO VICENTE: MUESTRA EL REPORTE DE CITAS RANGO DE FECHA CON ESTADO ATENDIDO Y CANCELADO
-def reporteCitasRangoFecha(request,fecha_inicio):
+def reporteCitasRangoFecha(request,fecha):
     global y,ca,contador,nuevo,reingreso,continuado
-    fecha=fecha_inicio
+    
     especialidades = Especialidad.objects.all()    
     width,height =A4
    
