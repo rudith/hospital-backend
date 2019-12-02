@@ -1,5 +1,8 @@
 from io import BytesIO
 
+import xlwt
+import datetime
+
 from reportlab.lib import colors
 from reportlab.lib.units import cm
 from reportlab.pdfgen import canvas
@@ -724,3 +727,41 @@ def reporteCitasRangoFecha(request,fecha):
         return response 
     else: 
         return JsonResponse({'status':'FAIL'})
+
+
+def export_users_xls(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="Historia.xls"'
+
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('Historia')
+
+    # Sheet header, first row
+    row_num = 0
+
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+
+    columns = ['id','numeroHistoria','dni','nombres','apellido_paterno','apellido_materno','sexo','foto','celular',
+        'fechaNac','telefono','estadoCivil','gradoInstruccion','ocupacion','fechaReg','direccion','nacionalidad',
+        'email','estReg','distrito','provincia','departamento']
+
+
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], font_style)
+
+    # Sheet body, remaining rows
+    font_style = xlwt.XFStyle()
+
+
+    rows = Historia.objects.all().values_list('id','numeroHistoria','dni','nombres','apellido_paterno','apellido_materno','sexo','foto','celular',
+        'fechaNac','telefono','estadoCivil','gradoInstruccion','ocupacion','fechaReg','direccion','nacionalidad',
+        'email','estReg','distrito','provincia','departamento')
+    
+    for row in rows:
+        row_num += 1
+        for col_num in range(len(row)):
+            ws.write(row_num, col_num, row[col_num], font_style)
+
+    wb.save(response)
+    return response

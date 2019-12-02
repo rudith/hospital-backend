@@ -1,9 +1,9 @@
 from django.conf.urls import url
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
-from .views import (vistaDistrito, vistaProvincia, vistaDepartamento, vistaHistoria, vistaCrearHistoria, BuscarHistoria, BuscarDNIH, HistoriaPDF,reniecDatos,reporteDiarioCitas,haycitas,reporteCitasRangoFecha,cancelarCitasFecha,BuscarNombreH,BuscarDistrito,BuscarProvincia,BuscarDistritos,BuscarProvincias,ultimaHistoria)#, vistaGrupoSang)
-from ..Administrador.api.views import (vistaArea, vistaTipoPersonal, vistaPersonal, vistaEspecialidad, BuscarDni)
+from .views import (vistaDistrito, vistaProvincia, vistaDepartamento, vistaHistoria, vistaCrearHistoria, BuscarHistoria, BuscarDNIH, HistoriaPDF,reniecDatos,reporteDiarioCitas,haycitas,reporteCitasRangoFecha,cancelarCitasFecha,BuscarNombreH,BuscarDistrito,BuscarProvincia,BuscarDistritos,BuscarProvincias,ultimaHistoria,export_users_xls)#, vistaGrupoSang)from ..Administrador.api.views import (vistaArea, vistaTipoPersonal, vistaPersonal, vistaEspecialidad, BuscarDni)
 from rest_framework.urlpatterns import format_suffix_patterns
+import datetime
 
 router = DefaultRouter()
 # router.register(r"grupo-sangre", vistaGrupoSang)
@@ -33,4 +33,8 @@ urlpatterns = [
     # url(r'^personals/(?P<dni>\d+)/$', BuscarDni.as_view(), name="actualizarbusqueda"),
     # url(r'^cancelar/(?P<dni>\d+)/$', cancelarCita.as_view(), name="cancelarCita"),
     #path("areas/", AvatarUpdateView.as_view(), name="avatar-update")
+
+    # exportar datos  de historias clinicas en un excel
+
+    url(r'^export/xls/$', export_users_xls, name='export_users_xls'),
 ]
