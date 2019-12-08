@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import Area, Personal, TipoPersonal, Especialidad
+from ..models import Area, Personal, TipoPersonal, Especialidad, Medico
 from django.contrib.auth.models import User
 
 
@@ -46,6 +46,20 @@ class TipoPersonalSerializer(serializers.ModelSerializer):
     class Meta:
         model = TipoPersonal
         fields = "__all__"   
+
+class MedicoSerializer(serializers.ModelSerializer):
+    especialidad = EspecialidadSerializer(read_only=True)
+    especialidadId = serializers.PrimaryKeyRelatedField(write_only=True, queryset= Especialidad.objects.all(), source='especialidad')
+    class Meta:
+        model = Medico
+        fields = "__all__"  
+
+class MedicoViewSerializer(serializers.ModelSerializer):
+    especialidad = EspecialidadSerializer(read_only=True)
+    especialidadId = serializers.PrimaryKeyRelatedField(write_only=True, queryset= Especialidad.objects.all(), source='especialidad')
+    class Meta:
+        model = Medico
+        fields = "__all__"  
 
 class PersonalSerializer(serializers.ModelSerializer):
     #user = serializers.StringRelatedField(read_only=True)

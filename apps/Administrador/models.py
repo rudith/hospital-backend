@@ -33,17 +33,17 @@ class Especialidad(models.Model):
 class Personal(models.Model):
     #codigoPer = models.AutoField(primary_key=True)
     #FK Area
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    area = models.ForeignKey(Area, on_delete=models.CASCADE)
-    tipo_personal = models.ForeignKey(TipoPersonal, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True,null=True)
+    area = models.ForeignKey(Area, on_delete=models.CASCADE, blank=True,null=True)
+    tipo_personal = models.ForeignKey(TipoPersonal, on_delete=models.CASCADE, blank=True,null=True)
     especialidad = models.ForeignKey(Especialidad, on_delete=models.CASCADE,blank=True,null=True)
-    dni = models.CharField(unique=True, max_length=8)
+    dni = models.CharField(unique=True, max_length=8,blank=True,null=True)
     nombres = models.CharField(max_length=40)
     apellido_paterno = models.CharField(max_length=30)
     apellido_materno = models.CharField(max_length=30)
-    celular = models.CharField(max_length=12,blank=True)
-    telefono = models.CharField(max_length=9,blank=True)
-    direccion = models.CharField(max_length=90,blank=True)
+    celular = models.CharField(max_length=12,blank=True,null=True)
+    telefono = models.CharField(max_length=9,blank=True,null=True)
+    direccion = models.CharField(max_length=90,blank=True, null= True)
     #email = models.EmailField(null=False,blank=True)
     fechaReg = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -53,3 +53,15 @@ class Personal(models.Model):
         return self.pk.__str__()
         #return self.nombres +" "+self.apellido_paterno + " (" +self.area.__str__()+")"
         
+class Medico(models.Model):
+    #codigoPer = models.AutoField(primary_key=True)
+    #FK Area
+    especialidad = models.ForeignKey(Especialidad, on_delete=models.CASCADE)
+    dni = models.CharField(unique=True, max_length=8,blank=True,null=True)
+    nombres = models.CharField(max_length=40)
+    apellido_paterno = models.CharField(max_length=30)
+    apellido_materno = models.CharField(max_length=30)
+
+    def __str__(self):
+        return self.pk.__str__()
+        #return self.nombres +" "+self.apellido_paterno + " (" +self.area.__str__()+")"

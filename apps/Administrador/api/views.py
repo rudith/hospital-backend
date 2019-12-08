@@ -3,8 +3,8 @@ from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
-from .serializers import AreaSerializer, PersonalSerializer, PersonalViewSerializer, TipoPersonalSerializer, EspecialidadSerializer, UsuarioSerializer,PersonalDetalleSerializer, UserSerializer
-from ..models import Area, Personal, TipoPersonal, Especialidad
+from .serializers import MedicoSerializer,MedicoViewSerializer,AreaSerializer, PersonalSerializer, PersonalViewSerializer, TipoPersonalSerializer, EspecialidadSerializer, UsuarioSerializer,PersonalDetalleSerializer, UserSerializer
+from ..models import Area, Personal, TipoPersonal, Especialidad, Medico
 from django.contrib.auth.models import User
 from .pagination import SmallSetPagination
 
@@ -84,6 +84,27 @@ class vistaUsuario2(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UsuarioSerializer
     permission_classes = [IsAuthenticated]
+
+class vistaCrearMedico(ModelViewSet):
+    queryset = Medico.objects.all()
+    serializer_class = MedicoSerializer
+    #serializer_class = UserSigninSerializer
+    pagination_class = SmallSetPagination
+    permission_classes = [IsAuthenticated]
+
+class vistaMedicoSP(ModelViewSet):
+    queryset = Medico.objects.all()
+    serializer_class = MedicoViewSerializer
+    #serializer_class = UserSigninSerializer
+    permission_classes = [IsAuthenticated]
+
+class vistaMedico(ModelViewSet):
+    queryset = Medico.objects.all()
+    serializer_class = MedicoViewSerializer
+    #serializer_class = UserSigninSerializer
+    pagination_class = SmallSetPagination
+    permission_classes = [IsAuthenticated]
+
 
 # class LoginView(APIView):
 #     serializer_class = UserSigninSerializer

@@ -10,7 +10,7 @@ from apps.Admision.models import Historia
 from rest_framework.decorators import api_view, permission_classes
 from .serializers import (OrdenViewSerializer, TriajeSerializer, TriajeViewSerializer,CitaSerializer, CitaViewSerializer, CitasDniSerializer, ConsultaSerializer, ConsultaViewSerializer,
                           ConsultaHistoriaViewSerializer, ConsultasDniSerializer, ConsultasHistoriaSerializer,TriajeHistoriaSerializer,
-                          CitasMedicoViewSerializer, CitasEspecialidadViewSerializer,CitaViewSerializerEstado, OrdenSerializer,ConsultaOrdenSerializer
+                          CitasMedicoViewSerializer, CitasEspecialidadViewSerializer, OrdenSerializer,ConsultaOrdenSerializer
 )#,CitaTemporal)
 
 
@@ -23,7 +23,14 @@ from rest_framework import status
 from datetime import date
 from datetime import datetime , timedelta
 from .pagination import SmallSetPagination
-    
+
+
+#JULIO VICENTE HAY CITAS EL DIA DE HOY
+def nroOrden(request,fecha):
+    citas= Cita.objects.filter(fechaAtencion=fecha)
+    contador = citas.count()
+    return JsonResponse({'orden': contador})
+
 #Vista para crear Ordenes , Get Post Put Delete
 class vistaCrearOrden(ModelViewSet):
     queryset = Orden.objects.all()

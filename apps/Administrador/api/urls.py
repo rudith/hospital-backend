@@ -2,7 +2,7 @@ from django.conf.urls import url
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 #from .views import (ProfileViewSet, ProfileStatusViewSet)
-from .views import ( LoginView, vistaArea, vistaArea2, vistaTipoPersonal, vistaTipoPersonal2, vistaPersonal, vistaPersonal2, vistaPersonales, vistaCrearPersonal, vistaEspecialidad, vistaEspecialidad2, BuscarDni, vistaUsuario, vistaUsuario2,BuscarEspecialidad,BuscarEsp,BuscarTip,BuscarArea, BuscarUser)
+from .views import ( vistaCrearMedico, vistaMedicoSP,vistaMedico, LoginView, vistaArea, vistaArea2, vistaTipoPersonal, vistaTipoPersonal2, vistaPersonal, vistaPersonal2, vistaPersonales, vistaCrearPersonal, vistaEspecialidad, vistaEspecialidad2, BuscarDni, vistaUsuario, vistaUsuario2,BuscarEspecialidad,BuscarEsp,BuscarTip,BuscarArea, BuscarUser)
 
 # profile_list = ProfileViewSet.as_view({"get": "list"})
 # profile_detail = ProfileViewSet.as_view({"get": "retrieve"})
@@ -21,6 +21,9 @@ router.register(r"especialidad",vistaEspecialidad)
 router.register(r"especialidadSP",vistaEspecialidad2)
 router.register(r"usuarios",vistaUsuario)
 router.register(r"usuariosSP",vistaUsuario2)
+router.register(r"crear-medico",vistaCrearMedico)
+router.register(r"ver-medicos",vistaMedico)
+router.register(r"ver-medicosSP",vistaMedicoSP)
 
 urlpatterns = [
     path("", include(router.urls)),

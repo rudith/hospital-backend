@@ -6,7 +6,7 @@ from .views import (CitasHistorial,vistaCrearOrden, vistaOrden, vistaTriaje, vis
                     ,BuscarConsultaDni,BuscarTriajeHistoria, BuscarCitaMedico, BuscarTriajeCita, BuscarHistorialClinico, atenderCita, triajeCita,BuscarCitaEspecialidad
                     ,atenderOrden,buscarOrden,buscarSol,buscarSol2,BuscarCitaMedicoEstado, BuscarCitasEspera,BuscarCitaDniE,BuscarHistorialClinicoDNI,BuscarCitaHistoria,BuscarCitaNombre,BuscarCitaEspecialidad2,VerSolicitudes,
                     cancelarOrden,vistaOrdenLab,BuscarCitaHHistoria,BuscarCitaHNombre,pagarOrden,BuscarCitaHEspecialidad,BuscarCitaHEspecialidad2,cancelarOrdenFecha,
-                    buscarOrdenLab, buscarNombreOrdenLab, buscarNombreOrden,buscarDNIOrdenLab,buscarDNIOrden)#, vistaCitaTemporal)# vistaHistoriaConsulta)
+                    buscarOrdenLab, buscarNombreOrdenLab, buscarNombreOrden,buscarDNIOrdenLab,buscarDNIOrden, nroOrden)#, vistaCitaTemporal)# vistaHistoriaConsulta)
 
 # profile_list = ProfileViewSet.as_view({"get": "list"})
 # profile_detail = ProfileViewSet.as_view({"get": "retrieve"})
@@ -35,6 +35,7 @@ urlpatterns = [
     # path("profiles/<int:pk>/", profile_detail, name="profile-detail")
     #path("consulta/<int:pk>/", vistaHistoriaDetalle.as_view(), name="consultas-detail"),
     path("", include(router.urls)),
+    url(r'^verOrdencita/(?P<fecha>\d{4}-\d{2}-\d{2})/$',nroOrden,name="Hay Citas"),
     url(r'^ver-citas/$', vistaCita.as_view(), name="VerCitas"),
     url(r'^buscarOrden/$', buscarOrden.as_view(), name="buscarOrden"),
     url(r'^buscarOrdenLab/$', buscarOrdenLab.as_view(), name="buscarOrdenLab"),
