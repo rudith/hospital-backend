@@ -67,6 +67,7 @@ class LoginView(APIView):
         print(tipo)
         return Response({
             'id': user.id,
+            'personal_id': personal.pk,
             'username': user.username,#user_serialized.data, 
             'expires_in': expires_in(token),
             'token': token.key,

@@ -103,7 +103,7 @@ class Historia(models.Model):
     departamento = models.ForeignKey(Departamento, on_delete=models.CASCADE,blank=True,null=True)
     #dni = models.CharField(unique=True, max_length=8)
     dni = models.CharField(blank=True,null=True, unique=True, error_messages={'unique':"Este DNI ya ha sido registrado."}, max_length=8 ,validators=[dni])
-    nombres = models.CharField(max_length=30)
+    nombres = models.CharField(max_length=50)
     apellido_paterno = models.CharField(max_length=30)
     apellido_materno = models.CharField(max_length=30)
     sexo = models.CharField(max_length=10)
@@ -121,8 +121,8 @@ class Historia(models.Model):
     email = models.EmailField(blank=True,null=True)
     updated_at = models.DateTimeField(auto_now=True)
     estReg = models.BooleanField(default=True,blank=True,null=True)
-    lugarNac = models.CharField(max_length=10,blank=True,null=True)
-    procedencia = models.CharField(max_length=10,blank=True,null=True)
+    lugarNac = models.CharField(max_length=50,blank=True,null=True)
+    procedencia = models.CharField(max_length=50,blank=True,null=True)
 
     def __str__(self):
         return self.numeroHistoria.__str__() 
