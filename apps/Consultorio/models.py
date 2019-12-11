@@ -22,7 +22,7 @@ class Cita(models.Model):
     exonerado = models.BooleanField(default=False)
     estReg = models.BooleanField(default=True)
     updated_at = models.DateTimeField(auto_now=True)
-    turno = models.IntegerField()
+    turno = models.IntegerField(blank=True,null=True)
     condicion = models.CharField(max_length=10,blank=True,null=True)
 
     def __str__(self):
@@ -107,7 +107,7 @@ class Orden(models.Model):
     fechaA = models.DateField(blank=True,null=True, validators=[fechaAtencion])
     fechaCreacion = models.DateField(auto_now_add=True)
     estadoOrden= models.CharField(max_length=10,blank=True,null=True)
-    nroRecibo = models.CharField(max_length=6,blank=True)
-    monto = models.CharField(max_length=6,blank=True)
+    nroRecibo = models.CharField(max_length=6,blank=True,null=True)
+    monto = models.CharField(max_length=6,blank=True,null=True)
     def __str__(self):  
         return self.pk.__str__() 
