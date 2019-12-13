@@ -130,7 +130,9 @@ class Historia(models.Model):
 
     # Metodo que captura la fecha de nacimiento  y devuelve la edad automaticamente 
     def edad(self):
-    
-       return int((datetime.now().date() - self.fechaNac).days / 365.25)
+        if self.fechaNac==None:
+            return 0
+        else:
+             return int((datetime.now().date() - self.fechaNac).days / 365.25)
 
     

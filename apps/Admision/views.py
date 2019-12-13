@@ -176,7 +176,7 @@ def reniecDatos(request,dni):
     return JsonResponse(data)
 #JULIO VICENTE HAY CITAS EL DIA DE HOY
 def haycitas(request,fecha):
-    citas= Cita.objects.filter(estadoCita__in=["Atendido","Cancelado"],fechaAtencion=fecha)
+    citas= Cita.objects.filter(fechaAtencion=fecha)
     if citas.count()>0:
         return JsonResponse({'hayCitas':'si'})
     else:
@@ -227,12 +227,13 @@ def HistoriaPDF(request,dni):
     #Cabecera_____________________________________________
     #nombre
     c.setFont('Helvetica', 16)
-    c.drawString(60,650,'Nombre')
-    c.drawString(185,650,historia[0].nombres.__str__()+" "+historia[0].apellido_paterno.__str__()+" "+historia[0].apellido_materno.__str__())
+    c.drawString(60,650,'Apellidos y Nombres')
+    c.setFont('Helvetica', 16)
+    c.drawString(230,650,historia[0].nombres.__str__()+" "+historia[0].apellido_paterno.__str__()+" "+historia[0].apellido_materno.__str__())
     c.line(40,665,550,665)
     c.line(40,645,550,645)
 
-    c.line(165,645,165,665)
+    c.line(220,645,220,665)
     c.line(40,645,40,665)
     c.line(550,645,550,665)
     #nombre
@@ -240,8 +241,8 @@ def HistoriaPDF(request,dni):
     c.drawString(70,610,'Fecha de  Nacimiento')
     c.drawString(90,590,historia[0].fechaNac.__str__())
 
-    c.drawString(340,610,'Departamento')
-    c.drawString(350,590,historia[0].departamento.__str__())
+    c.drawString(340,610,'Lugar de Nacimiento')
+    c.drawString(350,590,historia[0].lugarNac.__str__())
 
     c.line(40,625,550,625)
     c.line(40,605,550,605)
@@ -287,11 +288,11 @@ def HistoriaPDF(request,dni):
     c.drawString(50,430,'Sexo')
     c.drawString(50,410,historia[0].sexo.__str__())
 
-    c.drawString(170,430,'Estado Civil')
-    c.drawString(170,410,historia[0].estadoCivil.__str__())
+    c.drawString(140,430,'Estado Civil')
+    c.drawString(140,410,historia[0].estadoCivil.__str__())
 
-    c.drawString(290,430,'Ocupación ')
-    c.drawString(290,410,historia[0].ocupacion.__str__())
+    c.drawString(260,430,'Profesión/Ocupación ')
+    c.drawString(260,410,historia[0].ocupacion.__str__())
 
     c.drawString(425,430,'Teléfono')
     c.drawString(425,410,historia[0].telefono.__str__())
@@ -303,8 +304,8 @@ def HistoriaPDF(request,dni):
     c.line(40,405,550,405)
 
     c.line(40,405,40,445)
-    c.line(160,405,160,445)
-    c.line(280,405,280,445)
+    c.line(135,405,135,445)
+    c.line(255,405,255,445)
     c.line(415,405,415,445)    
     c.line(550,405,550,445)
 
@@ -312,8 +313,8 @@ def HistoriaPDF(request,dni):
     c.drawString(70,370,'Grado de Instrucción')
     c.drawString(50,350,historia[0].gradoInstruccion.__str__())
 
-    c.drawString(350,370,'Nacionalidad')
-    c.drawString(335,350,historia[0].nacionalidad.__str__())
+    c.drawString(350,370,'Procedencia')
+    c.drawString(335,350,historia[0].procedencia.__str__())
 
     c.line(40,385,550,385)
     c.line(40,365,550,365)
@@ -462,7 +463,7 @@ def reporteDiarioCitas(request):
     fecha=fecha.strftime("%Y-%m-%d")
     width,height =A4
    
-    citas= Cita.objects.filter(estadoCita__in=["Atendido","Cancelado"],fechaAtencion=fecha).order_by("especialidad","medico")
+    citas= Cita.objects.filter(fechaAtencion=fecha).order_by("especialidad","medico")
     if citas.count()!=0:
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename=ReporteDiarioCitas_'+fecha+'.pdf'
@@ -473,7 +474,7 @@ def reporteDiarioCitas(request):
         p.textColor = 'black'
         p.borderColor = 'black'
         p.alignment = TA_CENTER
-        p.borderWidth = 1
+        p.borderWidth = 0.5
         p.fontSize = 10
         y=800
         crearCabeceraEspecialidad(str(citas[0].especialidad),fecha)
@@ -594,7 +595,7 @@ def crearCabeceraMedico(medico):
     y=y-20   
 # JULIO VICENTE: COLOCA LOS ATRIBUTOS DE LA CITA
 def imprimir(p,cita):
-    global y,ca,contador
+    global y,ca,contador,nuevo,continuador,reingreso
     contador=contador+1
     if (y<12):
         ca.showPage()
@@ -604,19 +605,27 @@ def imprimir(p,cita):
     cont.wrapOn(ca,15,90)
     cont.drawOn(ca, 40, y)
     historia = Paragraph(str(cita.numeroHistoria),p)
-    historia.wrapOn(ca,100,90)
+    historia.wrapOn(ca,80,90)
     historia.drawOn(ca, 55, y)
     nombre = Paragraph(str(cita.numeroHistoria.nombres)+" "+str(cita.numeroHistoria.apellido_paterno)+" "+str(cita.numeroHistoria.apellido_materno),p)
     nombre.wrapOn(ca,200,90)
-    nombre.drawOn(ca, 155, y)
+    nombre.drawOn(ca, 135, y)
     recibo = Paragraph(str(cita.numeroRecibo),p)
-    recibo.wrapOn(ca,100,90)
-    recibo.drawOn(ca, 355, y)
-    cond = calcularCondicion(cita.numeroHistoria)
-    
-    condicion = Paragraph(str(cond),p)
-    condicion.wrapOn(ca,100,90)
-    condicion.drawOn(ca, 455, y)
+    recibo.wrapOn(ca,70,90)
+    recibo.drawOn(ca, 335, y)
+   
+    if cita.condicion=="N":
+        nuevo=nuevo+1
+    if cita.condicion=="R":
+        reingreso=reingreso+1
+    if cita.condicion=="C":
+        continuador=continuador+1
+    turno = Paragraph(str(cita.turno),p)
+    turno.wrapOn(ca,70,90)
+    turno.drawOn(ca, 405, y)
+    condicion = Paragraph(str(cita.condicion),p)
+    condicion.wrapOn(ca,80,90)
+    condicion.drawOn(ca, 475, y)
     y=y-11.5
 
 
@@ -630,42 +639,23 @@ def crearEncabezados(p):
     cont.wrapOn(ca,15,90)
     cont.drawOn(ca, 40, y)
     historia = Paragraph("N° HISTORIA",p)
-    historia.wrapOn(ca,100,90)
+    historia.wrapOn(ca,80,90)
     historia.drawOn(ca, 55, y)
     nombre = Paragraph("Apellidos y Nombres",p)
     nombre.wrapOn(ca,200,90)
-    nombre.drawOn(ca, 155, y)
+    nombre.drawOn(ca, 135, y)
     recibo = Paragraph("N° Recibo",p)
-    recibo.wrapOn(ca,100,90)
-    recibo.drawOn(ca, 355, y)
+    recibo.wrapOn(ca,70,90)
+    recibo.drawOn(ca, 335, y)
+    turno = Paragraph("Turno",p)
+    turno.wrapOn(ca,70,90)
+    turno.drawOn(ca, 405, y)
     condicion = Paragraph("Condicion",p)
-    condicion.wrapOn(ca,100,90)
-    condicion.drawOn(ca, 455, y)
+    condicion.wrapOn(ca,80,90)
+    condicion.drawOn(ca, 475, y)
     y=y-11.5
 
-# JULIO VICENTE: CALCULA LA CONDICION DE CADA CITA (NUEVO, REINGRESO,ATENDIDAS,CONTINUADOR)
-def calcularCondicion(numeroHistoria):
-    global reingreso,continuador,nuevo
-    fecha = datetime.today()
-    fechaInicio = fecha + timedelta(days=-365)
-    fechaInicio = fechaInicio.strftime("%Y-%m-%d")
-    fechaini = fechaInicio
-    fechaFinal = fecha + timedelta(days=-1)
-    fechaFinal = fechaFinal.strftime("%Y-%m-%d")
-    fechafin = fechaFinal
-    tienecitas= Cita.objects.filter(numeroHistoria=numeroHistoria)
-    citas = Cita.objects.filter(numeroHistoria=numeroHistoria,estadoCita__in=["Atendido","Cancelado"]).filter(fechaAtencion__range=[fechaini,fechafin])
 
-    if tienecitas.count()-1==0:
-        nuevo=nuevo+1
-        return "N"
-        
-    if citas.count()==0:
-        reingreso=reingreso+1
-        return "R"
-    if citas.count()>=1:
-        continuador=continuador+1
-        return "C"
  
 #JULIO VICENTE: MUESTRA EL REPORTE DE CITAS RANGO DE FECHA CON ESTADO ATENDIDO Y CANCELADO
 def reporteCitasRangoFecha(request,fecha):
@@ -674,7 +664,7 @@ def reporteCitasRangoFecha(request,fecha):
     especialidades = Especialidad.objects.all()    
     width,height =A4
    
-    citas= Cita.objects.filter(estadoCita__in=["Atendido","Cancelado"],fechaAtencion=fecha).order_by("especialidad","medico")
+    citas= Cita.objects.filter(fechaAtencion=fecha).order_by("especialidad","medico")
     if citas.count()!=0:
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename=ReporteDiario_'+fecha+'.pdf'
@@ -685,7 +675,7 @@ def reporteCitasRangoFecha(request,fecha):
         p.textColor = 'black'
         p.borderColor = 'black'
         p.alignment = TA_CENTER
-        p.borderWidth = 1
+        p.borderWidth = 0.5
         p.fontSize = 10
         y=800
         crearCabeceraEspecialidad(str(citas[0].especialidad),fecha)
