@@ -1,5 +1,13 @@
 from io import BytesIO
 
+#Vista genérica para mostrar resultados
+from django.views.generic.base import TemplateView
+#Workbook nos permite crear libros en excel
+from openpyxl import Workbook
+#Nos devuelve un objeto resultado, en este caso un archivo de excel
+from django.http.response import HttpResponse
+
+
 from reportlab.lib import colors
 from reportlab.lib.units import cm
 from reportlab.pdfgen import canvas
@@ -714,3 +722,86 @@ def reporteCitasRangoFecha(request,fecha):
         return response 
     else: 
         return JsonResponse({'status':'FAIL'})
+
+
+
+#generar excel con todas las historias clinicas
+class ReportehistoriasExcel(TemplateView):
+
+        #Usamos el método get para generar el archivo excel
+        def get(self, request, *args, **kwargs):
+                #Obtenemos todas las historias de nuestra base de datos
+                historias = Historia.objects.all()
+
+                provincias = Provincia.objects.all()
+                #Creamos el libro de trabajo
+                wb = Workbook()
+                #Definimos como nuestra hoja de trabajo, la hoja activa, por defecto la primera del libro
+                ws = wb.active
+                #En la celda A1 ponemos el texto 'REPORTE DE historias'
+                ws['A1'] = 'REPORTE DE HISTORIAS CLINICAS'
+                #Juntamos las celdas desde la A1 hasta la U1, formando una sola celda
+                ws.merge_cells('A1:U1')
+
+
+                #Creamos los encabezados desde la celda B3 hasta la E3
+
+
+                ws['A2'] = 'ID'
+                ws['B2'] = 'NUMERO DE HISTORIA'
+                ws['C2'] = 'DNI'
+                ws['D2'] = 'MONBRES'
+                ws['E2'] = 'APELLIDO_PATERNO'
+                ws['F2'] = 'APELLIDO_MATERNO'
+                ws['G2'] = 'SEXO'
+                ws['H2'] = 'FECHA_DE_NACIMIENTO'
+                ws['I2'] = 'CELULAR'
+                ws['J2'] = 'TELEFONO'
+                ws['K2'] = 'ESTADO_CIVIL'
+                ws['L2'] = 'GRADO_INSTITUCIONAL'
+                ws['M2'] = 'OCUPACION'
+                ws['N2'] = 'FECHA_REG'
+                ws['O2'] = 'DIRECCION'
+                ws['P2'] = 'NACIONALIDAD'
+                ws['Q2'] = 'EMAIL'
+                ws['R2'] = 'ESTREG'
+                ws['S2'] = 'DISTRITO'
+                ws['T2'] = 'PROVINCIA'
+                ws['U2'] = 'DEPARTAMENTO'
+                
+                cont=3
+                #Recorremos el conjunto de historias y vamos escribiendo cada uno de los datos en las celdas
+                for historia in historias:
+                        ws.cell(row=cont,column=1).value = historia.id
+                        ws.cell(row=cont,column=2).value = historia.numeroHistoria
+                        ws.cell(row=cont,column=3).value = historia.dni
+                        ws.cell(row=cont,column=4).value = historia.nombres
+                        ws.cell(row=cont,column=5).value = historia.apellido_paterno
+                        ws.cell(row=cont,column=6).value = historia.apellido_materno
+                        ws.cell(row=cont,column=7).value = historia.sexo
+                        ws.cell(row=cont,column=8).value = historia.fechaNac
+                        ws.cell(row=cont,column=9).value = historia.celular
+                        ws.cell(row=cont,column=10).value = historia.telefono
+                        ws.cell(row=cont,column=11).value = historia.estadoCivil
+                        ws.cell(row=cont,column=12).value = historia.gradoInstruccion
+                        ws.cell(row=cont,column=13).value = historia.ocupacion
+                        ws.cell(row=cont,column=14).value = historia.fechaReg
+                        ws.cell(row=cont,column=15).value = historia.direccion
+                        ws.cell(row=cont,column=16).value = historia.nacionalidad
+                        ws.cell(row=cont,column=17).value = historia.email
+                        ws.cell(row=cont,column=18).value = historia.estReg    
+                        ws.cell(row=cont,column=19).value = historia.distrito.nombre
+                        ws.cell(row=cont,column=20).value = historia.provincia.nombre
+                        ws.cell(row=cont,column=21).value = historia.departamento.nombre
+
+            
+                        cont = cont + 1
+
+                #Establecemos el nombre del archivo
+                nombre_archivo ="Reportehistoriasclinicas.xlsx"
+                #Definimos que el tipo de respuesta a devolver es un archivo de microsoft excel
+                response = HttpResponse(content_type="application/ms-excel")
+                contenido = "attachment; filename={0}".format(nombre_archivo)
+                response["Content-Disposition"] = contenido
+                wb.save(response)
+                return response
