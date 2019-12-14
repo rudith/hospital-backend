@@ -201,7 +201,7 @@ def cancelarCitasFecha(request):
 #Realizado por Julio Vicente: Historial Clinico,contiene datos & Consultas ,con su triaje, del paciente , utiliza libreria reportlab
 def HistoriaPDF(request,dni):
     global c,dy
-    historia=Historia.objects.filter(dni=dni)
+    historia=Historia.objects.filter(numeroHistoria=dni)
     width,height =A4
     
     response = HttpResponse(content_type='application/pdf')

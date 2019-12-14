@@ -128,6 +128,7 @@ class vistaCita(generics.ListAPIView):
         atendido = "Atendido"
         qs = qs.exclude(estadoCita=atendido)
         fecha=datetime.now().date()
+        qs = qs.filter(fechaAtencion__gte = fecha)
         return qs.order_by("fechaAtencion")
 
 #Vista general para crear consultas, Get Post Put Del
@@ -181,6 +182,8 @@ class BuscarCitaDni(generics.ListAPIView):
         qs = Cita.objects.exclude(estadoCita=cancelado)
         atendido = "Atendido"
         qs = qs.exclude(estadoCita=atendido)
+        fecha=datetime.now().date()
+        qs = qs.filter(fechaAtencion__gte = fecha)
         return qs.filter(numeroHistoria__dni=dni).order_by("fechaAtencion")
 
 #Busqueda de las citas por DNI,espera,triado, Serializer muestra todos las consultas
@@ -281,7 +284,10 @@ class BuscarCitaNombre (generics.ListAPIView):
         qs = qs.exclude(estadoCita=atendido)
         qs = qs.filter(numeroHistoria__nombres__icontains = nombre) 
         if qs.all().count()<1:
-                qs = qs.filter(numeroHistoria__apellido_paterno__icontains=nombre)
+            qs = qs.filter(numeroHistoria__apellido_paterno__icontains=nombre)
+        
+        fecha=datetime.now().date()
+        qs = qs.filter(fechaAtencion__gte = fecha)
         return qs.order_by("fechaAtencion")
 
 class BuscarCitaHNombre (generics.ListAPIView):
@@ -315,7 +321,11 @@ class BuscarCitaHistoria(generics.ListAPIView):
         qs = Cita.objects.exclude(estadoCita=cancelado)
         atendido = "Atendido"
         qs = qs.exclude(estadoCita=atendido)
+        fecha=datetime.now().date()
+        qs = qs.filter(fechaAtencion__gte = fecha)
         return qs.filter(numeroHistoria__numeroHistoria__icontains = nro).order_by("fechaAtencion")  
+
+        #menos igual lte, gte , lt y gt (sin igual)
 
 class BuscarCitaHHistoria(generics.ListAPIView):
     
@@ -358,6 +368,8 @@ class BuscarCitaEspecialidad2(generics.ListAPIView):
         qs = Cita.objects.exclude(estadoCita=cancelado)
         atendido = "Atendido"
         qs = qs.exclude(estadoCita=atendido)
+        fecha=datetime.now().date()
+        qs = qs.filter(fechaAtencion__gte = fecha)
         return qs.filter(especialidad__nombre__icontains = esp).order_by("fechaAtencion")  
 
 class BuscarCitaHEspecialidad(generics.ListAPIView):
