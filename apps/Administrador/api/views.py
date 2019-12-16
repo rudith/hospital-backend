@@ -99,13 +99,17 @@ class vistaMedicoSP(ModelViewSet):
     #serializer_class = UserSigninSerializer
     permission_classes = [IsAuthenticated]
 
-class vistaMedico(ModelViewSet):
-    queryset = Medico.objects.all()
-    serializer_class = MedicoViewSerializer
-    #serializer_class = UserSigninSerializer
+class vistaMedico(generics.ListAPIView):
+
+    # queryset = Personal.objects.all()
+    serializer_class = PersonalViewSerializer
     pagination_class = SmallSetPagination
     permission_classes = [IsAuthenticated]
-
+    def get_queryset(self):
+        qs = Personal.objects.all()
+        qs = qs.exclude(especialidad__isnull=True)
+        return qs.order_by("-fechaReg")
+    
 
 # class LoginView(APIView):
 #     serializer_class = UserSigninSerializer
@@ -270,6 +274,15 @@ class BuscarDni(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         return Personal.objects.all()
 
+class BuscarMedicoDni(generics.RetrieveUpdateDestroyAPIView):
+    
+    lookup_field = 'dni'
+    serializer_class = PersonalViewSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+
+        return Personal.objects.all().exclude(especialidad__isnull=True)
 #Busqueda por especialidad, Serializer muestra todas los personales
 class BuscarEspecialidad(generics.ListAPIView):
   

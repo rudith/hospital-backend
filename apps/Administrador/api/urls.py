@@ -2,7 +2,7 @@ from django.conf.urls import url
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 #from .views import (ProfileViewSet, ProfileStatusViewSet)
-from .views import ( vistaCrearMedico, vistaMedicoSP,vistaMedico, LoginView, vistaArea, vistaArea2, vistaTipoPersonal, vistaTipoPersonal2, vistaPersonal, vistaPersonal2, vistaPersonales, vistaCrearPersonal, vistaEspecialidad, vistaEspecialidad2, BuscarDni, vistaUsuario, vistaUsuario2,BuscarEspecialidad,BuscarEsp,BuscarTip,BuscarArea, BuscarUser)
+from .views import (BuscarMedicoDni, vistaCrearMedico, vistaMedicoSP,vistaMedico, LoginView, vistaArea, vistaArea2, vistaTipoPersonal, vistaTipoPersonal2, vistaPersonal, vistaPersonal2, vistaPersonales, vistaCrearPersonal, vistaEspecialidad, vistaEspecialidad2, BuscarDni, vistaUsuario, vistaUsuario2,BuscarEspecialidad,BuscarEsp,BuscarTip,BuscarArea, BuscarUser)
 
 # profile_list = ProfileViewSet.as_view({"get": "list"})
 # profile_detail = ProfileViewSet.as_view({"get": "retrieve"})
@@ -22,13 +22,14 @@ router.register(r"especialidadSP",vistaEspecialidad2)
 router.register(r"usuarios",vistaUsuario)
 router.register(r"usuariosSP",vistaUsuario2)
 router.register(r"crear-medico",vistaCrearMedico)
-router.register(r"ver-medicos",vistaMedico)
 router.register(r"ver-medicosSP",vistaMedicoSP)
 
 urlpatterns = [
     path("", include(router.urls)),
     path('login/', LoginView.as_view(), name='login'),
     url(r'^personaldni/(?P<dni>\d+)/$', BuscarDni.as_view(), name="PersonalDNI"),
+    url(r'^medicodni/(?P<dni>\d+)/$', BuscarMedicoDni.as_view(), name="PersonalDNI"),
+    url(r'^ver-medicos/$', vistaMedico.as_view(), name="vistaMedico"),
     #path('login/', signin),
     url(r'^buscarespecialidad/$', BuscarEsp.as_view(), name="BuscarEsp"),
     url(r'^buscartipousuario/$', BuscarTip.as_view(), name="BuscarTip"),
