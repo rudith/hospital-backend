@@ -183,12 +183,12 @@ MEDIA_ROOT = "uploads"
 #MEDIA_ROOT = os.path.join(BASE_DIR,"media")
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'apps.Administrador.api.authentication.ExpiringTokenAuthentication',  # custom authentication class
-    ),
-    # 'DEFAULT_PERMISSION_CLASSES': (
-    #     'rest_framework.permissions.IsAuthenticated',
-    # )
+    # 'DEFAULT_AUTHENTICATION_CLASSES': (
+    #     'apps.Administrador.api.authentication.ExpiringTokenAuthentication',  # custom authentication class
+    # ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    )
 }
 SITE_ID = 1
 
