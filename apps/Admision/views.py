@@ -38,6 +38,8 @@ from apps.Administrador.models import Especialidad
 import requests
 from .pagination import SmallSetPagination
 from reportlab.lib.enums import TA_JUSTIFY, TA_LEFT, TA_CENTER
+from datetime import datetime
+from datetime import date
 x,y=A4
 ca=""
 contador=0
@@ -746,56 +748,156 @@ class ReportehistoriasExcel(TemplateView):
 
                 #Creamos los encabezados desde la celda B3 hasta la E3
 
-
-                ws['A2'] = 'ID'
-                ws['B2'] = 'NUMERO DE HISTORIA'
-                ws['C2'] = 'DNI'
-                ws['D2'] = 'MONBRES'
-                ws['E2'] = 'APELLIDO_PATERNO'
-                ws['F2'] = 'APELLIDO_MATERNO'
-                ws['G2'] = 'SEXO'
-                ws['H2'] = 'FECHA_DE_NACIMIENTO'
-                ws['I2'] = 'CELULAR'
-                ws['J2'] = 'TELEFONO'
-                ws['K2'] = 'ESTADO_CIVIL'
-                ws['L2'] = 'GRADO_INSTITUCIONAL'
-                ws['M2'] = 'OCUPACION'
-                ws['N2'] = 'FECHA_REG'
-                ws['O2'] = 'DIRECCION'
-                ws['P2'] = 'NACIONALIDAD'
-                ws['Q2'] = 'EMAIL'
-                ws['R2'] = 'ESTREG'
-                ws['S2'] = 'DISTRITO'
-                ws['T2'] = 'PROVINCIA'
-                ws['U2'] = 'DEPARTAMENTO'
-                
+                ws['A2'] = 'NRO DE HISTORIA'
+                ws['B2'] = 'DNI'
+                ws['C2'] = 'NOMBRES'
+                ws['D2'] = 'APELLIDO_PATERNO'
+                ws['E2'] = 'APELLIDO_MATERNO'
+                ws['F2'] = 'DIRECCION'
+                ws['G2'] = 'DISTRITO'
+                ws['H2'] = 'CELULAR'
+                ws['I2'] = 'TELEFONO'
+                ws['J2'] = 'LUGAR DE NACIMIENTO'
+                ws['K2'] = 'FECHA_DE_NACIMIENTO'
+                ws['L2'] = 'EDAD'
+                ws['M2'] = 'SEXO'
+                ws['N2'] = 'GRADO DE INSTRUCCION'
+                ws['O2'] = 'OCUPACION'
+                ws['P2'] = 'ESTADO CIVIL'
+                ws['Q2'] = 'NACIONALIDAD'
+                ws['R2'] = 'PROVINCIA'
+                ws['S2'] = 'DEPARTAMENTO'
+                ws['T2'] = 'PROCEDENCIA'
+                ws['U2'] = 'APERTURA'
+            
                 cont=3
                 #Recorremos el conjunto de historias y vamos escribiendo cada uno de los datos en las celdas
                 for historia in historias:
-                        ws.cell(row=cont,column=1).value = historia.id
-                        ws.cell(row=cont,column=2).value = historia.numeroHistoria
-                        ws.cell(row=cont,column=3).value = historia.dni
-                        ws.cell(row=cont,column=4).value = historia.nombres
-                        ws.cell(row=cont,column=5).value = historia.apellido_paterno
-                        ws.cell(row=cont,column=6).value = historia.apellido_materno
-                        ws.cell(row=cont,column=7).value = historia.sexo
-                        ws.cell(row=cont,column=8).value = historia.fechaNac
-                        ws.cell(row=cont,column=9).value = historia.celular
-                        ws.cell(row=cont,column=10).value = historia.telefono
-                        ws.cell(row=cont,column=11).value = historia.estadoCivil
-                        ws.cell(row=cont,column=12).value = historia.gradoInstruccion
-                        ws.cell(row=cont,column=13).value = historia.ocupacion
-                        ws.cell(row=cont,column=14).value = historia.fechaReg
-                        ws.cell(row=cont,column=15).value = historia.direccion
-                        ws.cell(row=cont,column=16).value = historia.nacionalidad
-                        ws.cell(row=cont,column=17).value = historia.email
-                        ws.cell(row=cont,column=18).value = historia.estReg    
-                        ws.cell(row=cont,column=19).value = historia.distrito.nombre
-                        ws.cell(row=cont,column=20).value = historia.provincia.nombre
-                        ws.cell(row=cont,column=21).value = historia.departamento.nombre
+                    if historia.dni == None:
+                        dni = "00000000"
+                    else:
+                        dni = historia.dni
+
+                    if historia.nombres ==None:
+                        nombres = ""
+                    else :
+                        nombres = historia.nombres
+
+                    if historia.apellido_paterno ==None:
+                        apaterno = ""
+                    else :
+                        apaterno = historia.apellido_paterno
+
+                    if historia.apellido_materno ==None:
+                        amaterno = ""
+                    else :
+                        amaterno = historia.apellido_materno
+
+                    if historia.sexo ==None:
+                        sexo = ""
+                    else :
+                        sexo = historia.sexo
+
+                    if historia.fechaNac ==None:
+                        fechaNac = ""
+                    else :
+                        fechaNac = historia.fechaNac
+
+
+                    if historia.celular ==None:
+                        celular = ""
+                    else :
+                        celular = historia.celular
+
+                    if historia.telefono ==None:
+                        telefono  = ""
+                    else :
+                        telefono  = historia.telefono 
+
+                    if historia.estadoCivil ==None:
+                        estadoCivil = ""
+                    else :
+                        estadoCivil = historia.estadoCivil
+
+                    if historia.gradoInstruccion ==None:
+                        gradoInstruccion = ""
+                    else :
+                        gradoInstruccion = historia.gradoInstruccion
+
+                    if historia.ocupacion ==None:
+                        ocupacion = ""
+                    else :
+                        ocupacion = historia.ocupacion
+
+                    if historia.fechaReg == None:
+                        fechaReg = ""
+                    else :
+                        fechaReg = historia.fechaReg
+
+                    if historia.direccion == None:
+                        direccion = ""
+                    else :
+                        direccion = historia.direccion
+
+                    if historia.nacionalidad == None:
+                        nacionalidad = ""
+                    else :
+                        nacionalidad = historia.nacionalidad
+
+                    if historia.lugarNac == None:
+                        lugarNac = ""
+                    else :
+                        lugarNac = historia.lugarNac
+
+                    if historia.procedencia == None:
+                        procedencia = ""
+                    else :
+                        procedencia = historia.procedencia
+
+                    if historia.distrito == None:
+                        distrito = ""
+                    else :
+                        distrito = historia.distrito.nombre
+
+                    if historia.provincia == None:
+                        provincia = ""
+                    else :
+                        provincia = historia.provincia.nombre 
+
+                    if historia.departamento == None:
+                        departamento = ""
+                    else :
+                        departamento = historia.departamento.nombre
+
+                    if historia.fechaNac==None:
+                        edad = 100
+                    else:
+                        edad = int((datetime.now().date() - historia.fechaNac).days / 365.25)
+
+                    ws.cell(row=cont,column=1).value = historia.numeroHistoria
+                    ws.cell(row=cont,column=2).value = dni
+                    ws.cell(row=cont,column=3).value = nombres
+                    ws.cell(row=cont,column=4).value = apaterno
+                    ws.cell(row=cont,column=5).value = amaterno
+                    ws.cell(row=cont,column=6).value = direccion
+                    ws.cell(row=cont,column=7).value = distrito
+                    ws.cell(row=cont,column=8).value = celular
+                    ws.cell(row=cont,column=9).value = telefono
+                    ws.cell(row=cont,column=10).value = lugarNac
+                    ws.cell(row=cont,column=11).value = fechaNac
+                    ws.cell(row=cont,column=12).value = edad
+                    ws.cell(row=cont,column=13).value = sexo
+                    ws.cell(row=cont,column=14).value = gradoInstruccion
+                    ws.cell(row=cont,column=15).value = ocupacion
+                    ws.cell(row=cont,column=16).value = estadoCivil
+                    ws.cell(row=cont,column=17).value = nacionalidad
+                    ws.cell(row=cont,column=18).value = provincia    
+                    ws.cell(row=cont,column=19).value = departamento
+                    ws.cell(row=cont,column=20).value = procedencia
+                    ws.cell(row=cont,column=21).value = fechaReg
 
             
-                        cont = cont + 1
+                    cont = cont + 1
 
                 #Establecemos el nombre del archivo
                 nombre_archivo ="Reportehistoriasclinicas.xlsx"
@@ -805,3 +907,4 @@ class ReportehistoriasExcel(TemplateView):
                 response["Content-Disposition"] = contenido
                 wb.save(response)
                 return response
+

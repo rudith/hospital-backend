@@ -90,9 +90,9 @@ class HistoriaViewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Historia
         fields = "__all__"
-        # fields = ['id','numeroHistoria','dni','nombres','apellido_paterno','apellido_materno','sexo','edad','fechaNac','foto','celular',
-        # 'telefono','estadoCivil','gradoInstruccion','ocupacion','fechaReg','direccion','nacionalidad',
-        # 'email','updated_at','estReg','distrito','provincia','departamento']
+        fields = ['id','numeroHistoria','dni','nombres','apellido_paterno','apellido_materno','sexo','edad','fechaNac','foto','celular',
+         'telefono','estadoCivil','gradoInstruccion','ocupacion','fechaReg','direccion','nacionalidad',
+         'email','updated_at','estReg','distrito','provincia','departamento','lugarNac','procedencia']
 
 class HistoriaGetSerializer(serializers.ModelSerializer):
     #grupoSanguineo = serializers.StringRelatedField(read_only=True)

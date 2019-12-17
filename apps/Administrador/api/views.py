@@ -292,7 +292,7 @@ class BuscarEspecialidad(generics.ListAPIView):
     def get_queryset(self):
         #id = self.kwargs['id']
         id = self.request.query_params.get('id')
-        return Personal.objects.filter(especialidad__id=id)
+        return Personal.objects.filter(especialidad__id=id,estReg=True)
 
 # class cancelarCita(generics.RetrieveUpdateDestroyAPIView):
 #     lookup_field = 'dni'
