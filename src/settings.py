@@ -118,17 +118,13 @@ WSGI_APPLICATION = 'src.wsgi.application'
 # Base de datos en AWS
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': 'dbhospital',
-    #     'USER': 'dbhospital',
-    #     'PASSWORD': 'dbhospital',
-    #     'HOST': 'db-hospital.cgfr5amy7ljw.us-east-2.rds.amazonaws.com',
-    #     'PORT': '5432',
-    # }
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'dbhospital',
+        'USER': 'postgres',
+        'PASSWORD': 'admin',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
