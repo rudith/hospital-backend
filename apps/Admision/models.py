@@ -103,7 +103,7 @@ class Historia(models.Model):
     provincia = models.ForeignKey(Provincia, on_delete=models.CASCADE,blank=True,null=True)
     departamento = models.ForeignKey(Departamento, on_delete=models.CASCADE,blank=True,null=True)
     #dni = models.CharField(unique=True, max_length=8)
-    dni = models.CharField(blank=True,null=True, max_length=15)
+    dni = models.CharField(blank=True,null=True, max_length=15,)
     nombres = models.CharField(max_length=50, blank=True)
     apellido_paterno = models.CharField(max_length=30,blank=True,null=True)
     apellido_materno = models.CharField(max_length=30,blank=True,null=True)

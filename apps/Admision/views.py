@@ -225,10 +225,11 @@ def HistoriaPDF(request,dni):
     #Cabecera__________________________________________
     c.setLineWidth(.3)
     c.setFont('Helvetica',20)
-    c.drawString(185,750,'HISTORIA CLINICA')
-    c.drawString(405, 765, 'N° HISTORIA')
-    c.setFont('Helvetica',16)
-    c.drawString(402,725,historia[0].numeroHistoria.__str__())
+    c.drawString(185,750,'HISTORIA CLÍNICA')
+    c.setFont('Helvetica',15)
+    c.drawString(425, 765, 'N° HISTORIA')
+    c.setFont('Helvetica',28)
+    c.drawString(402,710,historia[0].numeroHistoria.__str__())
     c.drawImage("apps/Laboratorio/static/Unsa.png",60,700,width=85, height=110, mask='auto')
     c.line(40,695,550,695)
     c.line(40,820,550,820)
@@ -239,7 +240,7 @@ def HistoriaPDF(request,dni):
     c.line(395,750,550,750)
     #Cabecera_____________________________________________
     #nombre
-    c.setFont('Helvetica', 16)
+    c.setFont('Helvetica', 13)
     c.drawString(60,650,'Apellidos y Nombres')
     c.setFont('Helvetica', 13)
     c.drawString(230,650,historia[0].nombres.__str__()+" "+historia[0].apellido_paterno.__str__()+" "+historia[0].apellido_materno.__str__())
@@ -270,30 +271,32 @@ def HistoriaPDF(request,dni):
     c.drawString(125,550,'DNI')
     c.drawString(105,530,historia[0].dni.__str__())
 
-    c.drawString(340,550,'Edad')
-    c.drawString(350,530,str(historia[0].edad()))
+    c.drawString(270,550,'Edad')
+    c.drawString(275,530,str(historia[0].edad()))
+
+    c.drawString(425,550,'Distrito')
+    c.drawString(410,530,historia[0].distrito.__str__())
 
     c.line(40,565,550,565)
     c.line(40,545,550,545)
     c.line(40,525,550,525)
 
     c.line(40,525,40,565)
-    c.line(265,525,265,565)
+    c.line(220,525,220,565)
+    c.line(350,525,350,565)
     c.line(550,525,550,565)
 
-    #Direccion-Distrito
-    c.drawString(100,490,'Dirección')
-    c.drawString(50,470,historia[0].direccion.__str__())
+    
 
-    c.drawString(400,490,'Distrito')
-    c.drawString(395,470,historia[0].distrito.__str__())
+    #Direccion-Distrito
+    c.drawString(250,490,'Dirección')
+    c.drawString(50,470,historia[0].direccion.__str__())
 
     c.line(40,505,550,505)
     c.line(40,485,550,485)
     c.line(40,465,550,465)
 
     c.line(40,465,40,505)
-    c.line(365,465,365,505)
     c.line(550,465,550,505)
 
     c.setFont('Helvetica',12)
@@ -309,7 +312,11 @@ def HistoriaPDF(request,dni):
     c.drawString(260,410,historia[0].ocupacion.__str__())
 
     c.drawString(425,430,'Teléfono')
-    c.drawString(425,410,historia[0].telefono.__str__())
+    if historia[0].celular == None:
+        c.drawString(425,410,historia[0].telefono.__str__())
+    else :
+        c.drawString(425,410,historia[0].celular.__str__())
+    
 
 
 
@@ -339,8 +346,8 @@ def HistoriaPDF(request,dni):
     c.line(550,345,550,385)
 
      #Edad y Fecha de Apertura
-    c.drawString(45,310,'Fecha de Apertura')
-    c.drawString(45,290,historia[0].fechaReg.__str__())
+    c.drawString(250,310,'Fecha de Apertura')
+    c.drawString(260,290,historia[0].fechaReg.__str__())
 
     c.line(40,325,550,325)
     c.line(40,305,550,305)
