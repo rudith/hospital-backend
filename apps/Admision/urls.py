@@ -16,7 +16,7 @@ router.register(r"ver-historias",vistaHistoria)
 urlpatterns = [
     path("", include(router.urls)),
     url(r'^historianumero/$', BuscarHistoria.as_view(), name="HistoriaNumero"),
-    url(r'^historiadni/(?P<dni>\d+)/$', BuscarDNIH.as_view(), name="HistoriaDni"),
+    url(r'^historiadni/$', BuscarDNIH.as_view(), name="HistoriaDni"),
     url(r'^historiaPDF/(?P<dni>\d+)/$',HistoriaPDF,name="Historial PDF"),
     url(r'^historianombre/$', BuscarNombreH.as_view(), name="HistoriaDni"),
     url(r'^reniec/(?P<dni>\d+)/$',reniecDatos,name="Historial PDF"),

@@ -114,14 +114,17 @@ class BuscarHistoria(generics.ListAPIView):
         return Historia.objects.filter(numeroHistoria=nro)
 
 #Busqueda de las historias clinicas por  DNI , Serializer muestra todas las historias
-class BuscarDNIH(generics.RetrieveUpdateDestroyAPIView):
+class BuscarDNIH(generics.ListAPIView):
 
-    lookup_field = 'dni'
     serializer_class = HistoriaViewSerializer
+    pagination_class = SmallSetPagination
     permission_classes = [IsAuthenticated]
-
+     
     def get_queryset(self):
-        return Historia.objects.all()
+        #id = self.kwargs['id']
+        dni = self.request.query_params.get('dni')
+        qs = Historia.objects.filter(dni=dni)
+        return qs
 
 #Busqueda historia por nombre del paciente , Serializer muestra todas las historias
 class BuscarNombreH(generics.ListAPIView):
@@ -238,7 +241,7 @@ def HistoriaPDF(request,dni):
     #nombre
     c.setFont('Helvetica', 16)
     c.drawString(60,650,'Apellidos y Nombres')
-    c.setFont('Helvetica', 16)
+    c.setFont('Helvetica', 13)
     c.drawString(230,650,historia[0].nombres.__str__()+" "+historia[0].apellido_paterno.__str__()+" "+historia[0].apellido_materno.__str__())
     c.line(40,665,550,665)
     c.line(40,645,550,645)
@@ -282,17 +285,18 @@ def HistoriaPDF(request,dni):
     c.drawString(100,490,'Dirección')
     c.drawString(50,470,historia[0].direccion.__str__())
 
-    c.drawString(350,490,'Distrito')
-    c.drawString(335,470,historia[0].distrito.__str__())
+    c.drawString(400,490,'Distrito')
+    c.drawString(395,470,historia[0].distrito.__str__())
 
     c.line(40,505,550,505)
     c.line(40,485,550,485)
     c.line(40,465,550,465)
 
     c.line(40,465,40,505)
-    c.line(265,465,265,505)
+    c.line(365,465,365,505)
     c.line(550,465,550,505)
 
+    c.setFont('Helvetica',12)
     #Sexo EstadoCivil Profesión/Ocupación Teléfono
 
     c.drawString(50,430,'Sexo')
