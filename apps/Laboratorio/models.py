@@ -13,7 +13,7 @@ class ExamenLabCab(models.Model):
     tipoExam = models.ForeignKey(TipoExamen, on_delete=models.CASCADE)
     orden = models.CharField(max_length=100, blank=True, null=True)
     fecha = models.DateField()
-    observaciones = models.TextField(blank=True)
+    observaciones = models.TextField()
     def __str__(self):
         return self.pk.__str__() +  self.nombre.__str__()
 
