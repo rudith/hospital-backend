@@ -6,7 +6,7 @@ Django==2.2.4
 django-allauth==0.39.1
 django-cors-headers==3.1.0
 django-expiring-token==1.0.2
-django-registration==3.0.1
+django-registration==3.1.2
 django-rest-auth==0.9.5
 djangorestframework==3.10.2
 et-xmlfile==1.0.1
